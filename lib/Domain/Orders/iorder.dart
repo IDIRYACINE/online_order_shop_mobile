@@ -1,4 +1,3 @@
-import 'package:online_order_shop_mobile/Application/DeliveryAddress/latlng.dart';
 import 'package:online_order_shop_mobile/Domain/Cart/cart_item.dart';
 
 abstract class IOrder {

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/services.dart';
 import 'package:online_order_shop_mobile/Domain/Orders/iorder.dart';
 import 'package:online_order_shop_mobile/Domain/Orders/order.dart';
@@ -55,8 +54,7 @@ class OrderService implements IOrderService {
     // userId/status
     _ordersStatusSubscription ??=
         _serverAcess.getDataStream(dataUrl: "OrdersStatus").listen((event) {
-      Map<String, dynamic> orderStatus =
-          Map<String, dynamic>.from(json.decode(event.snapshot.value));
+      dynamic orderStatus = event.snapshot.value;
 
       if (event.previousSiblingKey != null) {
         _ordersSubscribers.forEach((key, subscriber) {
@@ -71,15 +69,11 @@ class OrderService implements IOrderService {
   void listenToOrderStreamOnServer() {
     _ordersStatusSubscription ??=
         _serverAcess.getDataStream(dataUrl: "Orders").listen((event) {
-      Map<String, dynamic> orders =
-          Map<String, dynamic>.from(json.decode(event.snapshot.value));
-      dev.log(orders.toString());
-
+      dynamic orders = event.snapshot.value;
+      dev.log(event.snapshot.value.runtimeType.toString());
       _ordersSubscribers.forEach((key, subscriber) {
         orders.forEach((key, orderMap) {
           mapSnapshotToOrder(orderMap).then((order) {
-            dev.log(order.toString());
-
             subscriber.notifyNewOrder(order);
           });
         });
@@ -116,17 +110,13 @@ class OrderService implements IOrderService {
     });
   }
 
-  Future<IOrder> mapSnapshotToOrder(Object value) async {
-    DataSnapshot snapshot = value as DataSnapshot;
+  Future<IOrder> mapSnapshotToOrder(dynamic jsonMap) async {
+    Map<String, dynamic> map = Map.from(json.decode(jsonMap.toString()));
 
-    Map<String, dynamic> jsonMap =
-        Map<String, dynamic>.from(json.decode(snapshot.value));
-    String orderId = snapshot.key!;
+    //String orderId = jsonMap.entries;
+    map["status"] = "waiting";
+    //_serverAcess.fetchData(dataUrl: "OrderStatus/$orderId").then((status) {});
 
-    _serverAcess.fetchData(dataUrl: "OrderStatus/$orderId").then((status) {
-      jsonMap["status"] = status;
-    });
-
-    return Order(jsonMap);
+    return Order(map);
   }
 }

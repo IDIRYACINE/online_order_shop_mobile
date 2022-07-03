@@ -100,7 +100,7 @@ class ProductsDatabase implements IProductsDatabase {
     _productsDatabase.insert(_categoriresTable, categoryValues);
 
     String createCategoryTable =
-        "CREATE TABLE IF NOT EXISTS ${category.getName()} "
+        "CREATE TABLE IF NOT EXISTS ${category.getName()} ("
         "	Id Integer PRIMARY KEY AUTOINCREMENT,"
         "	Name text NOT NULL,"
         "	ImageUrl text NOT NULL,"
@@ -123,7 +123,7 @@ class ProductsDatabase implements IProductsDatabase {
     _productsDatabase.delete(_categoriresTable,
         where: "id=?", whereArgs: [category.getId()]);
 
-    String dropCategoryTable = "DROP TABLE IF EXISTS ${category.getId()}";
+    String dropCategoryTable = "DROP TABLE ${category.getId()}";
     _productsDatabase.execute(dropCategoryTable);
   }
 

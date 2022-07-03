@@ -33,7 +33,7 @@ abstract class IAuthenticationService {
 
   Future<void> linkAuthProviderWithProfile({required dynamic authProvider});
 
-  Future<bool> accountIsActive();
+  bool accountIsActive();
 
   Future<void> updateEmail({required String newEmail});
 

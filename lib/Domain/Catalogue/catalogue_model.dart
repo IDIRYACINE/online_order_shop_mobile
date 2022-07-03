@@ -41,7 +41,7 @@ class CatalogueModel {
 
   void createCategory(Category category) {
     _categories.add(category);
-    _productsManager.createCategory();
+    _productsManager.createCategory(category);
   }
 
   void updateCategory(Category category) {

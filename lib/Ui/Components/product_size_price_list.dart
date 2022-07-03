@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:online_order_shop_mobile/Domain/Catalogue/optional_item.dart';
-import 'package:online_order_shop_mobile/Domain/Catalogue/product_model.dart';
-import 'package:online_order_shop_mobile/Ui/Components/product_components.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
 
 class SizePriceListView extends StatefulWidget {

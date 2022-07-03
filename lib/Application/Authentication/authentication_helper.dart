@@ -1,7 +1,6 @@
 import "package:flutter/material.dart";
 import 'package:online_order_shop_mobile/Application/Authentication/authentication_error_handler.dart';
 import 'package:online_order_shop_mobile/Application/Orders/order_helper.dart';
-import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
 import 'package:online_order_shop_mobile/Application/Providers/navigation_provider.dart';
 import 'package:online_order_shop_mobile/Domain/Profile/profile_model.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Authentication/iauthentication_service.dart';
@@ -91,19 +90,14 @@ class AuthenticationHelper {
     _profile.saveProfile();
   }
 
-  void isLoggedIn(BuildContext context) {
-    _authService.accountIsActive().then((value) {
-      if (value) {
-        Provider.of<NavigationProvider>(context, listen: false)
-            .navigateToProfile(context);
-      } else {
-        Provider.of<NavigationProvider>(context, listen: false)
-            .navigateToLogin(context);
-      }
-    }).catchError((error) {
+  Future<void> isLoggedIn(BuildContext context) async {
+    if (_authService.accountIsActive()) {
+      Provider.of<NavigationProvider>(context, listen: false)
+          .navigateToProfile(context);
+    } else {
       Provider.of<NavigationProvider>(context, listen: false)
           .navigateToLogin(context);
-    });
+    }
   }
 
   ProfileModel getProfile() {

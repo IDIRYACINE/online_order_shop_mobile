@@ -67,6 +67,7 @@ class FaultTolerantImage extends StatelessWidget {
   final double? height;
   final double? width;
   final BoxFit? fit;
+  final String backupImage;
 
   const FaultTolerantImage(
     this.src, {
@@ -74,6 +75,7 @@ class FaultTolerantImage extends StatelessWidget {
     this.height,
     this.width,
     this.fit,
+    this.backupImage = 'assets/images/no-preview-available.png',
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -84,7 +86,7 @@ class FaultTolerantImage extends StatelessWidget {
       fit: fit,
       errorBuilder: (context, object, stackTrace) {
         return Image.asset(
-          'assets/images/no-preview-available.png',
+          backupImage,
           height: height,
           width: width,
           fit: fit,

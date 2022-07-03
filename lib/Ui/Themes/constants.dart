@@ -56,6 +56,10 @@ const productNameLabel = "Nom d'article";
 const productDescriptionLabel = "Description";
 const manage = "Manager";
 
+//Settings
+const synchroniseDatabaseTitle = "Synchroniser la base donee";
+const synchroniseDatabaseDescription = "";
+
 //Measures
 const appBarHeight = 100.0;
 const goldenRatioFlexLarge = 8;
@@ -69,6 +73,7 @@ const spaceSmall = 4.0;
 const dividerThickness = 2.0;
 const borderCircularRaduis = 20.0;
 const borderCircularRaduisLarge = 40.0;
+const String uploadImageUrl = 'assets/images/upload.png';
 
 //Colors
 const primaryColor = Colors.black;

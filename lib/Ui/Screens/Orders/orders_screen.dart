@@ -28,33 +28,21 @@ class _OrdersScreenState extends State<OrdersScreen> {
               children: [
                 Flexible(
                   child: TabBar(
+                    onTap: (index) {
+                      selectedTabIndex.value = index;
+                    },
                     tabs: [
-                      InkResponse(
-                        child: Tab(
-                            child: Text(
-                          waitingTab,
-                          style: theme.textTheme.bodyText1,
-                        )),
-                        onTap: () {
-                          selectedTabIndex.value = 0;
-                        },
-                      ),
-                      InkResponse(
-                        child: Tab(
-                            child: Text(confirmedTab,
-                                style: theme.textTheme.bodyText1)),
-                        onTap: () {
-                          selectedTabIndex.value = 1;
-                        },
-                      ),
-                      InkResponse(
-                        child: Tab(
-                            child: Text(deliveryTab,
-                                style: theme.textTheme.bodyText1)),
-                        onTap: () {
-                          selectedTabIndex.value = 2;
-                        },
-                      ),
+                      Tab(
+                          child: Text(
+                        waitingTab,
+                        style: theme.textTheme.bodyText1,
+                      )),
+                      Tab(
+                          child: Text(confirmedTab,
+                              style: theme.textTheme.bodyText1)),
+                      Tab(
+                          child: Text(deliveryTab,
+                              style: theme.textTheme.bodyText1)),
                     ],
                   ),
                 ),

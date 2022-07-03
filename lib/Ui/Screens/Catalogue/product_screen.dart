@@ -7,7 +7,6 @@ import 'package:online_order_shop_mobile/Domain/Catalogue/optional_item.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/product_model.dart';
 import 'package:online_order_shop_mobile/Ui/Components/forms.dart';
 import 'package:online_order_shop_mobile/Ui/Components/product_components.dart';
-import 'package:online_order_shop_mobile/Ui/Components/product_size_price_list.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
 import 'package:provider/provider.dart';
 
@@ -133,6 +132,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     onTap: () {},
                     child: FaultTolerantImage(
                       product.getImageUrl(),
+                      backupImage: 'assets/images/no-preview-available.png',
                       width: double.infinity,
                       fit: BoxFit.fill,
                     ),

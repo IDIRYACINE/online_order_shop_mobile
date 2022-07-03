@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:online_order_shop_mobile/Ui/Screens/Settings/advanced_section.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -10,6 +11,8 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    return Column(
+      children: const [AdvancedSection()],
+    );
   }
 }

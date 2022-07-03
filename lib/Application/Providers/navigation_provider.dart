@@ -1,4 +1,3 @@
-import 'package:online_order_shop_mobile/Domain/Cart/cart_item.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/category_model.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/product_model.dart';
 import 'package:online_order_shop_mobile/Domain/Orders/iorder.dart';
@@ -9,16 +8,16 @@ import 'package:online_order_shop_mobile/Ui/Screens/Catalogue/product_screen.dar
 import 'package:online_order_shop_mobile/Ui/Screens/Catalogue/size_price_manager.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/DeliveryAddress/gps_screen.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Login/login_screen.dart';
-import 'package:online_order_shop_mobile/Ui/Screens/Cart/cart_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Orders/order_detaills.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Orders/orders_screen.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Profile/profile_screen.dart';
+import 'package:online_order_shop_mobile/Ui/Screens/Settings/settings_screen.dart';
 import 'package:online_order_shop_mobile/home_screen.dart';
 
 class NavigationProvider with ChangeNotifier {
   final List<Widget> _screens = [
-    const CartScreen(),
+    const SettingsScreen(),
     const CatalogueScreen(),
     const OrdersScreen()
   ];

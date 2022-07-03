@@ -57,6 +57,9 @@ ThemeData primaryTheme = ThemeData(
         fontSize: textSizeMeduim,
         fontWeight: FontWeight.bold,
         color: primaryColor),
+    headline6: const TextStyle(
+      fontSize: 10,
+    ),
     subtitle1: const TextStyle(fontSize: textSizeMeduim, color: darkColor),
     subtitle2: TextStyle(fontSize: textSizeMeduim2, color: hintColor),
     bodyText1: const TextStyle(fontSize: textSizeMeduim2, color: primaryColor),

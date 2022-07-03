@@ -7,7 +7,7 @@ class Product {
   final List<double> _prices;
   final List<String> _sizes;
   late final List<String> _descriptionImages;
-  int? _id;
+  final int? _id;
 
   Product(
       this._name, this._description, this._imageUrl, this._prices, this._sizes,

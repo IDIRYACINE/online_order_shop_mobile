@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:online_order_shop_mobile/Application/Providers/navigation_provider.dart';
-import 'package:online_order_shop_mobile/Domain/Cart/cart_item.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/category_model.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/product_model.dart';
 import 'package:online_order_shop_mobile/Ui/Components/forms.dart';

@@ -76,15 +76,27 @@ class ProductsMapper {
         productsCount: queryResult['ProductsCount'] as int);
   }
 
-  void removeProduct(Category category, Product product) {}
+  void removeProduct(Category category, Product product) {
+    _database.deleteProduct(category, product);
+  }
 
-  void updateCategory(Category category) {}
+  void updateCategory(Category category) {
+    _database.updateCategory(category);
+  }
 
-  void createCategory() {}
+  void createCategory(Category category) {
+    _database.createCategory(category);
+  }
 
-  void updateProduct(Category category, Product product) {}
+  void updateProduct(Category category, Product product) {
+    _database.updateProduct(category, product);
+  }
 
-  void createProduct(Category category, Product product) {}
+  void createProduct(Category category, Product product) {
+    _database.createProduct(category, product);
+  }
 
-  void removeCategory(Category category) {}
+  void removeCategory(Category category) {
+    _database.deleteCategory(category);
+  }
 }

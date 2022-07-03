@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:online_order_shop_mobile/Application/Authentication/authentication_helper.dart';
 import 'package:online_order_shop_mobile/Application/Authentication/user_input_validator.dart';
 import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
-import 'package:online_order_shop_mobile/Application/Providers/navigation_provider.dart';
 import 'package:online_order_shop_mobile/Ui/Components/buttons.dart';
 import 'package:online_order_shop_mobile/Ui/Components/forms.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
