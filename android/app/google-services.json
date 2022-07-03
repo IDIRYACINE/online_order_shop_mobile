@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "424442380556",
+    "firebase_url": "https://online-order-client-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "online-order-client",
+    "storage_bucket": "online-order-client.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:424442380556:android:a90ea091b3d1224a4a8929",
+        "android_client_info": {
+          "package_name": "com.idir.online_order_client"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "424442380556-hs3ffeg545hpngcrd0aspvq90seukbs3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-zyVunbD2Os-44HLnohupJ4i7UkI-vE4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "424442380556-hs3ffeg545hpngcrd0aspvq90seukbs3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:424442380556:android:1801fb329e4092904a8929",
+        "android_client_info": {
+          "package_name": "com.idir.online_order_shop_mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "424442380556-hs3ffeg545hpngcrd0aspvq90seukbs3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-zyVunbD2Os-44HLnohupJ4i7UkI-vE4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "424442380556-hs3ffeg545hpngcrd0aspvq90seukbs3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
