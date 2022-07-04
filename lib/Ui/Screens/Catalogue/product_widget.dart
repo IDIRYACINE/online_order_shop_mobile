@@ -29,7 +29,6 @@ class ProductWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-
     NavigationProvider navigation = Provider.of<NavigationProvider>(context);
 
     return InkResponse(
@@ -37,48 +36,51 @@ class ProductWidget extends StatelessWidget {
         navigation.navigateToProductDetails(context, category, product);
       },
       child: Card(
-          color: backgroundColor ?? theme.cardColor,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(borderCircularRaduis)),
-          elevation: cardElevation,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Expanded(
-                flex: imageFlex,
+        elevation: 4.0,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
                 child: FaultTolerantImage(
-                  product.getImageUrl(),
-                  width: double.infinity,
-                  fit: BoxFit.fill,
-                ),
-              ),
-              Expanded(
-                  child: Center(
-                child:
-                    Text(product.getName(), style: theme.textTheme.headline2),
-              )),
-              const Divider(),
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: cardBottomPadding),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          product.getPrice().toString(),
-                          style: theme.textTheme.headline2,
+              product.getImageUrl(),
+              height: double.maxFinite,
+              fit: BoxFit.fitHeight,
+            )),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: Align(
+                      alignment: AlignmentDirectional.centerEnd,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 4.0, right: 4.0),
+                        child: Text(product.getName(),
+                            style: theme.textTheme.bodyText1),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Align(
+                      alignment: AlignmentDirectional.bottomEnd,
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 4.0, bottom: 8.0),
+                        child: Text(
+                          '${product.getPrice().toString()} $labelCurrency',
+                          style: theme.textTheme.bodyText1,
                         ),
-                        const Text(
-                          labelCurrency,
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        )
-                      ]),
-                ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          )),
+            )
+          ],
+        ),
+      ),
     );
   }
 }
