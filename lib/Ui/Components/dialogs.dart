@@ -93,3 +93,74 @@ class ErrorAlertDialog extends StatelessWidget {
     );
   }
 }
+
+typedef TypedCallback = void Function(String value);
+
+class SpinnerAlertDialog extends StatefulWidget {
+  final List<String> data;
+  final int initialSelection;
+  final TypedCallback onConfirm;
+  final VoidCallback? onCancel;
+
+  const SpinnerAlertDialog(
+      {Key? key,
+      required this.data,
+      this.initialSelection = 0,
+      required this.onConfirm,
+      this.onCancel})
+      : super(key: key);
+
+  String getInitialItem() {
+    return data[initialSelection];
+  }
+
+  @override
+  State<StatefulWidget> createState() => _SpinnerAlertDialogState();
+}
+
+class _SpinnerAlertDialogState<T> extends State<SpinnerAlertDialog> {
+  late String dropDownValue = "attendu";
+
+  void onItemSelected(String? value) {
+    setState(() {
+      dropDownValue = value!;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+        content: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                DropdownButton<String>(
+                  value: dropDownValue,
+                  items: [
+                    for (String element in widget.data)
+                      DropdownMenuItem(
+                          value: element, child: Text(element.toString()))
+                  ],
+                  onChanged: onItemSelected,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text(cancelLabel)),
+                    DefaultButton(
+                        onPressed: () {
+                          widget.onConfirm(dropDownValue);
+                          Navigator.pop(context);
+                        },
+                        text: confirmLabel),
+                  ],
+                )
+              ],
+            )));
+  }
+}

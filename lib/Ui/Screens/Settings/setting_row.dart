@@ -23,27 +23,24 @@ class SettingRow extends StatelessWidget {
     ThemeData theme = Theme.of(context);
     return InkResponse(
       onTap: onRowClick,
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              if (leading != null) Expanded(child: leading!),
-              Expanded(
-                  child: Column(children: [
-                Expanded(
-                  child: Text(title, style: theme.textTheme.bodyText1),
-                ),
-                if (description != null)
-                  Expanded(
-                      child:
-                          Text(description!, style: theme.textTheme.bodyText2))
-              ])),
-              if (trailing != null) Expanded(child: trailing!),
-            ],
-          ),
-          if (divider) const Divider()
-        ],
+      child: Card(
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                if (leading != null) Flexible(child: leading!),
+                Column(children: [
+                  Text(title, style: theme.textTheme.bodyText1),
+                  if (description != null)
+                    Text(description!, style: theme.textTheme.bodyText2)
+                ]),
+                if (trailing != null) trailing!,
+              ],
+            ),
+            if (divider) const Divider()
+          ],
+        ),
       ),
     );
   }

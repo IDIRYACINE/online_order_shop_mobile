@@ -48,7 +48,7 @@ class _BottomNavBar extends State<BottomNavBar> {
             label: bottomNavBarCart,
             icon: IconButton(
                 onPressed: () {
-                  navigationProvider.navigateToCart();
+                  navigationProvider.navigateToSettings();
                 },
                 icon: const Icon(Icons.settings)),
           )

@@ -1,15 +1,16 @@
 class CartItem {
   late String _name;
   late int _quantity;
-  late double _price;
+  late num _price;
   late String _size;
-  late String _imageUrl;
+  String _imageUrl = "";
 
-  CartItem(
-      {required String name,
-      required int quantity,
-      required String size,
-      required double price}) {
+  CartItem({
+    required String name,
+    required int quantity,
+    required String size,
+    required num price,
+  }) {
     _name = name;
     _quantity = quantity;
     _price = price;
@@ -20,7 +21,7 @@ class CartItem {
     return _name;
   }
 
-  double getPrice() {
+  num getPrice() {
     return _price * _quantity;
   }
 
@@ -34,5 +35,9 @@ class CartItem {
 
   String getSize() {
     return _size;
+  }
+
+  void setImageUrl(String imageUrl) {
+    _imageUrl = imageUrl;
   }
 }

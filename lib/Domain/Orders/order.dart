@@ -1,5 +1,6 @@
 import 'package:online_order_shop_mobile/Domain/Cart/cart_item.dart';
 import 'package:online_order_shop_mobile/Domain/Orders/iorder.dart';
+import 'dart:developer' as dev;
 
 class Order implements IOrder {
   late List<Map<String, dynamic>> _items;
@@ -11,16 +12,18 @@ class Order implements IOrder {
   late double _longitude;
   late String _customerName;
   late String _email;
+  double? _totalPrice;
 
   Order(Map<String, dynamic> order) {
-    _items = order["items"];
+    dev.log(order.toString());
+    _items = List.from(order["items"]);
     _orderId = order["id"];
-    _orderStatus = order["status"];
-    _phoneNumber = order["phone"];
-    _latitude = order["latitude"];
-    _longitude = order["longitude"];
+    _orderStatus = "waiting"; //order["status"];
+    _phoneNumber = order["phoneNumber"];
+    _latitude = order["latitude"].toDouble();
+    _longitude = order["longitude"].toDouble();
     _address = order["address"];
-    _customerName = order["customerName"];
+    _customerName = order["fullName"];
     _email = order["email"];
   }
 
@@ -50,8 +53,8 @@ class Order implements IOrder {
 
     return CartItem(
         name: productRaw["name"],
-        price: productRaw["name"],
-        quantity: productRaw["name"],
+        price: productRaw["price"],
+        quantity: productRaw["quantity"],
         size: productRaw["size"]);
   }
 
@@ -72,7 +75,18 @@ class Order implements IOrder {
 
   @override
   double getTotalPrice() {
-    return 0;
+    if (_totalPrice != null) {
+      return _totalPrice!;
+    }
+    _totalPrice = 0;
+    int productsCount = _items.length;
+
+    for (int i = 0; i < productsCount; i++) {
+      _totalPrice =
+          _totalPrice! + ((_items[i]["price"] * _items[i]["quantity"]));
+    }
+
+    return _totalPrice!;
   }
 
   @override

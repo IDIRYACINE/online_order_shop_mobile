@@ -11,7 +11,7 @@ class SizePriceListView extends StatefulWidget {
   }
 
   void addElement() {
-    size.add("");
+    size.add("Default");
     price.add(0);
   }
 
@@ -25,11 +25,11 @@ class SizePriceListView extends StatefulWidget {
 class _SizePriceListViewState extends State<SizePriceListView> {
   @override
   Widget build(BuildContext context) {
-    int itemsCount = widget.price.length;
     ThemeData theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
+        mainAxisSize: MainAxisSize.max,
         children: [
           Flexible(
               child: Row(
@@ -54,13 +54,17 @@ class _SizePriceListViewState extends State<SizePriceListView> {
           Expanded(
             child: ListView.separated(
               scrollDirection: Axis.vertical,
-              itemCount: itemsCount,
+              itemCount: widget.price.length,
               itemBuilder: (context, index) {
                 return _SizePriceForm(
                   index: index,
                   size: widget.size[index],
                   price: widget.price[index],
-                  removeForm: () {},
+                  removeForm: () {
+                    setState(() {
+                      widget.removeElement(index);
+                    });
+                  },
                 );
               },
               separatorBuilder: (BuildContext context, int index) {
@@ -93,8 +97,8 @@ class _SizePriceForm extends StatefulWidget {
 }
 
 class _SizePriceFormState extends State<_SizePriceForm> {
-  String size = "";
-  double price = 0;
+  late String size;
+  late double price;
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +129,7 @@ class _SizePriceFormState extends State<_SizePriceForm> {
         Flexible(
             child: IconButton(
           icon: const Icon(Icons.remove_circle_outline),
-          onPressed: () {},
+          onPressed: widget.removeForm,
         )),
       ],
     );

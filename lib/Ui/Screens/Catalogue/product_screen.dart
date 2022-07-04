@@ -29,7 +29,7 @@ class ProductsScreen extends StatefulWidget {
   final int productDescriptionFlex = 1;
 
   const ProductsScreen(this.product,
-      {Key? key, this.editMode = false, required this.category})
+      {Key? key, this.editMode = true, required this.category})
       : super(key: key);
 
   @override

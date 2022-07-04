@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:online_order_shop_mobile/Application/Orders/order_helper.dart';
 import 'package:online_order_shop_mobile/Application/Providers/navigation_provider.dart';
 import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
+import 'package:online_order_shop_mobile/Infrastructure/Orders/iorder_service.dart';
 import 'package:online_order_shop_mobile/Infrastructure/service_provider.dart';
 import 'package:online_order_shop_mobile/Ui/Components/dialogs.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Login/login_screen.dart';
@@ -32,6 +33,12 @@ class MyApp extends StatelessWidget {
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
             if (snapshot.hasData) {
               if (ServicesProvider().authenticationService.accountIsActive()) {
+                IOrderService orderService = ServicesProvider().orderService;
+                orderService.subscribeToOrdersStream(
+                    Provider.of<OrdersProvider>(context, listen: false));
+
+                orderService.listenToOrderStreamOnServer();
+                orderService.listenToOrderStatusStreamOnServer();
                 return const HomeScreen();
               }
               return const LoginScreen();

@@ -76,6 +76,9 @@ class _CatalogueScreenState extends State<CatalogueScreen> {
                     child: ListView.separated(
                       itemCount: catalogueHelper.getCategoriesCount(),
                       itemBuilder: (context, index) {
+                        if (catalogueHelper.getCategoriesCount() == 0) {
+                          return const SizedBox();
+                        }
                         return CategoryWidget(
                             catalogueHelper.getCategory(index),
                             removeCategory: removeCategory,

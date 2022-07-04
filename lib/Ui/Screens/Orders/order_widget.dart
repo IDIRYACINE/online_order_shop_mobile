@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:online_order_shop_mobile/Application/Providers/navigation_provider.dart';
 import 'package:online_order_shop_mobile/Domain/Orders/iorder.dart';
+import 'package:online_order_shop_mobile/Domain/Orders/order_status.dart';
+import 'package:online_order_shop_mobile/Infrastructure/service_provider.dart';
 import 'package:online_order_shop_mobile/Ui/Components/buttons.dart';
+import 'package:online_order_shop_mobile/Ui/Components/dialogs.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
+import 'package:provider/provider.dart';
 
 class OrderWidget extends StatefulWidget {
   final IOrder order;
@@ -21,15 +26,53 @@ class OrderWidget extends StatefulWidget {
 class _OrderWidgetState extends State<OrderWidget> {
   @override
   Widget build(BuildContext context) {
-    //ThemeData theme = Theme.of(context);
+    ThemeData theme = Theme.of(context);
 
-    return Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-      Flexible(
-        child: Text(widget.order.getCustomerName()),
+    void updateState(String newState) {
+      ServicesProvider().orderService.updateOrderStatus(
+          OrderStatus.frToEnStatus(newState), widget.order.getId());
+    }
+
+    return InkResponse(
+      onTap: () {
+        showDialog<AlertDialog>(
+            context: context,
+            builder: (context) {
+              return SpinnerAlertDialog(
+                  data: OrderStatus.values, onConfirm: updateState);
+            });
+      },
+      child: Card(
+        child:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Flexible(
+            child: Text(widget.order.getCustomerName()),
+          ),
+          Expanded(
+            child: TextButton(
+              child: const Text(deleteOrderLabel),
+              onPressed: () {
+                ServicesProvider()
+                    .orderService
+                    .deleteOrder(widget.order.getId());
+              },
+            ),
+          ),
+          Expanded(
+            child: TextButton(
+              onPressed: () {
+                Provider.of<NavigationProvider>(context, listen: false)
+                    .navigateToOrderDetails(context, widget.order);
+              },
+              child: Text(
+                buttonOrderDetails,
+                style: theme.textTheme.overline,
+              ),
+            ),
+          )
+        ]),
       ),
-      const Flexible(child: Spacer()),
-      const Expanded(child: DefaultButton(text: buttonOrderDetails))
-    ]);
+    );
   }
 }
 

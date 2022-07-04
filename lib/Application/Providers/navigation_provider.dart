@@ -1,12 +1,15 @@
+import 'package:online_order_shop_mobile/Domain/Cart/cart.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/category_model.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/product_model.dart';
 import 'package:online_order_shop_mobile/Domain/Orders/iorder.dart';
+import 'package:online_order_shop_mobile/Ui/Screens/Cart/cart_screen.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Catalogue/catalogue_screen.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Catalogue/category_manager_screen.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Catalogue/category_screen.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Catalogue/product_screen.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Catalogue/size_price_manager.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/DeliveryAddress/gps_screen.dart';
+import 'package:online_order_shop_mobile/Ui/Screens/DeliveryAddress/immutable_map.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Login/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Orders/order_detaills.dart';
@@ -29,7 +32,7 @@ class NavigationProvider with ChangeNotifier {
 
   Widget getScreen() => _screens[_screenIndex];
 
-  void navigateToCart() {
+  void navigateToSettings() {
     _screenIndex = 0;
     _iconIndex = 2;
     notifyListeners();
@@ -47,7 +50,10 @@ class NavigationProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void navigateToSettings() {}
+  void navigateToCart(BuildContext context, Cart cart) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => CartScreen(cart)));
+  }
 
   void navigateToLogin(BuildContext context) {
     Navigator.push(
@@ -59,20 +65,15 @@ class NavigationProvider with ChangeNotifier {
         context, MaterialPageRoute(builder: (context) => const OrdersScreen()));
   }
 
-  void navigateToDeliveryAddressScreen(
-      BuildContext context, VoidCallback callback,
-      {required bool replace}) {
-    if (!replace) {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => DeliveryAddresScreen(callback)));
-    } else {
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => DeliveryAddresScreen(callback)));
-    }
+  void navigateToDeliveryAddressScreen(BuildContext context,
+      {required double latitude, required double longitude}) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ImmutableDeliveryAddresScreen(
+                  latitude: latitude,
+                  longitude: longitude,
+                )));
   }
 
   void navigateToProfile(BuildContext context) {
@@ -127,5 +128,20 @@ class NavigationProvider with ChangeNotifier {
         context,
         MaterialPageRoute(
             builder: (context) => SizePriceManagerScreen(product: product)));
+  }
+
+  void navigateToAddressScreen(BuildContext context, VoidCallback callback,
+      {required bool replace}) {
+    if (!replace) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => DeliveryAddresScreen(callback)));
+    } else {
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => DeliveryAddresScreen(callback)));
+    }
   }
 }

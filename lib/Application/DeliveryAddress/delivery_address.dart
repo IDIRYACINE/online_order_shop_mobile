@@ -37,7 +37,7 @@ class DeliveryAddress {
       if (value) {
         Navigator.pop(context);
         Provider.of<NavigationProvider>(context, listen: false)
-            .navigateToDeliveryAddressScreen(context, () {}, replace: false);
+            .navigateToAddressScreen(context, () {}, replace: false);
       }
     });
   }

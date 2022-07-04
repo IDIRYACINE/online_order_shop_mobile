@@ -32,7 +32,9 @@ class AuthenticationHelper {
         .then((value) {
       Provider.of<NavigationProvider>(_context, listen: false)
           .navigateToHomeScreen(_context);
+
       IOrderService orderService = ServicesProvider().orderService;
+
       orderService.subscribeToOrdersStream(
           Provider.of<OrdersProvider>(_context, listen: false));
 
@@ -110,7 +112,7 @@ class AuthenticationHelper {
 
   void setDeliveryAddresse(BuildContext context) {
     Provider.of<NavigationProvider>(context, listen: false)
-        .navigateToDeliveryAddressScreen(context, () => {}, replace: false);
+        .navigateToAddressScreen(context, () => {}, replace: false);
   }
 
   String getFullName() {

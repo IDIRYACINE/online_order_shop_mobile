@@ -16,12 +16,15 @@ class _OrdersScreenState extends State<OrdersScreen> {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    ValueNotifier<int> selectedTabIndex = ValueNotifier<int>(0);
     OrdersProvider ordersProvider = Provider.of<OrdersProvider>(context);
+
+    ValueNotifier<int> selectedTabIndex =
+        ValueNotifier<int>(ordersProvider.selectedTabIndex);
 
     return Padding(
         padding: const EdgeInsets.all(8.0),
         child: DefaultTabController(
+            initialIndex: selectedTabIndex.value,
             length: 3,
             child: Scaffold(
                 body: Column(
@@ -30,6 +33,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                   child: TabBar(
                     onTap: (index) {
                       selectedTabIndex.value = index;
+                      ordersProvider.setSelectedTabIndex(index);
                     },
                     tabs: [
                       Tab(

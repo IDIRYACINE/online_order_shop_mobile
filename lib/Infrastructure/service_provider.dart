@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Authentication/authentication_service.dart';
@@ -56,8 +57,9 @@ class ServicesProvider {
   }
 
   Future<void> _initServerAcess() async {
-    DatabaseReference _databaseReference =
-        FirebaseDatabase(databaseURL: databaseUrl).reference();
+    DatabaseReference _databaseReference = FirebaseDatabase.instanceFor(
+            app: Firebase.app(), databaseURL: databaseUrl)
+        .ref();
 
     _serverAcess =
         FireBaseServices(FirebaseStorage.instance, _databaseReference);

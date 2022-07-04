@@ -55,10 +55,13 @@ const categoryNameLabel = "Nom de Category";
 const productNameLabel = "Nom d'article";
 const productDescriptionLabel = "Description";
 const manage = "Manager";
+const deleteOrderLabel = "Supprimer";
 
 //Settings
 const synchroniseDatabaseTitle = "Synchroniser la base donee";
 const synchroniseDatabaseDescription = "";
+const resetDatabaseTitle = "Reset database";
+const advancedSectionTitle = "Advanced";
 
 //Measures
 const appBarHeight = 100.0;

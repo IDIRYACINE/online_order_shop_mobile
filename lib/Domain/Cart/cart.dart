@@ -1,37 +1,25 @@
 import 'package:online_order_shop_mobile/Domain/Cart/cart_item.dart';
+import 'package:online_order_shop_mobile/Domain/Orders/iorder.dart';
 
 class Cart {
-  static final Cart _cartModel = Cart._();
   final List<CartItem> _products = [];
+  final IOrder _order;
 
-  factory Cart() {
-    return _cartModel;
-  }
-
-  Cart._();
+  Cart(this._order);
 
   void addProduct({required CartItem product}) {
     _products.add(product);
   }
 
-  void clearCart() {
-    _products.clear();
-  }
-
   double getTotalPrice() {
-    double totalPrice = 0;
-    int productsCount = getProductsCount();
-    for (int i = 0; i < productsCount; i++) {
-      totalPrice += _products[i].getPrice();
-    }
-    return totalPrice;
+    return _order.getTotalPrice();
   }
 
   int getProductsCount() {
-    return _products.length;
+    return _order.getItemsCount();
   }
 
   CartItem getProduct({required int productId}) {
-    return _products[productId];
+    return _order.getItem(productId);
   }
 }

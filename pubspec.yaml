@@ -32,20 +32,20 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  firebase_core: ^1.8.0
+  firebase_core: ^1.11.0
   firebase_storage: ^10.0.6
-  firebase_database: ^7.1.1
+  firebase_database: ^9.0.7
   sqflite: ^2.0.0+4
   path_provider: ^2.0.4
   provider: ^6.0.1
   get: ^4.3.8
   cupertino_icons: ^1.0.2
   firebase_auth: ^3.2.0
-  flutter_facebook_auth: ^3.5.6
+  flutter_facebook_auth: ^4.3.4+2
   cloud_firestore: ^3.1.0
   http: ^0.13.4
   geolocator: ^8.0.5
-  flutter_map: ^0.14.0
+  flutter_map: ^1.1.1
   latlong2: ^0.8.1
   image_picker: ^0.8.5+3
 

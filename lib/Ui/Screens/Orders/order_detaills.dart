@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:online_order_shop_mobile/Application/Authentication/authentication_helper.dart';
+import 'package:online_order_shop_mobile/Application/Cart/cart_helper.dart';
 import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
+import 'package:online_order_shop_mobile/Application/Providers/navigation_provider.dart';
+import 'package:online_order_shop_mobile/Domain/Cart/cart.dart';
 import 'package:online_order_shop_mobile/Domain/Orders/iorder.dart';
 import 'package:online_order_shop_mobile/Ui/Components/cards.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
@@ -25,15 +28,17 @@ class OrderDetaillsScreen extends StatefulWidget {
 class _OrderDetaillsScreentState extends State<OrderDetaillsScreen> {
   @override
   Widget build(BuildContext context) {
-    AuthenticationHelper _authHelper =
-        Provider.of<HelpersProvider>(context, listen: false).authHelper;
+    NavigationProvider navigationProvider =
+        Provider.of<NavigationProvider>(context, listen: false);
+
+    CartHelper cartHelper =
+        Provider.of<HelpersProvider>(context, listen: false).cartHelper;
 
     ThemeData theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: theme.colorScheme.surface,
         title:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Card(
@@ -45,9 +50,8 @@ class _OrderDetaillsScreentState extends State<OrderDetaillsScreen> {
                   },
                   icon: Icon(
                     Icons.arrow_back_ios,
-                    color: theme.colorScheme.primary,
+                    color: theme.colorScheme.secondaryVariant,
                   ))),
-          Text(profileTitle, style: theme.textTheme.headline2),
         ]),
       ),
       body: Padding(
@@ -69,6 +73,15 @@ class _OrderDetaillsScreentState extends State<OrderDetaillsScreen> {
               Padding(
                 padding: EdgeInsets.all(widget.cardsPadding),
                 child: InformationCard(
+                  label: phoneLabel,
+                  initialValue: widget.order.getPhoneNumber(),
+                  onPressed: () {},
+                  onChangeConfirm: (String value) {},
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(widget.cardsPadding),
+                child: InformationCard(
                   label: emailLabel,
                   initialValue: widget.order.getEmail(),
                   onPressed: () {},
@@ -80,26 +93,23 @@ class _OrderDetaillsScreentState extends State<OrderDetaillsScreen> {
                 child: InformationCard(
                   label: addressLabel,
                   initialValue: widget.order.getAddress(),
-                  onPressed: () {},
+                  onPressed: () {
+                    navigationProvider.navigateToDeliveryAddressScreen(context,
+                        latitude: widget.order.getLatitude(),
+                        longitude: widget.order.getLongitude());
+                  },
                   onChangeConfirm: (String value) {},
                 ),
               ),
-              Padding(
-                  padding: EdgeInsets.all(widget.cardsPadding),
-                  child: InformationCard(
-                    label: addressLabel,
-                    initialValue: _authHelper.getAddress(),
-                    onPressed: () {
-                      _authHelper.setDeliveryAddresse(context);
-                    },
-                    onChangeConfirm: (value) {},
-                  )),
               Padding(
                 padding: EdgeInsets.all(widget.cardsPadding),
                 child: InformationCard(
                   label: cartItemsCountLabel,
                   initialValue: widget.order.getItemsCount().toString(),
-                  onPressed: () {},
+                  onPressed: () {
+                    navigationProvider.navigateToCart(
+                        context, Cart(widget.order));
+                  },
                   onChangeConfirm: (String value) {},
                 ),
               ),
@@ -119,25 +129,3 @@ class _OrderDetaillsScreentState extends State<OrderDetaillsScreen> {
     );
   }
 }
-
-
-/*
-Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            widget.title,
-            style: TextStyle(
-                fontSize: textSizeMeduim,
-                color: color,
-                fontWeight: FontWeight.bold),
-          ),
-          if (widget.description != null)
-            Text(
-              widget.description!,
-              style: theme.textTheme.subtitle2,
-            )
-        ],
-      ))
-*/      

@@ -33,7 +33,7 @@ class HelpersProvider with ChangeNotifier {
 
       await _catalogueHelper.initCategories();
 
-      _cartHelper = CartHelper(Cart(), notifyListeners);
+      _cartHelper = CartHelper(notifyListeners);
       await _initProfile();
 
       await services.permissionsService.requestGpsPermission();

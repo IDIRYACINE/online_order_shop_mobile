@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/services.dart';
 import 'package:online_order_shop_mobile/Domain/Orders/iorder.dart';
 import 'package:online_order_shop_mobile/Domain/Orders/order.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Server/ionline_data_service.dart';
@@ -10,8 +9,6 @@ import 'package:online_order_shop_mobile/Infrastructure/Orders/iorder_subscriber
 import 'dart:developer' as dev;
 
 class OrderService implements IOrderService {
-  static const _orderStatusChannelName = "online_order_client/order_status";
-
   StreamSubscription? _ordersStatusSubscription;
 
   StreamSubscription? _ordersSubscription;
@@ -19,17 +16,6 @@ class OrderService implements IOrderService {
   final Map<String, IOrderSubscriber> _ordersSubscribers = {};
 
   final IOnlineServerAcess _serverAcess;
-
-  final EventChannel _orderStatusChannel =
-      const EventChannel(_orderStatusChannelName);
-
-  /// Defining Method Channel and it's functions
-  static const _controlsChannelName = "online_order_client/controls";
-
-  static const _listenToOrderStatusMethod = "listenToOrderStatus";
-
-  final MethodChannel _controlsChannel =
-      const MethodChannel(_controlsChannelName);
 
   OrderService(this._serverAcess);
 
@@ -46,7 +32,11 @@ class OrderService implements IOrderService {
 
   @override
   void updateOrderStatus(String status, String orderId) {
-    _serverAcess.postData(dataUrl: 'OrdersStatus/$orderId', data: status);
+    _serverAcess.postData(
+        dataUrl: 'OrdersStatus/$orderId/status', data: status);
+    _ordersSubscribers.forEach((key, subscriber) {
+      subscriber.notifyOrderStatusChange(orderId, status);
+    });
   }
 
   @override
@@ -54,9 +44,14 @@ class OrderService implements IOrderService {
     // userId/status
     _ordersStatusSubscription ??=
         _serverAcess.getDataStream(dataUrl: "OrdersStatus").listen((event) {
-      dynamic orderStatus = event.snapshot.value;
+      if (_ordersSubscribers.isEmpty) {
+        return;
+      }
 
-      if (event.previousSiblingKey != null) {
+      Map<String, dynamic> orderStatus =
+          Map.from(json.decode(json.encode(event.snapshot.value)));
+
+      if (event.previousChildKey != null) {
         _ordersSubscribers.forEach((key, subscriber) {
           subscriber.notifyOrderStatusChange(
               event.snapshot.key!, orderStatus["status"]);
@@ -69,11 +64,15 @@ class OrderService implements IOrderService {
   void listenToOrderStreamOnServer() {
     _ordersStatusSubscription ??=
         _serverAcess.getDataStream(dataUrl: "Orders").listen((event) {
-      dynamic orders = event.snapshot.value;
-      dev.log(event.snapshot.value.runtimeType.toString());
+      if (_ordersSubscribers.isEmpty) {
+        return;
+      }
+      Map<String, dynamic> orders =
+          Map.from(json.decode(json.encode(event.snapshot.value)));
+
       _ordersSubscribers.forEach((key, subscriber) {
         orders.forEach((key, orderMap) {
-          mapSnapshotToOrder(orderMap).then((order) {
+          mapSnapshotToOrder(key, orderMap).then((order) {
             subscriber.notifyNewOrder(order);
           });
         });
@@ -84,6 +83,9 @@ class OrderService implements IOrderService {
   @override
   void deleteOrder(String orderId) {
     _serverAcess.removeData(dataUrl: "Orders/$orderId");
+    _ordersSubscribers.forEach((key, subscriber) {
+      subscriber.notifyDeleteOrder(orderId);
+    });
   }
 
   @override
@@ -102,20 +104,18 @@ class OrderService implements IOrderService {
 
   @override
   Future<void> onFirstConnect() async {
-    _serverAcess.fetchData(dataUrl: "Orders").then((orderMap) {
-      _ordersSubscribers.forEach((key, subscriber) {
-        mapSnapshotToOrder(orderMap)
-            .then((order) => subscriber.notifyNewOrder(order));
-      });
-    });
+    listenToOrderStatusStreamOnServer();
+    listenToOrderStreamOnServer();
   }
 
-  Future<IOrder> mapSnapshotToOrder(dynamic jsonMap) async {
-    Map<String, dynamic> map = Map.from(json.decode(jsonMap.toString()));
-
-    //String orderId = jsonMap.entries;
-    map["status"] = "waiting";
-    //_serverAcess.fetchData(dataUrl: "OrderStatus/$orderId").then((status) {});
+  Future<IOrder> mapSnapshotToOrder(
+      String orderId, Map<String, dynamic> map) async {
+    await _serverAcess
+        .fetchData(dataUrl: "OrderStatus/$orderId")
+        .then((status) {
+      map["status"] = status;
+      map["id"] = orderId;
+    });
 
     return Order(map);
   }
