@@ -41,8 +41,8 @@ class _SizePriceManagerScreenState extends State<SizePriceManagerScreen> {
         children: [
           Expanded(
             child: SizePriceListView(
-              price: widget.product.getPriceList(),
-              size: widget.product.getSizeList(),
+              prices: widget.product.getPriceList(),
+              sizes: widget.product.getSizeList(),
             ),
           ),
         ],

@@ -1,25 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:online_order_shop_mobile/Ui/Components/dialogs.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
 
 class SizePriceListView extends StatefulWidget {
-  final List<String> size;
-  final List<double> price;
+  final List<String> sizes;
+  final List<double> prices;
 
   void removeElement(int index) {
-    size.removeAt(index);
-    price.removeAt(index);
+    sizes.removeAt(index);
+    prices.removeAt(index);
   }
 
-  void addElement() {
-    size.add("Default");
-    price.add(0);
+  void addElement(String size, String price) {
+    sizes.add(size);
+    prices.add(double.parse(price));
   }
 
-  const SizePriceListView({Key? key, required this.size, required this.price})
+  const SizePriceListView({Key? key, required this.sizes, required this.prices})
       : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _SizePriceListViewState();
+
+  void updateForm(int index, String size, String price) {
+    sizes[index] = size;
+    prices[index] = double.parse(price);
+  }
 }
 
 class _SizePriceListViewState extends State<SizePriceListView> {
@@ -43,9 +49,18 @@ class _SizePriceListViewState extends State<SizePriceListView> {
               IconButton(
                 icon: const Icon(Icons.add_circle_outline),
                 onPressed: () {
-                  setState(() {
-                    widget.addElement();
-                  });
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return SizePriceAlertDialog(
+                          onConfirm: (String size, String price) {
+                            setState(() {
+                              widget.addElement(size, price);
+                            });
+                          },
+                          formKey: GlobalKey<FormState>(),
+                        );
+                      });
                 },
               )
             ],
@@ -54,15 +69,20 @@ class _SizePriceListViewState extends State<SizePriceListView> {
           Expanded(
             child: ListView.separated(
               scrollDirection: Axis.vertical,
-              itemCount: widget.price.length,
+              itemCount: widget.prices.length,
               itemBuilder: (context, index) {
                 return _SizePriceForm(
                   index: index,
-                  size: widget.size[index],
-                  price: widget.price[index],
+                  size: widget.sizes[index],
+                  price: widget.prices[index],
                   removeForm: () {
                     setState(() {
                       widget.removeElement(index);
+                    });
+                  },
+                  updateForm: (index, size, price) {
+                    setState(() {
+                      widget.updateForm(index, size, price);
                     });
                   },
                 );
@@ -78,18 +98,22 @@ class _SizePriceListViewState extends State<SizePriceListView> {
   }
 }
 
+typedef SizePriceCallback = void Function(int index, String size, String price);
+
 class _SizePriceForm extends StatefulWidget {
   final String size;
   final double price;
   final int index;
   final VoidCallback removeForm;
+  final SizePriceCallback updateForm;
 
   const _SizePriceForm(
       {Key? key,
       this.size = "",
       this.price = 0,
       required this.index,
-      required this.removeForm})
+      required this.removeForm,
+      required this.updateForm})
       : super(key: key);
 
   @override
@@ -106,32 +130,44 @@ class _SizePriceFormState extends State<_SizePriceForm> {
     size = widget.size;
     price = widget.price;
 
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Expanded(
-            child: InkResponse(
-          child: Text(
-            size,
-            style: theme.textTheme.bodyText1,
-          ),
-          onTap: () {},
-        )),
-        Expanded(
-            child: InkResponse(
-          child: Text(
-            '${price.toString()} $labelCurrency',
-            style: theme.textTheme.bodyText1,
-          ),
-          onTap: () {},
-        )),
-        Flexible(
-            child: IconButton(
-          icon: const Icon(Icons.remove_circle_outline),
-          onPressed: widget.removeForm,
-        )),
-      ],
+    return InkResponse(
+      onTap: () {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return SizePriceAlertDialog(
+                initialPriceValue: price.toString(),
+                initialSizeValue: size,
+                onConfirm: (String size, String price) {
+                  widget.updateForm(widget.index, size, price);
+                },
+                formKey: GlobalKey<FormState>(),
+              );
+            });
+      },
+      child: Card(
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Expanded(
+                child: Text(
+              size,
+              style: theme.textTheme.bodyText1,
+            )),
+            Expanded(
+                child: Text(
+              '${price.toString()} $labelCurrency',
+              style: theme.textTheme.bodyText1,
+            )),
+            Flexible(
+                child: IconButton(
+              icon: const Icon(Icons.remove_circle_outline),
+              onPressed: widget.removeForm,
+            )),
+          ],
+        ),
+      ),
     );
   }
 }

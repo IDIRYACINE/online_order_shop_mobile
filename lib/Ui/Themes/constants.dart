@@ -58,10 +58,12 @@ const manage = "Manager";
 const deleteOrderLabel = "Supprimer";
 
 //Settings
-const synchroniseDatabaseTitle = "Synchroniser la base donee";
+const synchroniseDatabaseTitle = "Synchroniser la base de données";
 const synchroniseDatabaseDescription = "";
-const resetDatabaseTitle = "Reset database";
-const advancedSectionTitle = "Advanced";
+const resetDatabaseTitle = "Réinitialiser la base de données";
+const advancedSectionTitle = "Avancée";
+const priceLabel = "Prix";
+const sizeLabel = "Taille";
 
 //Measures
 const appBarHeight = 100.0;

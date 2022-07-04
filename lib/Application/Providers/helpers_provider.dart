@@ -5,7 +5,6 @@ import 'package:online_order_shop_mobile/Application/Authentication/authenticati
 import 'package:online_order_shop_mobile/Application/Cart/cart_helper.dart';
 import 'package:online_order_shop_mobile/Application/Catalogue/catalogue_helper.dart';
 import 'package:online_order_shop_mobile/Application/DeliveryAddress/delivery_address.dart';
-import 'package:online_order_shop_mobile/Domain/Cart/cart.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/catalogue_model.dart';
 import 'package:online_order_shop_mobile/Domain/Profile/profile_model.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Exceptions/server_exceptions.dart';

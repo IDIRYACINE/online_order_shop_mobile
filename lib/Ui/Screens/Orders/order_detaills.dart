@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:online_order_shop_mobile/Application/Authentication/authentication_helper.dart';
-import 'package:online_order_shop_mobile/Application/Cart/cart_helper.dart';
-import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
 import 'package:online_order_shop_mobile/Application/Providers/navigation_provider.dart';
 import 'package:online_order_shop_mobile/Domain/Cart/cart.dart';
 import 'package:online_order_shop_mobile/Domain/Orders/iorder.dart';
@@ -30,9 +27,6 @@ class _OrderDetaillsScreentState extends State<OrderDetaillsScreen> {
   Widget build(BuildContext context) {
     NavigationProvider navigationProvider =
         Provider.of<NavigationProvider>(context, listen: false);
-
-    CartHelper cartHelper =
-        Provider.of<HelpersProvider>(context, listen: false).cartHelper;
 
     ThemeData theme = Theme.of(context);
 

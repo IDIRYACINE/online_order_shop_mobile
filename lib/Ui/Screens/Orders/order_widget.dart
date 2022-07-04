@@ -3,7 +3,6 @@ import 'package:online_order_shop_mobile/Application/Providers/navigation_provid
 import 'package:online_order_shop_mobile/Domain/Orders/iorder.dart';
 import 'package:online_order_shop_mobile/Domain/Orders/order_status.dart';
 import 'package:online_order_shop_mobile/Infrastructure/service_provider.dart';
-import 'package:online_order_shop_mobile/Ui/Components/buttons.dart';
 import 'package:online_order_shop_mobile/Ui/Components/dialogs.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
 import 'package:provider/provider.dart';
@@ -45,12 +44,18 @@ class _OrderWidgetState extends State<OrderWidget> {
       child: Card(
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Flexible(
-            child: Text(widget.order.getCustomerName()),
+          Expanded(
+            child: Padding(
+                padding: const EdgeInsets.only(left: 4.00),
+                child: Text(widget.order.getCustomerName())),
           ),
           Expanded(
             child: TextButton(
-              child: const Text(deleteOrderLabel),
+              child: Text(
+                deleteOrderLabel,
+                style: TextStyle(
+                    color: theme.colorScheme.error, fontSize: textSizeMeduim2),
+              ),
               onPressed: () {
                 ServicesProvider()
                     .orderService
@@ -75,24 +80,3 @@ class _OrderWidgetState extends State<OrderWidget> {
     );
   }
 }
-
-/*
-Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            widget.title,
-            style: TextStyle(
-                fontSize: textSizeMeduim,
-                color: color,
-                fontWeight: FontWeight.bold),
-          ),
-          if (widget.description != null)
-            Text(
-              widget.description!,
-              style: theme.textTheme.subtitle2,
-            )
-        ],
-      ))
-*/      

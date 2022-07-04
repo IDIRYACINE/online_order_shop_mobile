@@ -84,14 +84,6 @@ class AuthenticationHelper {
     ServicesProvider().orderService.cancelAllSubscribtions();
   }
 
-  void _updateProfile(String fullName, String phone, String email) {
-    _profile.setEmail(email: email);
-    _profile.setFullName(fullName: fullName);
-
-    _profile.setPhoneNumber(number: phone);
-    _profile.saveProfile();
-  }
-
   Future<void> isLoggedIn(BuildContext context) async {
     if (_authService.accountIsActive()) {
       Provider.of<NavigationProvider>(context, listen: false)

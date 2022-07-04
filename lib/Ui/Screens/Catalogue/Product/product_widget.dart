@@ -56,7 +56,7 @@ class ProductWidget extends StatelessWidget {
                     child: Align(
                       alignment: AlignmentDirectional.centerEnd,
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 4.0, right: 4.0),
+                        padding: const EdgeInsets.only(left: 4.0, right: 8.0),
                         child: Text(product.getName(),
                             style: theme.textTheme.bodyText1),
                       ),
@@ -67,7 +67,7 @@ class ProductWidget extends StatelessWidget {
                     child: Align(
                       alignment: AlignmentDirectional.bottomEnd,
                       child: Padding(
-                        padding: const EdgeInsets.only(right: 4.0, bottom: 8.0),
+                        padding: const EdgeInsets.only(right: 8.0, bottom: 8.0),
                         child: Text(
                           '${product.getPrice().toString()} $labelCurrency',
                           style: theme.textTheme.bodyText1,

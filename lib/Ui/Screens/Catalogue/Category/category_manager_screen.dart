@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:online_order_shop_mobile/Application/Catalogue/catalogue_helper.dart';
 import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/category_model.dart';
+import 'package:online_order_shop_mobile/Infrastructure/Server/ionline_data_service.dart';
 import 'package:online_order_shop_mobile/Infrastructure/service_provider.dart';
+import 'package:online_order_shop_mobile/Ui/Components/cards.dart';
 import 'package:online_order_shop_mobile/Ui/Components/forms.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
 import 'package:provider/provider.dart';
@@ -21,16 +23,27 @@ class CategoryManagerScreen extends StatefulWidget {
 class _CategoryManagerScreenState extends State<CategoryManagerScreen> {
   late Category category;
   late CatalogueHelper catalogueHelper;
+  late ValueNotifier<String> imageUrl;
+  bool imageChanged = false;
 
   void saveChanges() {
+    IOnlineServerAcess server = ServicesProvider().serverAcessService;
+
     if (widget.editMode) {
       category.transfer(widget.category!);
       catalogueHelper.updateCategory(category);
-      ServicesProvider().serverAcessService.addFileToUploadQueue(
-          fileUrl: category.getImageUrl(), savePath: category.getId());
+
+      if (imageChanged) {
+        server.uploadFile(
+            fileUrl: category.getImageUrl(), savePath: category.getId());
+      }
       return;
     }
     catalogueHelper.createCategory(category);
+    if (imageChanged) {
+      server.uploadFile(
+          fileUrl: category.getImageUrl(), savePath: category.getName());
+    }
   }
 
   void setup() {
@@ -41,9 +54,12 @@ class _CategoryManagerScreenState extends State<CategoryManagerScreen> {
         productsCount: 0,
         imageUrl: uploadImageUrl,
       );
+      imageUrl = ValueNotifier('');
+
       return;
     }
     category = Category.from(widget.category!);
+    imageUrl = ValueNotifier(category.getImageUrl());
   }
 
   Future<void> browseImage() async {
@@ -52,15 +68,19 @@ class _CategoryManagerScreenState extends State<CategoryManagerScreen> {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       category.setImageUrl(image.path);
+      imageUrl.value = category.getImageUrl();
     }
   }
 
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
+
     catalogueHelper =
         Provider.of<HelpersProvider>(context, listen: false).catalogueHelper;
+
     setup();
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -92,24 +112,34 @@ class _CategoryManagerScreenState extends State<CategoryManagerScreen> {
           ),
         ]),
       ),
-      body: Column(
-        children: [
-          Flexible(
-              child: InkResponse(
-            onTap: browseImage,
-            child: FaultTolerantImage(
-              category.getImageUrl(),
-              backupImage: uploadImageUrl,
-              fit: BoxFit.fill,
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Flexible(
+                child: InkResponse(
+              onTap: browseImage,
+              child: ValueListenableBuilder<String>(
+                valueListenable: imageUrl,
+                builder: (context, value, child) {
+                  return FaultTolerantImage(
+                    category.getImageUrl(),
+                    backupImage: uploadImageUrl,
+                    fit: BoxFit.fill,
+                  );
+                },
+              ),
+            )),
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: InformationCard(
+                label: categoryNameLabel,
+                initialValue: category.getName(),
+                onChangeConfirm: (value) {},
+              ),
             ),
-          )),
-          Flexible(
-              child: CustomTextFormField(
-            label: categoryNameLabel,
-            initialValue: category.getName(),
-            onChange: (value) {},
-          )),
-        ],
+          ],
+        ),
       ),
     );
   }

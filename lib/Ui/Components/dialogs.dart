@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:online_order_shop_mobile/Ui/Components/buttons.dart';
 import 'package:online_order_shop_mobile/Ui/Components/forms.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
 
@@ -25,9 +24,13 @@ class TextFieldAlertDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String temp = "";
+    ThemeData theme = Theme.of(context);
 
     return AlertDialog(
-      title: Text(label),
+      title: Text(
+        label,
+        style: theme.textTheme.bodyText1,
+      ),
       content: Form(
           key: formKey,
           child: SingleChildScrollView(
@@ -52,13 +55,16 @@ class TextFieldAlertDialog extends StatelessWidget {
                             Navigator.of(context).pop();
                           },
                           child: const Text(cancelLabel)),
-                      DefaultButton(
+                      TextButton(
                           onPressed: () {
                             if (formKey.currentState!.validate()) {
                               onConfirm(temp);
                             }
                           },
-                          text: confirmLabel),
+                          child: Text(
+                            confirmLabel,
+                            style: theme.textTheme.overline,
+                          )),
                     ],
                   ),
                 ),
@@ -129,38 +135,138 @@ class _SpinnerAlertDialogState<T> extends State<SpinnerAlertDialog> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
     return AlertDialog(
         content: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               mainAxisSize: MainAxisSize.min,
               children: [
-                DropdownButton<String>(
-                  value: dropDownValue,
-                  items: [
-                    for (String element in widget.data)
-                      DropdownMenuItem(
-                          value: element, child: Text(element.toString()))
-                  ],
-                  onChanged: onItemSelected,
+                Flexible(
+                  child: DropdownButton<String>(
+                    value: dropDownValue,
+                    isExpanded: true,
+                    items: [
+                      for (String element in widget.data)
+                        DropdownMenuItem(
+                            value: element, child: Text(element.toString()))
+                    ],
+                    onChanged: onItemSelected,
+                  ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text(cancelLabel)),
-                    DefaultButton(
-                        onPressed: () {
-                          widget.onConfirm(dropDownValue);
-                          Navigator.pop(context);
-                        },
-                        text: confirmLabel),
-                  ],
-                )
+                const SizedBox(
+                  height: 10,
+                ),
+                Flexible(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text(
+                            cancelLabel,
+                            style: TextStyle(fontSize: textSizeMeduim2),
+                          )),
+                      TextButton(
+                          onPressed: () {
+                            widget.onConfirm(dropDownValue);
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            confirmLabel,
+                            style: TextStyle(
+                                color: theme.colorScheme.secondaryVariant,
+                                fontSize: textSizeMeduim2),
+                          )),
+                    ],
+                  ),
+                ),
               ],
             )));
+  }
+}
+
+typedef DoubleTextFieldAlertCallback = void Function(
+    String firstValue, String secondValue);
+
+class SizePriceAlertDialog extends StatefulWidget {
+  final GlobalKey<FormState> formKey;
+  final FormFieldValidator? validator;
+  final DoubleTextFieldAlertCallback onConfirm;
+  final String initialPriceValue;
+  final String initialSizeValue;
+
+  const SizePriceAlertDialog(
+      {Key? key,
+      required this.formKey,
+      this.validator,
+      required this.onConfirm,
+      this.initialPriceValue = "0",
+      this.initialSizeValue = "Standard"})
+      : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _SizePriceAlertDialogState();
+}
+
+class _SizePriceAlertDialogState extends State<SizePriceAlertDialog> {
+  @override
+  Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+    String size = widget.initialSizeValue;
+    String price = widget.initialPriceValue;
+
+    return AlertDialog(
+      content: Form(
+        key: widget.formKey,
+        child: SingleChildScrollView(
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            Flexible(
+              child: CustomTextFormField(
+                label: sizeLabel,
+                onChange: (value) {
+                  size = value;
+                },
+                initialValue: size,
+                validator: widget.validator,
+              ),
+            ),
+            Flexible(
+              child: CustomTextFormField(
+                label: priceLabel,
+                onChange: (value) {
+                  price = value;
+                },
+                initialValue: price,
+                validator: widget.validator,
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text(cancelLabel)),
+                TextButton(
+                    onPressed: () {
+                      if (widget.formKey.currentState!.validate()) {
+                        widget.onConfirm(size, price);
+                      }
+                    },
+                    child: Text(
+                      confirmLabel,
+                      style: theme.textTheme.overline,
+                    )),
+              ],
+            ),
+          ]),
+        ),
+      ),
+    );
   }
 }

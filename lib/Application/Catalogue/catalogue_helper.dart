@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/catalogue_model.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/category_model.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/product_model.dart';
-import 'package:online_order_shop_mobile/Ui/Screens/Catalogue/product_widget.dart';
+import 'package:online_order_shop_mobile/Ui/Screens/Catalogue/Product/product_widget.dart';
 
 class CatalogueHelper {
   final CatalogueModel _catalogueModel;
@@ -40,7 +40,7 @@ class CatalogueHelper {
   }
 
   final BoxConstraints _defaultProductWidgetConstraints =
-      const BoxConstraints(minHeight: 200, maxHeight: 400);
+      const BoxConstraints(minHeight: 100, maxHeight: 150);
 
   Widget productWidgetBuilder(BuildContext context, int productIndex,
       [BoxConstraints? productConstraints]) {

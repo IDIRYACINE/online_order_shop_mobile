@@ -6,7 +6,6 @@ import 'package:online_order_shop_mobile/Domain/Orders/order.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Server/ionline_data_service.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Orders/iorder_service.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Orders/iorder_subscriber.dart';
-import 'dart:developer' as dev;
 
 class OrderService implements IOrderService {
   StreamSubscription? _ordersStatusSubscription;

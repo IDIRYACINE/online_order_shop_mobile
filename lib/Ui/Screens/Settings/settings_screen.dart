@@ -16,11 +16,11 @@ class _SettingsState extends State<SettingsScreen> {
 
     return SingleChildScrollView(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.max,
-        children: [
-          Text(advancedSectionTitle, style: theme.textTheme.bodyText1),
-          const SettingRow(title: synchroniseDatabaseTitle),
-          const SettingRow(
+        children: const [
+          SettingRow(title: synchroniseDatabaseTitle),
+          SettingRow(
             title: resetDatabaseTitle,
             divider: false,
           )

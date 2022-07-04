@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:online_order_shop_mobile/Application/Catalogue/catalogue_helper.dart';
 import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
 import 'package:online_order_shop_mobile/Application/Providers/navigation_provider.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/category_model.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/optional_item.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/product_model.dart';
+import 'package:online_order_shop_mobile/Infrastructure/Server/ionline_data_service.dart';
+import 'package:online_order_shop_mobile/Infrastructure/service_provider.dart';
+import 'package:online_order_shop_mobile/Ui/Components/cards.dart';
 import 'package:online_order_shop_mobile/Ui/Components/forms.dart';
 import 'package:online_order_shop_mobile/Ui/Components/product_components.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
@@ -22,7 +26,7 @@ class ProductsScreen extends StatefulWidget {
   final int productDescriptionMaxLines = 2;
 
   final int imageFlex = 1;
-  final int productFlex = 2;
+  final int productFlex = 1;
 
   final int productNameFlex = 1;
   final int productPriceFlex = 1;
@@ -39,16 +43,28 @@ class ProductsScreen extends StatefulWidget {
 class _ProductsScreenState extends State<ProductsScreen> {
   late ThemeData theme;
   late Product product;
+  bool imageChanged = false;
   late NavigationProvider navigationProvider;
   late CatalogueHelper catalogueHelper;
+  late ValueNotifier<String> imageUrl;
 
   void saveChanges() {
+    IOnlineServerAcess server = ServicesProvider().serverAcessService;
+
     if (widget.editMode) {
       product.transfer(widget.product);
       catalogueHelper.updateProduct(widget.category, product);
+      if (imageChanged) {
+        server.uploadFile(
+            fileUrl: product.getImageUrl(),
+            savePath: product.getId().toString());
+      }
       return;
     }
     catalogueHelper.createProduct(widget.category, product);
+
+    server.uploadFile(
+        fileUrl: product.getImageUrl(), savePath: product.getName());
   }
 
   void setup(BuildContext context) {
@@ -62,9 +78,22 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
     if (widget.editMode) {
       product = widget.product;
+      imageUrl = ValueNotifier(product.getImageUrl());
       return;
     }
+
     product = Product("", "", "", [], []);
+    imageUrl = ValueNotifier("");
+  }
+
+  Future<void> browseImage() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      product.setImageUrl(image.path);
+      imageUrl.value = product.getImageUrl();
+    }
   }
 
   ValueNotifier<int> currentSizeIndex = ValueNotifier(0);
@@ -130,11 +159,16 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   flex: widget.imageFlex,
                   child: InkResponse(
                     onTap: () {},
-                    child: FaultTolerantImage(
-                      product.getImageUrl(),
-                      backupImage: 'assets/images/no-preview-available.png',
-                      width: double.infinity,
-                      fit: BoxFit.fill,
+                    child: ValueListenableBuilder<String>(
+                      valueListenable: imageUrl,
+                      builder: (context, value, child) {
+                        return FaultTolerantImage(
+                          product.getImageUrl(),
+                          backupImage: 'assets/images/upload.png',
+                          width: double.infinity,
+                          fit: BoxFit.fill,
+                        );
+                      },
                     ),
                   )),
               Expanded(
@@ -153,13 +187,14 @@ class _ProductsScreenState extends State<ProductsScreen> {
                           ),
                         ],
                       )),
-                      Flexible(
-                          child: CustomTextFormField(
-                              label: productNameLabel, onChange: (value) {})),
-                      Flexible(
-                          child: CustomTextFormField(
-                              label: productDescriptionLabel,
-                              onChange: (value) {})),
+                      InformationCard(
+                          label: productNameLabel,
+                          initialValue: product.getName(),
+                          onChangeConfirm: product.setName),
+                      InformationCard(
+                          label: productDescriptionLabel,
+                          initialValue: product.getDescription(),
+                          onChangeConfirm: product.setDescription),
                       Flexible(
                           child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

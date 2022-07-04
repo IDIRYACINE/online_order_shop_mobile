@@ -44,6 +44,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
     return Padding(
         padding: widget.paddings ?? const EdgeInsets.all(8),
         child: TextFormField(
+          style: theme.textTheme.bodyText1,
           decoration: InputDecoration(
               filled: true,
               fillColor: widget.textFieldColor ?? theme.scaffoldBackgroundColor,

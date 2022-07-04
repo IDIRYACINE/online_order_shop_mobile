@@ -15,7 +15,7 @@ class SettingRow extends StatelessWidget {
       this.onRowClick,
       this.trailing,
       this.leading,
-      this.divider = true})
+      this.divider = false})
       : super(key: key);
 
   @override
@@ -23,23 +23,27 @@ class SettingRow extends StatelessWidget {
     ThemeData theme = Theme.of(context);
     return InkResponse(
       onTap: onRowClick,
-      child: Card(
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 100),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Card(
+            elevation: 8,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (leading != null) Flexible(child: leading!),
-                Column(children: [
-                  Text(title, style: theme.textTheme.bodyText1),
-                  if (description != null)
-                    Text(description!, style: theme.textTheme.bodyText2)
-                ]),
+                Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(title, style: theme.textTheme.headline2),
+                      if (description != null)
+                        Text(description!, style: theme.textTheme.bodyText1)
+                    ]),
                 if (trailing != null) trailing!,
               ],
             ),
-            if (divider) const Divider()
-          ],
+          ),
         ),
       ),
     );
