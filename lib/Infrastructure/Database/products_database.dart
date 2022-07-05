@@ -178,7 +178,6 @@ class ProductsDatabase implements IProductsDatabase {
   @override
   Future<void> reset() async {
     File databaseFile = await _getLocalDatabaseFile();
-
     try {
       int databaseVersion = await _serverAccess.fetchData(dataUrl: 'version');
 

@@ -66,8 +66,11 @@ class ProductWidget extends StatelessWidget {
                     alignment: AlignmentDirectional.centerEnd,
                     child: Padding(
                       padding: const EdgeInsets.only(left: 4.0, right: 8.0),
-                      child: Text(product.getName(),
-                          style: theme.textTheme.bodyText1),
+                      child: ValueListenableBuilder<String>(
+                          valueListenable: product.getNameObserver(),
+                          builder: (context, name, child) {
+                            return Text(name, style: theme.textTheme.bodyText1);
+                          }),
                     ),
                   ),
                 ),

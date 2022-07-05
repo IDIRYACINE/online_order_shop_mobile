@@ -27,6 +27,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
   late CartHelper cartHelper;
   late CategoryManagerHelper categoryManagerHelper;
   late ThemeData theme;
+
   bool init = false;
 
   void setup() {
@@ -74,12 +75,21 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(widget.category.getName(),
-                        style: theme.textTheme.bodyText1),
+                    ValueListenableBuilder<String>(
+                        valueListenable: widget.category.getNameObserver(),
+                        builder: (context, name, child) {
+                          return Text(name, style: theme.textTheme.bodyText1);
+                        }),
                     const SizedBox(height: 4.00),
-                    Text(
-                      'Articles : ${widget.category.getProductCount().toString()}',
-                      style: theme.textTheme.bodyText2,
+                    ValueListenableBuilder<int>(
+                      valueListenable:
+                          widget.category.getProductCountObserver(),
+                      builder: (context, count, child) {
+                        return Text(
+                          'Articles : ${count.toString()}',
+                          style: theme.textTheme.bodyText2,
+                        );
+                      },
                     )
                   ],
                 ),

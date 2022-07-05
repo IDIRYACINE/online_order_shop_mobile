@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:online_order_shop_mobile/Domain/Cart/cart.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/product_model.dart';
 import 'package:online_order_shop_mobile/Domain/Orders/iorder.dart';
@@ -15,6 +16,7 @@ import 'package:online_order_shop_mobile/Ui/Screens/Orders/order_detaills.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Orders/orders_screen.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Profile/profile_screen.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Settings/settings_screen.dart';
+import 'package:online_order_shop_mobile/Ui/Screens/SplashScreen/reboot_screen.dart';
 import 'package:online_order_shop_mobile/home_screen.dart';
 
 class NavigationProvider with ChangeNotifier {
@@ -24,10 +26,18 @@ class NavigationProvider with ChangeNotifier {
     const OrdersScreen()
   ];
 
+  Widget? _homeScreen;
+
   int _screenIndex = 1;
   int _iconIndex = 0;
 
   NavigationProvider();
+
+  Widget getHomeScreen() {
+    _homeScreen ??= const HomeScreen();
+
+    return _homeScreen!;
+  }
 
   Widget getScreen() => _screens[_screenIndex];
 
@@ -83,6 +93,15 @@ class NavigationProvider with ChangeNotifier {
   void navigateToHomeScreen(BuildContext context) {
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+  }
+
+  void navigateToRebootScreen(BuildContext context, AsyncCallback task) {
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => RebootScreen(
+                  task: task,
+                )));
   }
 
   void navigateToCategory(BuildContext context) {

@@ -34,18 +34,31 @@ class _CategoryScreenState extends State<CategoryScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Card(
-                elevation: 4.0,
-                color: theme.cardColor,
-                child: IconButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    icon: Icon(
-                      Icons.arrow_back_ios,
-                      color: theme.colorScheme.secondaryVariant,
-                    ))),
-            Text(categoryManagerHelper.name, style: theme.textTheme.headline2),
-            const SizedBox()
+              elevation: 4.0,
+              color: theme.cardColor,
+              child: IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: Icon(
+                  Icons.arrow_back_ios,
+                  color: theme.colorScheme.secondaryVariant,
+                ),
+              ),
+            ),
+            Card(
+              elevation: 4.0,
+              color: theme.cardColor,
+              child: IconButton(
+                  onPressed: () {
+                    categoryManagerHelper.applyChanges();
+                    Navigator.of(context).pop();
+                  },
+                  icon: Icon(
+                    Icons.done,
+                    color: theme.colorScheme.secondaryVariant,
+                  )),
+            ),
           ],
         ),
       ),

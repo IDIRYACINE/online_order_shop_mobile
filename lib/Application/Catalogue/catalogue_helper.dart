@@ -45,4 +45,9 @@ class CatalogueHelper with ChangeNotifier {
   void createProduct(Category category, Product product) {
     _catalogueModel.createProduct(category, product);
   }
+
+  Future<void> reloadCategories() async {
+    _catalogueModel.clearCategories();
+    await initCategories();
+  }
 }

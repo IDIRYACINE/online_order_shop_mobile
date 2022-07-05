@@ -1,17 +1,22 @@
 // ignore_for_file: unused_field
 
+import 'package:flutter/foundation.dart';
+
 typedef ProductMap = Map<String, List<Product>>;
 
 class Product {
-  String _name, _description, _imageUrl;
+  String _description, _imageUrl;
+  late ValueNotifier<String> _name;
   List<double> _prices;
   List<String> _sizes;
   late final List<String> _descriptionImages;
   final int? _id;
 
   Product(
-      this._name, this._description, this._imageUrl, this._prices, this._sizes,
-      [this._id]);
+      String name, this._description, this._imageUrl, this._prices, this._sizes,
+      [this._id]) {
+    _name = ValueNotifier(name);
+  }
 
   String getDescription() {
     return _description;
@@ -22,7 +27,7 @@ class Product {
   }
 
   String getName() {
-    return _name;
+    return _name.value;
   }
 
   double getPrice([int index = 0]) {
@@ -79,7 +84,7 @@ class Product {
   void transfer(Product target) {
     target.setSizeList(_sizes);
     target.setPriceList(_prices);
-    target.setName(_name);
+    target.setName(_name.value);
     target.setImageUrl(_imageUrl);
     target.setDescription(_description);
   }
@@ -95,7 +100,7 @@ class Product {
   }
 
   void setName(String name) {
-    _name = name;
+    _name.value = name;
   }
 
   void setImageUrl(String imageUrl) {
@@ -130,5 +135,9 @@ class Product {
   void updateModels(List<String> sizes, List<double> prices) {
     _sizes = List.from(sizes);
     _prices = List.from(prices);
+  }
+
+  ValueListenable<String> getNameObserver() {
+    return _name;
   }
 }

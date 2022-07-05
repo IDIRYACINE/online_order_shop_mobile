@@ -1,5 +1,6 @@
 // ignore_for_file: unused_field, prefer_final_fields
 
+import 'package:flutter/foundation.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Database/products_mapper.dart';
 import 'package:online_order_shop_mobile/Infrastructure/service_provider.dart';
 
@@ -9,9 +10,9 @@ typedef CategoryMap = List<Category>;
 
 class Category {
   late String _id;
-  late String _name;
+  late ValueNotifier<String> _name;
   late String _imageUrl;
-  late int _productCount;
+  late ValueNotifier<int> _productCount;
   int _loadedProductsCount = 0;
   final List<Product> _products = [];
 
@@ -21,13 +22,13 @@ class Category {
       required String imageUrl,
       required int productsCount}) {
     _id = id;
-    _name = name;
+    _name = ValueNotifier(name);
     _imageUrl = imageUrl;
-    _productCount = productsCount;
+    _productCount = ValueNotifier(productsCount);
   }
 
   String getName() {
-    return _name;
+    return _name.value;
   }
 
   String getImageUrl() {
@@ -81,17 +82,25 @@ class Category {
 
   void transfer(Category target) {
     target.setImageUrl(_imageUrl);
-    target.setName(_name);
-    target.setProductsCount(_productCount);
+    target.setName(_name.value);
+    target.setProductsCount(_productCount.value);
     target.setProducts(_products);
   }
 
   void setProductsCount(int productCount) {
-    _productCount = productCount;
+    _productCount.value = productCount;
   }
 
   void setName(String name) {
-    _name = name;
+    _name.value = name;
+  }
+
+  ValueListenable<String> getNameObserver() {
+    return _name;
+  }
+
+  ValueListenable<int> getProductCountObserver() {
+    return _productCount;
   }
 
   void setProducts(List<Product> products) {

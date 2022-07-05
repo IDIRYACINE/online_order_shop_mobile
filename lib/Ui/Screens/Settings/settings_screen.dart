@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:online_order_shop_mobile/Application/Catalogue/catalogue_helper.dart';
+import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
+import 'package:online_order_shop_mobile/Application/Providers/navigation_provider.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Database/idatabase.dart';
 import 'package:online_order_shop_mobile/Infrastructure/service_provider.dart';
 import 'package:online_order_shop_mobile/Ui/Components/Dialogs/confirmation_dialog.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Settings/setting_row.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
+import 'package:provider/provider.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -14,10 +18,22 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsState extends State<SettingsScreen> {
   final IProductsDatabase database = ServicesProvider().productDatabase;
+  late CatalogueHelper catalogueHelper;
+
+  Future<void> reboot() async {
+    await database.reset();
+    await catalogueHelper.reloadCategories();
+  }
 
   @override
   Widget build(BuildContext context) {
     //ThemeData theme = Theme.of(context);
+
+    NavigationProvider navigationProvider =
+        Provider.of<NavigationProvider>(context, listen: false);
+
+    catalogueHelper = catalogueHelper =
+        Provider.of<HelpersProvider>(context, listen: false).catalogueHelper;
 
     return SingleChildScrollView(
       child: Column(
@@ -52,11 +68,8 @@ class _SettingsState extends State<SettingsScreen> {
                   builder: (context) {
                     return ConfirmAlertDialog(
                       onConfirm: () {
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(const SnackBar(
-                          content: Text(reDownloadingDatabaseLabel),
-                        ));
-                        database.reset();
+                        navigationProvider.navigateToRebootScreen(
+                            context, reboot);
                       },
                       message: messagePermanantAction,
                     );

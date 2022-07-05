@@ -51,4 +51,8 @@ class CatalogueModel {
     category.removeProduct(product);
     _productsManager.removeProduct(category, product);
   }
+
+  void clearCategories() {
+    _categories.clear();
+  }
 }
