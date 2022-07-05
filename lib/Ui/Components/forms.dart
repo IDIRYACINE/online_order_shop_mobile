@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 typedef OnChangeFunction = void Function(String value);
-typedef FormFieldValidator = String? Function(String? value);
+typedef StringFormFieldValidator = String? Function(String? value);
 
 class CustomTextFormField extends StatefulWidget {
   final String? label;
@@ -13,7 +13,7 @@ class CustomTextFormField extends StatefulWidget {
   final OnChangeFunction onChange;
   final EdgeInsets? paddings;
   final Color? textFieldColor;
-  final FormFieldValidator? validator;
+  final StringFormFieldValidator? validator;
 
   const CustomTextFormField({
     Key? key,

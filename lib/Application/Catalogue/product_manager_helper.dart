@@ -124,7 +124,6 @@ class ProductManagerHelper {
     if (_somethingChanged || _updatedImage) {
       String imageNameOnServer = "";
 
-      _tempProduct.transfer(_product);
       _productsDatabase.remebmerChange();
 
       if (_editMode) {
@@ -150,6 +149,7 @@ class ProductManagerHelper {
 
       imageUrl = url;
 
+      _tempProduct.transfer(_product);
       _catalogueHelper.createProduct(_category, _product);
 
       _somethingChanged = false;

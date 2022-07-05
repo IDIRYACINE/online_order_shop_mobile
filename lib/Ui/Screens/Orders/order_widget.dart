@@ -4,7 +4,7 @@ import 'package:online_order_shop_mobile/Domain/Orders/iorder.dart';
 import 'package:online_order_shop_mobile/Domain/Orders/order_status.dart';
 import 'package:online_order_shop_mobile/Infrastructure/service_provider.dart';
 import 'package:online_order_shop_mobile/Ui/Components/Dialogs/confirmation_dialog.dart';
-import 'package:online_order_shop_mobile/Ui/Components/Dialogs/dialogs.dart';
+import 'package:online_order_shop_mobile/Ui/Components/Dialogs/spinner_dialog.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
 import 'package:provider/provider.dart';
 

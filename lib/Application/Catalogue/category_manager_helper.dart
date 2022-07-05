@@ -23,7 +23,7 @@ class CategoryManagerHelper {
 
   final CatalogueHelper _catalogueHelper;
 
-  final ValueNotifier<String> imageUrl = ValueNotifier("");
+  final ValueNotifier<String> image = ValueNotifier("");
 
   final List<Product> _deletedProducts = [];
 
@@ -49,7 +49,7 @@ class CategoryManagerHelper {
 
     _tempCategory = my_app.Category.from(category);
 
-    imageUrl.value = category.getImageUrl();
+    image.value = category.getImageUrl();
 
     productCount.value = category.getProductCount();
   }
@@ -76,57 +76,57 @@ class CategoryManagerHelper {
   }
 
   Future<void> applyChanges() async {
-    String imageNameOnServer =
-        _server.serverImageNameFormater(category.getId());
+    if (_somethingChanged || _imageUpdated) {
+      String imageNameOnServer = "";
 
-    if (_imageUpdated || _somethingChanged) {
       _productsDatabase.remebmerChange();
 
-      _tempCategory.transfer(category);
-
-      if (editMode) {
+      if (_editMode) {
         if (_imageUpdated) {
+          imageNameOnServer =
+              _server.serverImageNameFormater(_category.getId());
+
           String url = await _server.uploadFile(
-              fileUrl: imageUrl.value, name: imageNameOnServer);
+              fileUrl: image.value, name: imageNameOnServer);
 
-          setImageUrl(url);
+          imageUrl = url;
         }
+        _tempCategory.transfer(_category);
 
-        if (_deletedProducts.isNotEmpty) {
-          for (Product product in _deletedProducts) {
-            _catalogueHelper.removeProduct(category, product);
-          }
-        }
-
-        _catalogueHelper.updateCategory(category);
-        _somethingChanged = false;
-        _imageUpdated = false;
+        _catalogueHelper.updateCategory(_category);
 
         return;
       }
+      imageNameOnServer =
+          _server.serverImageNameFormater(_tempCategory.getId());
 
       String url = await _server.uploadFile(
-          fileUrl: imageUrl.value, name: imageNameOnServer);
+          fileUrl: image.value, name: imageNameOnServer);
 
-      setImageUrl(url);
+      imageUrl = url;
 
-      _catalogueHelper.createCategory(category);
+      _tempCategory.transfer(_category);
+
+      _catalogueHelper.createCategory(_category);
+
+      _somethingChanged = false;
+      _imageUpdated = false;
     }
   }
 
   Future<void> browseImage() async {
     final ImagePicker _picker = ImagePicker();
-    // Pick an image
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    // Maybe we should move the copy image from (cache) to internal storge , then upload
-    if (image != null) {
-      setImageUrl(image.path);
+    final XFile? imageFile =
+        await _picker.pickImage(source: ImageSource.gallery);
+
+    if (imageFile != null) {
+      image.value = imageFile.path;
+      imageUrl = image.value;
     }
   }
 
-  void setImageUrl(String value) {
-    _tempCategory.setImageUrl(value);
-    imageUrl.value = value;
+  set imageUrl(String imageUrl) {
+    _tempCategory.setImageUrl(imageUrl);
     _imageUpdated = true;
   }
 

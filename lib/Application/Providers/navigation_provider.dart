@@ -5,7 +5,7 @@ import 'package:online_order_shop_mobile/Domain/Orders/iorder.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Cart/cart_screen.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Catalogue/Category/category_manager_screen.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Catalogue/Category/category_screen.dart';
-import 'package:online_order_shop_mobile/Ui/Screens/Catalogue/Product/product_screen.dart';
+import 'package:online_order_shop_mobile/Ui/Screens/Catalogue/Product/product_manager_screen.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Catalogue/Product/size_price_manager.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Catalogue/catalogue_screen.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/DeliveryAddress/gps_screen.dart';

@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:online_order_shop_mobile/Application/Catalogue/catalogue_helper.dart';
 import 'package:online_order_shop_mobile/Application/Catalogue/product_manager_helper.dart';
 import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
 import 'package:online_order_shop_mobile/Application/Providers/navigation_provider.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/optional_item.dart';
 import 'package:online_order_shop_mobile/Ui/Components/Images/local_image.dart';
-import 'package:online_order_shop_mobile/Ui/Components/Images/network_image.dart';
 import 'package:online_order_shop_mobile/Ui/Components/cards.dart';
 import 'package:online_order_shop_mobile/Ui/Components/product_components.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
@@ -38,7 +36,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
   bool initiliazed = false;
 
   late NavigationProvider navigationProvider;
-  late CatalogueHelper catalogueHelper;
   late ProductManagerHelper productManagerHelper;
 
   void setup(BuildContext context) {
@@ -47,9 +44,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
       navigationProvider =
           Provider.of<NavigationProvider>(context, listen: false);
-
-      catalogueHelper =
-          Provider.of<HelpersProvider>(context, listen: false).catalogueHelper;
 
       productManagerHelper =
           Provider.of<HelpersProvider>(context, listen: false)
@@ -127,16 +121,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     child: ValueListenableBuilder<String>(
                         valueListenable: productManagerHelper.image,
                         builder: (context, value, child) {
-                          if (productManagerHelper.editMode) {
-                            return CustomNetworkImage(
-                              value,
-                              backupImage: uploadImageUrl,
-                              fit: BoxFit.fill,
-                            );
-                          }
                           return LocalImage(
                             value,
-                            backupImage: uploadImageUrl,
                             fit: BoxFit.fill,
                           );
                         }),

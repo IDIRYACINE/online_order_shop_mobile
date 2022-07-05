@@ -84,7 +84,6 @@ class FireBaseServices implements IOnlineServerAcess {
 
   @override
   String serverImageNameFormater(String name) {
-    // TODO: implement serverImageNameFormater
-    throw UnimplementedError();
+    return "images/$name.png";
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Exceptions/auth_exceptions.dart';
-import 'package:online_order_shop_mobile/Ui/Components/Dialogs/dialogs.dart';
+import 'package:online_order_shop_mobile/Ui/Components/Dialogs/error_dialog.dart';
 
 class AuthenticationErrorHandler {
   late BuildContext _context;

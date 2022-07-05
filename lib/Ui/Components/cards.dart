@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:online_order_shop_mobile/Ui/Components/Dialogs/dialogs.dart';
+import 'package:online_order_shop_mobile/Ui/Components/Dialogs/textfield_alert_dialog.dart';
 
 typedef FormFieldValidator = String? Function(String? value);
 typedef FormFieldCallback = void Function(String value);
