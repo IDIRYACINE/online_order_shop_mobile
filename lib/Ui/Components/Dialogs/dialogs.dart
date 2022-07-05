@@ -264,6 +264,7 @@ class _SizePriceAlertDialogState extends State<SizePriceAlertDialog> {
                     onPressed: () {
                       if (widget.formKey.currentState!.validate()) {
                         widget.onConfirm(size, price);
+                        Navigator.of(context).pop();
                       }
                     },
                     child: Text(

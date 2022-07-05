@@ -17,6 +17,10 @@ class ProductManagerHelper {
 
   final IProductsDatabase _productsDatabase;
 
+  List<String> _tempSizes = [];
+
+  List<double> _tempPrices = [];
+
   late Product _tempProduct;
 
   bool _somethingChanged = false;
@@ -25,11 +29,13 @@ class ProductManagerHelper {
 
   bool _updatedImage = false;
 
-  final ValueNotifier<int> modelsCount = ValueNotifier(0);
+  final ValueNotifier<int> modelsChangeCounter = ValueNotifier(0);
 
   final ValueNotifier<String> image = ValueNotifier("");
 
   final ValueNotifier<int> formCounter = ValueNotifier(0);
+
+  final ValueNotifier<int> tempModelsCount = ValueNotifier(0);
 
   final CatalogueHelper _catalogueHelper;
 
@@ -46,9 +52,13 @@ class ProductManagerHelper {
 
     _editMode = editMode;
 
-    modelsCount.value = _tempProduct.getSizesCount();
+    tempModelsCount.value = _tempProduct.getSizesCount();
 
     image.value = _tempProduct.getImageUrl();
+
+    _tempSizes = List.from(_tempProduct.getSizeList());
+
+    _tempPrices = List.from(_tempProduct.getPriceList());
   }
 
   String get name => _product.getName();
@@ -64,6 +74,8 @@ class ProductManagerHelper {
     _tempProduct.setDescription(description);
     _somethingChanged = true;
   }
+
+  get modelsCount => _tempProduct.getSizesCount();
 
   String get imageUrl => _product.getName();
 
@@ -90,18 +102,22 @@ class ProductManagerHelper {
 
   String getPrice(int index) => _tempProduct.getPrice(index).toString();
 
-  void addModel(String size, String price) {
-    _tempProduct.addSize(size);
-    _tempProduct.addPrice(double.parse(price));
+  String getTempSize(int index) => _tempProduct.getSize(index);
 
-    modelsCount.value++;
+  String getTempPrice(int index) => _tempProduct.getPrice(index).toString();
+
+  void addModel(String size, String price) {
+    _tempSizes.add(size);
+    _tempPrices.add(double.parse(price));
+
+    tempModelsCount.value++;
   }
 
   void removeModel(int index) {
-    _tempProduct.removeSize(index);
-    _tempProduct.removePrice(index);
+    _tempSizes.removeAt(index);
+    _tempPrices.removeAt(index);
 
-    modelsCount.value--;
+    tempModelsCount.value--;
   }
 
   Future<void> applyChanges() async {
@@ -155,5 +171,11 @@ class ProductManagerHelper {
       image.value = imageFile.path;
       imageUrl = image.value;
     }
+  }
+
+  void applyModelsChanges() {
+    _tempProduct.updateModels(_tempSizes, _tempPrices);
+    modelsChangeCounter.value++;
+    _somethingChanged = true;
   }
 }

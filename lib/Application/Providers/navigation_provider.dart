@@ -124,7 +124,7 @@ class NavigationProvider with ChangeNotifier {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => SizePriceManagerScreen(product: product)));
+            builder: (context) => const SizePriceManagerScreen()));
   }
 
   void navigateToAddressScreen(BuildContext context, VoidCallback callback,

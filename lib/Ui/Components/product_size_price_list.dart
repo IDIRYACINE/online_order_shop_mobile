@@ -6,30 +6,19 @@ import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
 import 'package:provider/provider.dart';
 
 class SizePriceListView extends StatefulWidget {
-  final List<String> sizes;
-  final List<double> prices;
-  final VoidCallback onChange;
-
-  const SizePriceListView(
-      {Key? key,
-      required this.sizes,
-      required this.prices,
-      required this.onChange})
-      : super(key: key);
+  const SizePriceListView({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _SizePriceListViewState();
-
-  void updateForm(int index, String size, String price) {
-    sizes[index] = size;
-    prices[index] = double.parse(price);
-  }
 }
 
 class _SizePriceListViewState extends State<SizePriceListView> {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
+
     ProductManagerHelper productManagerHelper =
         Provider.of<HelpersProvider>(context, listen: false)
             .productManagerHelper;
@@ -56,8 +45,6 @@ class _SizePriceListViewState extends State<SizePriceListView> {
                       builder: (context) {
                         return SizePriceAlertDialog(
                           onConfirm: (String size, String price) {
-                            widget.onChange();
-
                             productManagerHelper.addModel(size, price);
                           },
                           formKey: GlobalKey<FormState>(),
@@ -70,23 +57,20 @@ class _SizePriceListViewState extends State<SizePriceListView> {
           const Divider(),
           Expanded(
             child: ValueListenableBuilder<int>(
-                valueListenable: productManagerHelper.modelsCount,
-                builder: (context, value, child) {
+                valueListenable: productManagerHelper.tempModelsCount,
+                builder: (context, itemsCount, child) {
                   return ListView.separated(
                     scrollDirection: Axis.vertical,
-                    itemCount: widget.prices.length,
+                    itemCount: itemsCount,
                     itemBuilder: (context, index) {
                       return _SizePriceForm(
                         index: index,
-                        size: widget.sizes[index],
-                        price: widget.prices[index],
+                        size: productManagerHelper.getSize(index),
+                        price: productManagerHelper.getPrice(index),
                         removeForm: () {
-                          widget.onChange();
-
                           productManagerHelper.removeModel(index);
                         },
                         updateForm: (index, size, price) {
-                          widget.onChange();
                           productManagerHelper.updateModel(index, size, price);
                         },
                       );
@@ -107,7 +91,7 @@ typedef SizePriceCallback = void Function(int index, String size, String price);
 
 class _SizePriceForm extends StatefulWidget {
   final String size;
-  final double price;
+  final String price;
   final int index;
   final VoidCallback removeForm;
   final SizePriceCallback updateForm;
@@ -115,7 +99,7 @@ class _SizePriceForm extends StatefulWidget {
   const _SizePriceForm(
       {Key? key,
       this.size = "",
-      this.price = 0,
+      this.price = "0",
       required this.index,
       required this.removeForm,
       required this.updateForm})
@@ -127,7 +111,7 @@ class _SizePriceForm extends StatefulWidget {
 
 class _SizePriceFormState extends State<_SizePriceForm> {
   late String size;
-  late double price;
+  late String price;
 
   @override
   Widget build(BuildContext context) {

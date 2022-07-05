@@ -4,8 +4,8 @@ typedef ProductMap = Map<String, List<Product>>;
 
 class Product {
   String _name, _description, _imageUrl;
-  final List<double> _prices;
-  final List<String> _sizes;
+  List<double> _prices;
+  List<String> _sizes;
   late final List<String> _descriptionImages;
   final int? _id;
 
@@ -125,5 +125,10 @@ class Product {
   void updateModel(int index, String size, double price) {
     _prices[index] = price;
     _sizes[index] = size;
+  }
+
+  void updateModels(List<String> sizes, List<double> prices) {
+    _sizes = List.from(sizes);
+    _prices = List.from(prices);
   }
 }

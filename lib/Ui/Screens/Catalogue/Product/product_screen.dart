@@ -192,17 +192,17 @@ class _ProductsScreenState extends State<ProductsScreen> {
                         ],
                       )),
                       Expanded(
-                          child: ValueListenableBuilder(
-                              valueListenable: productManagerHelper.formCounter,
-                              builder: (context, value, child) {
+                          child: ValueListenableBuilder<int>(
+                              valueListenable:
+                                  productManagerHelper.modelsChangeCounter,
+                              builder: (context, changes, child) {
                                 return OptionalItemsWidget(
                                   sizesTitle,
                                   displayTitle: false,
                                   activeItem: currentSizeIndex.value,
                                   unselectedItemColor:
                                       theme.colorScheme.background,
-                                  itemCount:
-                                      productManagerHelper.modelsCount.value,
+                                  itemCount: productManagerHelper.modelsCount,
                                   itemPopulater: getSize,
                                   onItemPressed: selectSize,
                                 );
