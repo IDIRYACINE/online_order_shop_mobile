@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:online_order_shop_mobile/Application/Cart/cart_helper.dart';
-import 'package:online_order_shop_mobile/Application/Catalogue/catalogue_helper.dart';
+import 'package:online_order_shop_mobile/Application/Catalogue/category_manager_helper.dart';
 import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
 import 'package:online_order_shop_mobile/Application/Providers/navigation_provider.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/category_model.dart';
-import 'package:online_order_shop_mobile/Infrastructure/service_provider.dart';
+import 'package:online_order_shop_mobile/Ui/Components/Dialogs/confirmation_dialog.dart';
 import 'package:online_order_shop_mobile/Ui/Components/Images/network_image.dart';
+import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
 import 'package:provider/provider.dart';
-
-typedef IntegerCallback = void Function(int index);
 
 class CategoryWidget extends StatefulWidget {
   final Category category;
@@ -16,9 +15,7 @@ class CategoryWidget extends StatefulWidget {
   final int contentFlex = 3;
   final int actionsFLex = 1;
   final int index;
-  final IntegerCallback removeCategory;
-  const CategoryWidget(this.category,
-      {Key? key, required this.removeCategory, required this.index})
+  const CategoryWidget(this.category, {Key? key, required this.index})
       : super(key: key);
 
   @override
@@ -28,21 +25,35 @@ class CategoryWidget extends StatefulWidget {
 class _CategoryWidgetState extends State<CategoryWidget> {
   late NavigationProvider navigationHelper;
   late CartHelper cartHelper;
-  late CatalogueHelper catalogueHelper;
+  late CategoryManagerHelper categoryManagerHelper;
+  late ThemeData theme;
+  bool init = false;
+
+  void setup() {
+    if (!init) {
+      categoryManagerHelper =
+          Provider.of<HelpersProvider>(context, listen: false)
+              .categoryManagerHelper;
+
+      theme = Theme.of(context);
+
+      navigationHelper =
+          Provider.of<NavigationProvider>(context, listen: false);
+
+      cartHelper =
+          Provider.of<HelpersProvider>(context, listen: false).cartHelper;
+
+      init = true;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
-    navigationHelper = Provider.of<NavigationProvider>(context, listen: false);
-    cartHelper =
-        Provider.of<HelpersProvider>(context, listen: false).cartHelper;
-
-    catalogueHelper =
-        Provider.of<HelpersProvider>(context, listen: false).catalogueHelper;
+    setup();
 
     return InkResponse(
       onTap: () {
-        catalogueHelper.setSelectedCategory(widget.category);
+        categoryManagerHelper.setCategory(widget.category, false);
         navigationHelper.navigateToCategory(context);
       },
       child: Card(
@@ -76,18 +87,26 @@ class _CategoryWidgetState extends State<CategoryWidget> {
             ),
             IconButton(
                 onPressed: () {
-                  catalogueHelper.setSelectedCategory(widget.category);
-                  navigationHelper.navigateToCategoryManager(
-                      context, widget.category, true);
+                  categoryManagerHelper.setCategory(widget.category);
+
+                  navigationHelper.navigateToCategoryManager(context);
                 },
                 icon: const Icon(Icons.edit_outlined)),
             Align(
               alignment: AlignmentDirectional.centerEnd,
               child: IconButton(
                   onPressed: () {
-                    ServicesProvider().serverAcessService.removeData(
-                        dataUrl: 'images/${widget.category.getId()}');
-                    widget.removeCategory(widget.index);
+                    showDialog<AlertDialog>(
+                        context: context,
+                        builder: (context) {
+                          return ConfirmAlertDialog(
+                            onConfirm: () {
+                              categoryManagerHelper
+                                  .removeCategory(widget.category);
+                            },
+                            message: messagePermanantAction,
+                          );
+                        });
                   },
                   icon: const Icon(Icons.remove_circle_outline)),
             ),

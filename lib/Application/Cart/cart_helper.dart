@@ -14,7 +14,6 @@ class CartHelper {
   }
 
   void init() {
-    int count = _cart.getProductsCount();
     // TODO : Query image from db
   }
 
@@ -28,11 +27,6 @@ class CartHelper {
 
   String getTotalPrice() {
     return _cart.getTotalPrice().toStringAsFixed(2);
-  }
-
-  String _getTimeStamp() {
-    DateTime now = DateTime.now();
-    return '${now.hour} : ${now.minute}';
   }
 
   void setCart(Cart cart) {

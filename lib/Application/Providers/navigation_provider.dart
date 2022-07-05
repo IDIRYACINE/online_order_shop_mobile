@@ -1,5 +1,4 @@
 import 'package:online_order_shop_mobile/Domain/Cart/cart.dart';
-import 'package:online_order_shop_mobile/Domain/Catalogue/category_model.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/product_model.dart';
 import 'package:online_order_shop_mobile/Domain/Orders/iorder.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Cart/cart_screen.dart';
@@ -109,15 +108,9 @@ class NavigationProvider with ChangeNotifier {
     return _iconIndex;
   }
 
-  void navigateToCategoryManager(BuildContext context, Category category,
-      [bool editMode = false]) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => CategoryManagerScreen(
-                  editMode: editMode,
-                  category: category,
-                )));
+  void navigateToCategoryManager(BuildContext context) {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => const CategoryManagerScreen()));
   }
 
   void navigateToSizeManager(BuildContext context, Product product) {

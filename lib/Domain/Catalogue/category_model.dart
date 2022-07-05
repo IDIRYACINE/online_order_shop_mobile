@@ -99,7 +99,9 @@ class Category {
     _products.addAll(products);
   }
 
-  void removeProduct(int productIndex) {}
+  void removeProduct(Product product) {
+    _products.remove(product);
+  }
 
   void addProduct() {}
 

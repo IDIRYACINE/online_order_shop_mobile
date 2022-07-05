@@ -41,7 +41,10 @@ class ConfirmAlertDialog extends StatelessWidget {
                       },
                       child: const Text(cancelLabel)),
                   TextButton(
-                      onPressed: onConfirm,
+                      onPressed: () {
+                        onConfirm();
+                        Navigator.of(context).pop();
+                      },
                       child: Text(
                         confirmLabel,
                         style: theme.textTheme.overline,

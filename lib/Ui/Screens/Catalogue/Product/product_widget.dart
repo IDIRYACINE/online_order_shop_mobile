@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:online_order_shop_mobile/Application/Catalogue/category_manager_helper.dart';
 import 'package:online_order_shop_mobile/Application/Catalogue/product_manager_helper.dart';
 import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
 import 'package:online_order_shop_mobile/Application/Providers/navigation_provider.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/category_model.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/product_model.dart';
-import 'package:online_order_shop_mobile/Infrastructure/service_provider.dart';
 import 'package:online_order_shop_mobile/Ui/Components/Images/network_image.dart';
 import 'package:provider/provider.dart';
-
-typedef ProductCallback = void Function(Category category, int product);
 
 class ProductWidget extends StatelessWidget {
   final Product product;
@@ -19,7 +17,6 @@ class ProductWidget extends StatelessWidget {
   final int index;
   final double productNameTopPadding;
   final int imageFlex = 2;
-  final ProductCallback removeProduct;
   final double cardElevation = 8.0;
 
   const ProductWidget(
@@ -30,7 +27,6 @@ class ProductWidget extends StatelessWidget {
     this.dividerThickness = 4,
     this.productNameTopPadding = 4,
     this.cardBottomPadding = 10,
-    required this.removeProduct,
     required this.index,
   }) : super(key: key);
 
@@ -45,6 +41,10 @@ class ProductWidget extends StatelessWidget {
         Provider.of<HelpersProvider>(context, listen: false)
             .productManagerHelper;
 
+    CategoryManagerHelper categoryManagerHelper =
+        Provider.of<HelpersProvider>(context, listen: false)
+            .categoryManagerHelper;
+
     return Card(
       elevation: 4.0,
       child: Row(
@@ -53,7 +53,7 @@ class ProductWidget extends StatelessWidget {
           Expanded(
               child: CustomNetworkImage(
             product.getImageUrl(),
-            height: double.maxFinite,
+            height: 100,
             fit: BoxFit.fitHeight,
           )),
           Expanded(
@@ -62,7 +62,6 @@ class ProductWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Expanded(
-                  flex: 3,
                   child: Align(
                     alignment: AlignmentDirectional.centerEnd,
                     child: Padding(
@@ -87,9 +86,7 @@ class ProductWidget extends StatelessWidget {
                           icon: const Icon(Icons.edit_outlined)),
                       IconButton(
                           onPressed: () {
-                            ServicesProvider().serverAcessService.removeData(
-                                dataUrl: 'images/${product.getName()}');
-                            removeProduct(category, index);
+                            categoryManagerHelper.removeProduct(product);
                           },
                           icon: const Icon(Icons.remove_circle_outline)),
                     ],

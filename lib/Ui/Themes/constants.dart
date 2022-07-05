@@ -58,7 +58,7 @@ const manage = "Manager";
 const deleteOrderLabel = "Supprimer";
 const productsTitle = "Articles";
 const orderStatusLabel = "Status";
-const messagePermanantAction = "This action is permanant are you sure?";
+const messagePermanantAction = "Cette action est permanente êtes-vous sûr ?";
 
 //Settings
 const synchroniseDatabaseTitle = "Synchroniser la base de données";

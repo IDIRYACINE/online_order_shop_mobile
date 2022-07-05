@@ -68,7 +68,7 @@ class _SizePriceManagerScreenState extends State<SizePriceManagerScreen> {
       ),
       body: Column(
         mainAxisSize: MainAxisSize.max,
-        children: [
+        children: const [
           Expanded(
             child: SizePriceListView(),
           ),

@@ -24,9 +24,8 @@ class CatalogueModel {
     return _categories.length;
   }
 
-  void removeCategory(int index) {
-    Category category = _categories[index];
-    _categories.removeAt(index);
+  void removeCategory(Category category) {
+    _categories.remove(category);
     _productsManager.removeCategory(category);
   }
 
@@ -48,9 +47,8 @@ class CatalogueModel {
     _productsManager.updateCategory(category);
   }
 
-  void removeProduct(Category category, int productIndex) {
-    Product product = category.getProduct(productIndex: productIndex);
-    category.removeProduct(productIndex);
+  void removeProduct(Category category, Product product) {
+    category.removeProduct(product);
     _productsManager.removeProduct(category, product);
   }
 }

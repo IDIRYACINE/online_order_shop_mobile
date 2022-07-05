@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:online_order_shop_mobile/Application/Catalogue/catalogue_helper.dart';
+import 'package:online_order_shop_mobile/Application/Catalogue/category_manager_helper.dart';
 import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
 import 'package:online_order_shop_mobile/Application/Providers/navigation_provider.dart';
-import 'package:online_order_shop_mobile/Domain/Catalogue/category_model.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/product_model.dart';
-import 'package:online_order_shop_mobile/Infrastructure/service_provider.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
 import 'package:provider/provider.dart';
 
@@ -21,20 +19,13 @@ class CategoryScreen extends StatefulWidget {
 }
 
 class _CategoryScreenState extends State<CategoryScreen> {
-  late CatalogueHelper catalogueHelper;
-
-  void removeProduct(Category category, int productIndex) {
-    setState(() {
-      catalogueHelper.removeProduct(category, productIndex);
-      ServicesProvider().productDatabase.remebmerChange();
-    });
-  }
+  late CategoryManagerHelper categoryManagerHelper;
 
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    catalogueHelper =
-        Provider.of<HelpersProvider>(context, listen: false).catalogueHelper;
+    categoryManagerHelper = Provider.of<HelpersProvider>(context, listen: false)
+        .categoryManagerHelper;
 
     return Scaffold(
       appBar: AppBar(
@@ -53,8 +44,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       Icons.arrow_back_ios,
                       color: theme.colorScheme.secondaryVariant,
                     ))),
-            Text(catalogueHelper.getCategory().getName(),
-                style: theme.textTheme.headline2),
+            Text(categoryManagerHelper.name, style: theme.textTheme.headline2),
             const SizedBox()
           ],
         ),
@@ -82,7 +72,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
                       Provider.of<HelpersProvider>(context, listen: false)
                           .productManagerHelper
-                          .setProduct(catalogueHelper.getCategory(),
+                          .setProduct(categoryManagerHelper.category,
                               Product("", "", "", [], []), false);
                     },
                     icon: const Icon(Icons.add_circle_outline)),
@@ -90,20 +80,24 @@ class _CategoryScreenState extends State<CategoryScreen> {
             )),
             Expanded(
                 flex: golenRationFlexSmall,
-                child: ListView.separated(
-                  scrollDirection: Axis.vertical,
-                  itemCount: catalogueHelper.getCategory().getProductCount(),
-                  itemBuilder: (context, productIndex) => catalogueHelper
-                      .productWidgetBuilder(context, productIndex,
-                          (category, productIndex) {
-                    removeProduct(category, productIndex);
-                  }),
-                  separatorBuilder: (BuildContext context, int index) {
-                    return const SizedBox(
-                      height: 5,
-                    );
-                  },
-                )),
+                child: ValueListenableBuilder<int>(
+                    valueListenable: categoryManagerHelper.productCount,
+                    builder: (context, itemCount, child) {
+                      return ListView.separated(
+                        scrollDirection: Axis.vertical,
+                        itemCount: itemCount,
+                        itemBuilder: (context, productIndex) =>
+                            categoryManagerHelper.productWidgetBuilder(
+                          context,
+                          productIndex,
+                        ),
+                        separatorBuilder: (BuildContext context, int index) {
+                          return const SizedBox(
+                            height: 5,
+                          );
+                        },
+                      );
+                    })),
           ],
         ),
       ),

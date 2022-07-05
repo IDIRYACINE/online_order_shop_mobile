@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:online_order_shop_mobile/Application/Catalogue/catalogue_helper.dart';
+import 'package:online_order_shop_mobile/Application/Catalogue/category_manager_helper.dart';
 import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
 import 'package:online_order_shop_mobile/Application/Providers/navigation_provider.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/category_model.dart';
-import 'package:online_order_shop_mobile/Infrastructure/service_provider.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Catalogue/Category/category_widget.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
 import 'package:provider/provider.dart';
@@ -24,15 +23,8 @@ class CatalogueScreen extends StatefulWidget {
 }
 
 class _CatalogueScreenState extends State<CatalogueScreen> {
-  late CatalogueHelper catalogueHelper;
   late NavigationProvider navigationProvider;
-
-  void removeCategory(int index) {
-    setState(() {
-      catalogueHelper.removeCategory(index);
-      ServicesProvider().productDatabase.remebmerChange();
-    });
-  }
+  late CategoryManagerHelper categoryManagerHelper;
 
   void onSeeAllPressed(BuildContext context) {
     navigationProvider.navigateToCategory(context);
@@ -40,10 +32,11 @@ class _CatalogueScreenState extends State<CatalogueScreen> {
 
   @override
   Widget build(BuildContext context) {
-    catalogueHelper =
-        Provider.of<HelpersProvider>(context, listen: false).catalogueHelper;
     navigationProvider =
         Provider.of<NavigationProvider>(context, listen: false);
+
+    categoryManagerHelper = Provider.of<HelpersProvider>(context, listen: false)
+        .categoryManagerHelper;
 
     final ThemeData theme = Theme.of(context);
 
@@ -64,10 +57,13 @@ class _CatalogueScreenState extends State<CatalogueScreen> {
                     ),
                     IconButton(
                         onPressed: () {
-                          Category category = Category(
-                              id: "", name: "", imageUrl: "", productsCount: 0);
-                          navigationProvider.navigateToCategoryManager(
-                              context, category);
+                          categoryManagerHelper.setCategory(Category(
+                              id: "",
+                              name: "",
+                              imageUrl: "",
+                              productsCount: 0));
+
+                          navigationProvider.navigateToCategoryManager(context);
                         },
                         icon: const Icon(Icons.add_circle_outline)),
                   ],
@@ -75,14 +71,13 @@ class _CatalogueScreenState extends State<CatalogueScreen> {
                 Expanded(
                     flex: golenRationFlexSmall,
                     child: ListView.separated(
-                      itemCount: catalogueHelper.getCategoriesCount(),
+                      itemCount: categoryManagerHelper.getCategoriesCount(),
                       itemBuilder: (context, index) {
-                        if (catalogueHelper.getCategoriesCount() == 0) {
+                        if (categoryManagerHelper.getCategoriesCount() == 0) {
                           return const SizedBox();
                         }
                         return CategoryWidget(
-                            catalogueHelper.getCategory(index),
-                            removeCategory: removeCategory,
+                            categoryManagerHelper.getCategory(index),
                             index: index);
                       },
                       separatorBuilder: (BuildContext context, int index) {
