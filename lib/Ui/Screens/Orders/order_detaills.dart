@@ -8,7 +8,7 @@ import 'package:online_order_shop_mobile/Ui/Components/cards.dart';
 import 'package:online_order_shop_mobile/Ui/Components/dialogs.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 class OrderDetaillsScreen extends StatefulWidget {
   final IOrder order;
@@ -28,7 +28,8 @@ class OrderDetaillsScreen extends StatefulWidget {
 
 class _OrderDetaillsScreentState extends State<OrderDetaillsScreen> {
   void dialPhone() {
-    UrlLauncher.launch("tel://21213123123");
+    url_launcher
+        .launchUrl(Uri(scheme: 'tel', path: widget.order.getPhoneNumber()));
   }
 
   void updateState(String newState) {

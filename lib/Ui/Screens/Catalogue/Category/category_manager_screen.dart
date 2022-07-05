@@ -1,9 +1,8 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:online_order_shop_mobile/Application/Catalogue/catalogue_helper.dart';
 import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/category_model.dart';
+import 'package:online_order_shop_mobile/Infrastructure/Database/idatabase.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Server/ionline_data_service.dart';
 import 'package:online_order_shop_mobile/Infrastructure/service_provider.dart';
 import 'package:online_order_shop_mobile/Ui/Components/Images/local_image.dart';
@@ -12,7 +11,6 @@ import 'package:online_order_shop_mobile/Ui/Components/cards.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:developer' as dev;
 
 class CategoryManagerScreen extends StatefulWidget {
   final bool editMode;
@@ -29,25 +27,50 @@ class _CategoryManagerScreenState extends State<CategoryManagerScreen> {
   late CatalogueHelper catalogueHelper;
   late ValueNotifier<String> imageUrl;
   bool imageChanged = false;
+  bool nameChanged = false;
 
   Future<void> saveChanges() async {
     IOnlineServerAcess server = ServicesProvider().serverAcessService;
-    category.transfer(widget.category!);
+    IProductsDatabase productsDatabase = ServicesProvider().productDatabase;
+    String imageNameOnServer = "";
 
-    if (widget.editMode) {
-      if (imageChanged) {
-        String url = await server.uploadFile(
-            fileUrl: imageUrl.value, name: category.getId());
-        category.setImageUrl(url);
+    if (imageChanged || nameChanged) {
+      category.transfer(widget.category!);
+      productsDatabase.remebmerChange();
+
+      if (widget.editMode) {
+        if (imageChanged) {
+          imageNameOnServer = server.serverImageNameFormater(category.getId());
+          String url = await server.uploadFile(
+              fileUrl: imageUrl.value, name: imageNameOnServer);
+          category.setImageUrl(url);
+        }
+
+        catalogueHelper.updateCategory(category);
+        return;
       }
-      catalogueHelper.updateCategory(category);
-      return;
     }
+    imageNameOnServer = server.serverImageNameFormater(category.getId());
 
     String url = await server.uploadFile(
-        fileUrl: imageUrl.value, name: category.getId());
-    category.setImageUrl(url);
+        fileUrl: imageUrl.value, name: imageNameOnServer);
+
+    setImageUrl(url);
+
     catalogueHelper.createCategory(category);
+  }
+
+  void setImageUrl(String image) {
+    category.setImageUrl(image);
+    imageChanged = true;
+  }
+
+  void setName(String name) {
+    if (!widget.editMode) {
+      category.setId(name);
+    }
+    category.setName(name);
+    nameChanged = true;
   }
 
   void setup() {
@@ -61,8 +84,8 @@ class _CategoryManagerScreenState extends State<CategoryManagerScreen> {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     // Maybe we should move the copy image from (cache) to internal storge , then upload
     if (image != null) {
+      setImageUrl(image.path);
       imageUrl.value = image.path;
-      imageChanged = true;
     }
   }
 
@@ -136,12 +159,7 @@ class _CategoryManagerScreenState extends State<CategoryManagerScreen> {
                 child: InformationCard(
                   label: categoryNameLabel,
                   initialValue: category.getName(),
-                  onChangeConfirm: (name) {
-                    if (!widget.editMode) {
-                      category.setId(name);
-                    }
-                    category.setName(name);
-                  },
+                  onChangeConfirm: setName,
                 ),
               ),
             ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Database/idatabase.dart';
-import 'package:online_order_shop_mobile/Infrastructure/Server/ionline_data_service.dart';
 import 'package:online_order_shop_mobile/Infrastructure/service_provider.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Settings/setting_row.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
@@ -17,7 +16,7 @@ class _SettingsState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
+    //ThemeData theme = Theme.of(context);
 
     return SingleChildScrollView(
       child: Column(

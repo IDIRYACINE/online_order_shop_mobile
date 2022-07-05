@@ -56,8 +56,8 @@ class FireBaseServices implements IOnlineServerAcess {
     try {
       File file = File(fileUrl);
 
-      await _firebaseStorage.ref("images/$name.png").putFile(file);
-      url = await _firebaseStorage.ref("images/$name.png").getDownloadURL();
+      await _firebaseStorage.ref(name).putFile(file);
+      url = await _firebaseStorage.ref(name).getDownloadURL();
     } on FirebaseException catch (e) {
       dev.log(e.message!);
     }
@@ -80,5 +80,11 @@ class FireBaseServices implements IOnlineServerAcess {
   Future<String> getUploadUrl({required String savePath}) async {
     String url = await _firebaseStorage.ref(savePath).getDownloadURL();
     return url;
+  }
+
+  @override
+  String serverImageNameFormater(String name) {
+    // TODO: implement serverImageNameFormater
+    throw UnimplementedError();
   }
 }

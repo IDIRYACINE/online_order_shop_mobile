@@ -14,4 +14,6 @@ abstract class IOnlineServerAcess {
   Future<bool> uploadPendingFiles();
   Future<String> getUploadUrl({required String savePath});
   void addFileToUploadQueue({required String fileUrl, String? savePath});
+
+  String serverImageNameFormater(String name);
 }

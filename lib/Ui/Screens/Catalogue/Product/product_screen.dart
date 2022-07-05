@@ -6,6 +6,7 @@ import 'package:online_order_shop_mobile/Application/Providers/navigation_provid
 import 'package:online_order_shop_mobile/Domain/Catalogue/category_model.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/optional_item.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/product_model.dart';
+import 'package:online_order_shop_mobile/Infrastructure/Database/idatabase.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Server/ionline_data_service.dart';
 import 'package:online_order_shop_mobile/Infrastructure/service_provider.dart';
 import 'package:online_order_shop_mobile/Ui/Components/Images/local_image.dart';
@@ -44,31 +45,68 @@ class ProductsScreen extends StatefulWidget {
 class _ProductsScreenState extends State<ProductsScreen> {
   late ThemeData theme;
   late Product product;
+
   bool imageChanged = false;
+  bool sizeChanged = false;
+  bool nameChanged = false;
+  bool descriptionChanged = false;
+
   late NavigationProvider navigationProvider;
   late CatalogueHelper catalogueHelper;
   late ValueNotifier<String> imageUrl;
 
   Future<void> saveChanges() async {
-    IOnlineServerAcess server = ServicesProvider().serverAcessService;
+    if (imageChanged || nameChanged || sizeChanged || descriptionChanged) {
+      IOnlineServerAcess server = ServicesProvider().serverAcessService;
+      IProductsDatabase productsDatabase = ServicesProvider().productDatabase;
+      String imageNameOnServer = "";
 
-    if (widget.editMode) {
-      if (imageChanged) {
-        String url = await server.uploadFile(
-            fileUrl: imageUrl.value, name: product.getName());
-        product.setImageUrl(url);
-      }
       product.transfer(widget.product);
+      productsDatabase.remebmerChange();
 
-      catalogueHelper.updateProduct(widget.category, product);
+      if (widget.editMode) {
+        if (imageChanged) {
+          imageNameOnServer = server.serverImageNameFormater(product.getName());
 
-      return;
+          String url = await server.uploadFile(
+              fileUrl: imageUrl.value, name: imageNameOnServer);
+          product.setImageUrl(url);
+        }
+        product.transfer(widget.product);
+
+        catalogueHelper.updateProduct(widget.category, product);
+
+        return;
+      }
+      imageNameOnServer = server.serverImageNameFormater(product.getName());
+
+      String url = await server.uploadFile(
+          fileUrl: imageUrl.value, name: imageNameOnServer);
+      product.setImageUrl(url);
+      catalogueHelper.createProduct(widget.category, product);
     }
+  }
 
-    String url = await server.uploadFile(
-        fileUrl: imageUrl.value, name: product.getName());
-    product.setImageUrl(url);
-    catalogueHelper.createProduct(widget.category, product);
+  void setName(String name) {
+    if (!widget.editMode) {
+      // product.setId(category.productCount(db));
+    }
+    product.setName(name);
+    nameChanged = true;
+  }
+
+  void setImageUrl(String image) {
+    product.setImageUrl(image);
+    imageChanged = true;
+  }
+
+  void setDescription(String description) {
+    product.setDescription(description);
+    descriptionChanged = true;
+  }
+
+  void registerSizeChange() {
+    sizeChanged = true;
   }
 
   void setup(BuildContext context) {
@@ -89,7 +127,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
 
     if (image != null) {
-      product.setImageUrl(image.path);
+      setImageUrl(image.path);
       imageUrl.value = product.getImageUrl();
     }
   }
@@ -195,11 +233,11 @@ class _ProductsScreenState extends State<ProductsScreen> {
                       InformationCard(
                           label: productNameLabel,
                           initialValue: product.getName(),
-                          onChangeConfirm: product.setName),
+                          onChangeConfirm: setName),
                       InformationCard(
                           label: productDescriptionLabel,
                           initialValue: product.getDescription(),
-                          onChangeConfirm: product.setDescription),
+                          onChangeConfirm: setDescription),
                       Flexible(
                           child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -4,6 +4,7 @@ import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.
 import 'package:online_order_shop_mobile/Application/Providers/navigation_provider.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/category_model.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/product_model.dart';
+import 'package:online_order_shop_mobile/Infrastructure/service_provider.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
 import 'package:provider/provider.dart';
 
@@ -25,6 +26,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
   void removeProduct(Category category, int productIndex) {
     setState(() {
       catalogueHelper.removeProduct(category, productIndex);
+      ServicesProvider().productDatabase.remebmerChange();
     });
   }
 

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/optional_item.dart';
 import 'package:online_order_shop_mobile/Ui/Components/Images/network_image.dart';
-import 'package:online_order_shop_mobile/Ui/Components/forms.dart';
 
 typedef ItemPopulater = OptionalItem Function(int index);
 typedef ItemActivationFunction = void Function(

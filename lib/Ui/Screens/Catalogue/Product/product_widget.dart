@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:online_order_shop_mobile/Application/Providers/navigation_provider.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/category_model.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/product_model.dart';
+import 'package:online_order_shop_mobile/Infrastructure/service_provider.dart';
 import 'package:online_order_shop_mobile/Ui/Components/Images/network_image.dart';
 import 'package:provider/provider.dart';
 
@@ -82,6 +83,8 @@ class ProductWidget extends StatelessWidget {
                             icon: const Icon(Icons.edit_outlined)),
                         IconButton(
                             onPressed: () {
+                              ServicesProvider().serverAcessService.removeData(
+                                  dataUrl: 'images/${product.getName()}');
                               removeProduct(category, index);
                             },
                             icon: const Icon(Icons.remove_circle_outline)),

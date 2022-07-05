@@ -7,13 +7,14 @@ import 'package:online_order_shop_mobile/Infrastructure/Database/idatabase.dart'
 import 'package:online_order_shop_mobile/Infrastructure/Exceptions/server_exceptions.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Server/ionline_data_service.dart';
 import 'package:sqflite/sqflite.dart';
+import 'dart:developer' as dev;
 
 class ProductsDatabase implements IProductsDatabase {
   static const String _productsDatabaseName = 'Products.db';
   static const String _categoriresTable = "Categories";
   late Database _productsDatabase;
   final IOnlineServerAcess _serverAccess;
-  bool somethingChanged = false;
+  bool _somethingChanged = false;
 
   ProductsDatabase(this._serverAccess);
 
@@ -147,7 +148,8 @@ class ProductsDatabase implements IProductsDatabase {
 
   @override
   Future<bool> upgradeDatabaseVersion() async {
-    if (somethingChanged) {
+    dev.log(_somethingChanged.toString());
+    if (_somethingChanged) {
       int currentVersion = await _productsDatabase.getVersion();
       _productsDatabase.setVersion(currentVersion + 1);
 
@@ -155,7 +157,7 @@ class ProductsDatabase implements IProductsDatabase {
 
       _serverAccess.uploadFile(
           fileUrl: databaseFile.path, name: _productsDatabaseName);
-      somethingChanged = false;
+      _somethingChanged = false;
       return true;
     }
     return false;
@@ -170,7 +172,7 @@ class ProductsDatabase implements IProductsDatabase {
 
   @override
   void remebmerChange() {
-    somethingChanged = true;
+    _somethingChanged = true;
   }
 
   @override
