@@ -5,7 +5,7 @@ import 'package:online_order_shop_mobile/Application/Providers/navigation_provid
 import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Orders/iorder_service.dart';
 import 'package:online_order_shop_mobile/Infrastructure/service_provider.dart';
-import 'package:online_order_shop_mobile/Ui/Components/dialogs.dart';
+import 'package:online_order_shop_mobile/Ui/Components/Dialogs/dialogs.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Login/login_screen.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/main_theme.dart';

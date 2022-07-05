@@ -127,7 +127,7 @@ class SpinnerAlertDialog extends StatefulWidget {
 }
 
 class _SpinnerAlertDialogState<T> extends State<SpinnerAlertDialog> {
-  late String dropDownValue;
+  String? dropDownValue;
 
   void onItemSelected(String? value) {
     setState(() {
@@ -136,7 +136,7 @@ class _SpinnerAlertDialogState<T> extends State<SpinnerAlertDialog> {
   }
 
   void setup() {
-    dropDownValue = widget.initialValue ?? "attendu";
+    dropDownValue ??= widget.initialValue ?? "attendu";
   }
 
   @override
@@ -180,7 +180,7 @@ class _SpinnerAlertDialogState<T> extends State<SpinnerAlertDialog> {
                           )),
                       TextButton(
                           onPressed: () {
-                            widget.onConfirm(dropDownValue);
+                            widget.onConfirm(dropDownValue!);
                             Navigator.pop(context);
                           },
                           child: Text(

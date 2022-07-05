@@ -105,4 +105,25 @@ class Product {
   void setDescription(String description) {
     _description = description;
   }
+
+  void removePrice(int index) {
+    _prices.removeAt(index);
+  }
+
+  void removeSize(int index) {
+    _sizes.removeAt(index);
+  }
+
+  void addPrice(double price) {
+    _prices.add(price);
+  }
+
+  void addSize(String size) {
+    _sizes.add(size);
+  }
+
+  void updateModel(int index, String size, double price) {
+    _prices[index] = price;
+    _sizes[index] = size;
+  }
 }

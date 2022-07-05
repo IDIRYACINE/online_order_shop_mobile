@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:online_order_shop_mobile/Application/Catalogue/catalogue_helper.dart';
+import 'package:online_order_shop_mobile/Application/Catalogue/product_manager_helper.dart';
 import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
 import 'package:online_order_shop_mobile/Application/Providers/navigation_provider.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/category_model.dart';
@@ -17,12 +18,9 @@ import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
 import 'package:provider/provider.dart';
 
 class ProductsScreen extends StatefulWidget {
-  final Product product;
-  final bool editMode;
   final double dividerThickness = 2.0;
   final double appBarElevation = 0.0;
   final double padding = 15.0;
-  final Category category;
   final double backbuttonPadding = 10.0;
   final double optionalItemsYpadding = 4.0;
   final int productDescriptionMaxLines = 2;
@@ -34,9 +32,7 @@ class ProductsScreen extends StatefulWidget {
   final int productPriceFlex = 1;
   final int productDescriptionFlex = 1;
 
-  const ProductsScreen(this.product,
-      {Key? key, required this.editMode, required this.category})
-      : super(key: key);
+  const ProductsScreen({Key? key}) : super(key: key);
 
   @override
   _ProductsScreenState createState() => _ProductsScreenState();
@@ -44,91 +40,28 @@ class ProductsScreen extends StatefulWidget {
 
 class _ProductsScreenState extends State<ProductsScreen> {
   late ThemeData theme;
-  late Product product;
 
-  bool imageChanged = false;
-  bool sizeChanged = false;
-  bool nameChanged = false;
-  bool descriptionChanged = false;
+  bool initiliazed = false;
 
   late NavigationProvider navigationProvider;
   late CatalogueHelper catalogueHelper;
-  late ValueNotifier<String> imageUrl;
-
-  Future<void> saveChanges() async {
-    if (imageChanged || nameChanged || sizeChanged || descriptionChanged) {
-      IOnlineServerAcess server = ServicesProvider().serverAcessService;
-      IProductsDatabase productsDatabase = ServicesProvider().productDatabase;
-      String imageNameOnServer = "";
-
-      product.transfer(widget.product);
-      productsDatabase.remebmerChange();
-
-      if (widget.editMode) {
-        if (imageChanged) {
-          imageNameOnServer = server.serverImageNameFormater(product.getName());
-
-          String url = await server.uploadFile(
-              fileUrl: imageUrl.value, name: imageNameOnServer);
-          product.setImageUrl(url);
-        }
-        product.transfer(widget.product);
-
-        catalogueHelper.updateProduct(widget.category, product);
-
-        return;
-      }
-      imageNameOnServer = server.serverImageNameFormater(product.getName());
-
-      String url = await server.uploadFile(
-          fileUrl: imageUrl.value, name: imageNameOnServer);
-      product.setImageUrl(url);
-      catalogueHelper.createProduct(widget.category, product);
-    }
-  }
-
-  void setName(String name) {
-    if (!widget.editMode) {
-      // product.setId(category.productCount(db));
-    }
-    product.setName(name);
-    nameChanged = true;
-  }
-
-  void setImageUrl(String image) {
-    product.setImageUrl(image);
-    imageChanged = true;
-  }
-
-  void setDescription(String description) {
-    product.setDescription(description);
-    descriptionChanged = true;
-  }
-
-  void registerSizeChange() {
-    sizeChanged = true;
-  }
+  late ProductManagerHelper productManagerHelper;
 
   void setup(BuildContext context) {
-    theme = Theme.of(context);
+    if (!initiliazed) {
+      theme = Theme.of(context);
 
-    navigationProvider =
-        Provider.of<NavigationProvider>(context, listen: false);
+      navigationProvider =
+          Provider.of<NavigationProvider>(context, listen: false);
 
-    catalogueHelper =
-        Provider.of<HelpersProvider>(context, listen: false).catalogueHelper;
+      catalogueHelper =
+          Provider.of<HelpersProvider>(context, listen: false).catalogueHelper;
 
-    product = widget.product;
-    imageUrl = ValueNotifier(product.getImageUrl());
-  }
+      productManagerHelper =
+          Provider.of<HelpersProvider>(context, listen: false)
+              .productManagerHelper;
 
-  Future<void> browseImage() async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-
-    if (image != null) {
-      setImageUrl(image.path);
-      imageUrl.value = product.getImageUrl();
+      initiliazed = true;
     }
   }
 
@@ -137,7 +70,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   VoidCallback? toggleLastSelectedSize;
 
   OptionalItem getSize(int index) {
-    return OptionalItem(widget.product.getSize(index));
+    return OptionalItem(productManagerHelper.getSize(index));
   }
 
   void selectSize(int index, VoidCallback selfToggle) {
@@ -174,7 +107,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
               color: theme.cardColor,
               child: IconButton(
                   onPressed: () {
-                    saveChanges();
+                    productManagerHelper.applyChanges();
                     Navigator.of(context).pop();
                   },
                   icon: Icon(
@@ -195,20 +128,20 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   flex: widget.imageFlex,
                   child: InkResponse(
                     onTap: () {
-                      browseImage();
+                      productManagerHelper.browseImage();
                     },
                     child: ValueListenableBuilder<String>(
-                        valueListenable: imageUrl,
+                        valueListenable: productManagerHelper.image,
                         builder: (context, value, child) {
-                          if (widget.editMode) {
+                          if (productManagerHelper.editMode) {
                             return CustomNetworkImage(
-                              product.getImageUrl(),
+                              value,
                               backupImage: uploadImageUrl,
                               fit: BoxFit.fill,
                             );
                           }
                           return LocalImage(
-                            product.getImageUrl(),
+                            value,
                             backupImage: uploadImageUrl,
                             fit: BoxFit.fill,
                           );
@@ -232,12 +165,12 @@ class _ProductsScreenState extends State<ProductsScreen> {
                       )),
                       InformationCard(
                           label: productNameLabel,
-                          initialValue: product.getName(),
-                          onChangeConfirm: setName),
+                          initialValue: productManagerHelper.name,
+                          onChangeConfirm: productManagerHelper.setName),
                       InformationCard(
                           label: productDescriptionLabel,
-                          initialValue: product.getDescription(),
-                          onChangeConfirm: setDescription),
+                          initialValue: productManagerHelper.description,
+                          onChangeConfirm: productManagerHelper.setDescription),
                       Flexible(
                           child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -249,7 +182,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                           InkResponse(
                             onTap: () {
                               navigationProvider.navigateToSizeManager(
-                                  context, product);
+                                  context, productManagerHelper.product);
                             },
                             child: Text(
                               manage,
@@ -259,15 +192,21 @@ class _ProductsScreenState extends State<ProductsScreen> {
                         ],
                       )),
                       Expanded(
-                          child: OptionalItemsWidget(
-                        sizesTitle,
-                        displayTitle: false,
-                        activeItem: currentSizeIndex.value,
-                        unselectedItemColor: theme.colorScheme.background,
-                        itemCount: widget.product.getSizesCount(),
-                        itemPopulater: getSize,
-                        onItemPressed: selectSize,
-                      )),
+                          child: ValueListenableBuilder(
+                              valueListenable: productManagerHelper.formCounter,
+                              builder: (context, value, child) {
+                                return OptionalItemsWidget(
+                                  sizesTitle,
+                                  displayTitle: false,
+                                  activeItem: currentSizeIndex.value,
+                                  unselectedItemColor:
+                                      theme.colorScheme.background,
+                                  itemCount:
+                                      productManagerHelper.modelsCount.value,
+                                  itemPopulater: getSize,
+                                  onItemPressed: selectSize,
+                                );
+                              })),
                     ]),
               )
             ],

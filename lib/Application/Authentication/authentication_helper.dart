@@ -6,7 +6,7 @@ import 'package:online_order_shop_mobile/Domain/Profile/profile_model.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Authentication/iauthentication_service.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Orders/iorder_service.dart';
 import 'package:online_order_shop_mobile/Infrastructure/service_provider.dart';
-import 'package:online_order_shop_mobile/Ui/Components/dialogs.dart';
+import 'package:online_order_shop_mobile/Ui/Components/Dialogs/dialogs.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
 import 'package:provider/provider.dart';
 import 'dart:developer' as dev;

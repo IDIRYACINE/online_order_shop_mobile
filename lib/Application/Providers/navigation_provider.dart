@@ -91,17 +91,9 @@ class NavigationProvider with ChangeNotifier {
         MaterialPageRoute(builder: (context) => const CategoryScreen()));
   }
 
-  void navigateToProductDetails(
-      BuildContext context, Category category, Product product,
-      [bool editMode = false]) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => ProductsScreen(
-                  product,
-                  category: category,
-                  editMode: editMode,
-                )));
+  void navigateToProductDetails(BuildContext context) {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => const ProductsScreen()));
   }
 
   void navigateToOrderDetails(BuildContext context, IOrder order) {

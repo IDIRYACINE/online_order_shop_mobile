@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:online_order_shop_mobile/Ui/Components/dialogs.dart';
+import 'package:online_order_shop_mobile/Application/Catalogue/product_manager_helper.dart';
+import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
+import 'package:online_order_shop_mobile/Ui/Components/Dialogs/dialogs.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
+import 'package:provider/provider.dart';
 
 class SizePriceListView extends StatefulWidget {
   final List<String> sizes;
   final List<double> prices;
+  final VoidCallback onChange;
 
-  void removeElement(int index) {
-    sizes.removeAt(index);
-    prices.removeAt(index);
-  }
-
-  void addElement(String size, String price) {
-    sizes.add(size);
-    prices.add(double.parse(price));
-  }
-
-  const SizePriceListView({Key? key, required this.sizes, required this.prices})
+  const SizePriceListView(
+      {Key? key,
+      required this.sizes,
+      required this.prices,
+      required this.onChange})
       : super(key: key);
 
   @override
@@ -32,6 +30,10 @@ class _SizePriceListViewState extends State<SizePriceListView> {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
+    ProductManagerHelper productManagerHelper =
+        Provider.of<HelpersProvider>(context, listen: false)
+            .productManagerHelper;
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -54,9 +56,9 @@ class _SizePriceListViewState extends State<SizePriceListView> {
                       builder: (context) {
                         return SizePriceAlertDialog(
                           onConfirm: (String size, String price) {
-                            setState(() {
-                              widget.addElement(size, price);
-                            });
+                            widget.onChange();
+
+                            productManagerHelper.addModel(size, price);
                           },
                           formKey: GlobalKey<FormState>(),
                         );
@@ -67,30 +69,33 @@ class _SizePriceListViewState extends State<SizePriceListView> {
           )),
           const Divider(),
           Expanded(
-            child: ListView.separated(
-              scrollDirection: Axis.vertical,
-              itemCount: widget.prices.length,
-              itemBuilder: (context, index) {
-                return _SizePriceForm(
-                  index: index,
-                  size: widget.sizes[index],
-                  price: widget.prices[index],
-                  removeForm: () {
-                    setState(() {
-                      widget.removeElement(index);
-                    });
-                  },
-                  updateForm: (index, size, price) {
-                    setState(() {
-                      widget.updateForm(index, size, price);
-                    });
-                  },
-                );
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                return const Divider();
-              },
-            ),
+            child: ValueListenableBuilder<int>(
+                valueListenable: productManagerHelper.modelsCount,
+                builder: (context, value, child) {
+                  return ListView.separated(
+                    scrollDirection: Axis.vertical,
+                    itemCount: widget.prices.length,
+                    itemBuilder: (context, index) {
+                      return _SizePriceForm(
+                        index: index,
+                        size: widget.sizes[index],
+                        price: widget.prices[index],
+                        removeForm: () {
+                          widget.onChange();
+
+                          productManagerHelper.removeModel(index);
+                        },
+                        updateForm: (index, size, price) {
+                          widget.onChange();
+                          productManagerHelper.updateModel(index, size, price);
+                        },
+                      );
+                    },
+                    separatorBuilder: (BuildContext context, int index) {
+                      return const Divider();
+                    },
+                  );
+                }),
           ),
         ],
       ),
@@ -129,6 +134,9 @@ class _SizePriceFormState extends State<_SizePriceForm> {
     ThemeData theme = Theme.of(context);
     size = widget.size;
     price = widget.price;
+    ProductManagerHelper productManagerHelper =
+        Provider.of<HelpersProvider>(context, listen: false)
+            .productManagerHelper;
 
     return InkResponse(
       onTap: () {
@@ -146,27 +154,33 @@ class _SizePriceFormState extends State<_SizePriceForm> {
             });
       },
       child: Card(
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Expanded(
-                child: Text(
-              size,
-              style: theme.textTheme.bodyText1,
-            )),
-            Expanded(
-                child: Text(
-              '${price.toString()} $labelCurrency',
-              style: theme.textTheme.bodyText1,
-            )),
-            Flexible(
-                child: IconButton(
-              icon: const Icon(Icons.remove_circle_outline),
-              onPressed: widget.removeForm,
-            )),
-          ],
-        ),
+        child: ValueListenableBuilder<int>(
+            valueListenable: productManagerHelper.formCounter,
+            builder: (context, value, child) {
+              return Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Expanded(
+                      child: Text(
+                    productManagerHelper.getSize(widget.index),
+                    style: theme.textTheme.bodyText1,
+                  )),
+                  Expanded(
+                      child: Text(
+                    '${productManagerHelper.getPrice(widget.index)} $labelCurrency',
+                    style: theme.textTheme.bodyText1,
+                  )),
+                  Flexible(
+                      child: IconButton(
+                    icon: const Icon(Icons.remove_circle_outline),
+                    onPressed: () {
+                      productManagerHelper.removeModel(widget.index);
+                    },
+                  )),
+                ],
+              );
+            }),
       ),
     );
   }

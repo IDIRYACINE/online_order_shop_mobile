@@ -77,9 +77,13 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     onPressed: () {
                       Provider.of<NavigationProvider>(context, listen: false)
                           .navigateToProductDetails(
-                              context,
-                              catalogueHelper.getCategory(),
-                              Product("", "", "", [], []));
+                        context,
+                      );
+
+                      Provider.of<HelpersProvider>(context, listen: false)
+                          .productManagerHelper
+                          .setProduct(catalogueHelper.getCategory(),
+                              Product("", "", "", [], []), false);
                     },
                     icon: const Icon(Icons.add_circle_outline)),
               ],

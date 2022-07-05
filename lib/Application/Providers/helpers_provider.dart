@@ -4,6 +4,7 @@ import 'package:online_order_shop_mobile/Application/Authentication/authenticati
 import 'package:online_order_shop_mobile/Application/Authentication/authentication_helper.dart';
 import 'package:online_order_shop_mobile/Application/Cart/cart_helper.dart';
 import 'package:online_order_shop_mobile/Application/Catalogue/catalogue_helper.dart';
+import 'package:online_order_shop_mobile/Application/Catalogue/product_manager_helper.dart';
 import 'package:online_order_shop_mobile/Application/DeliveryAddress/delivery_address.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/catalogue_model.dart';
 import 'package:online_order_shop_mobile/Domain/Profile/profile_model.dart';
@@ -18,6 +19,7 @@ class HelpersProvider with ChangeNotifier {
   late ServicesProvider services;
   late DeliveryAddress _addressHelper;
   late AuthenticationHelper _authHelper;
+  late ProductManagerHelper _productManagerHelper;
 
   Future<bool> initApp() async {
     try {
@@ -36,6 +38,9 @@ class HelpersProvider with ChangeNotifier {
       await _initProfile();
 
       await services.permissionsService.requestGpsPermission();
+
+      _productManagerHelper = ProductManagerHelper(services.serverAcessService,
+          services.productDatabase, _catalogueHelper);
     } on LocalDatabaseNotFound catch (_) {
       throw LocalDatabaseNotFound();
     } catch (e) {
@@ -63,4 +68,6 @@ class HelpersProvider with ChangeNotifier {
   DeliveryAddress get addressHelper => _addressHelper;
 
   AuthenticationHelper get authHelper => _authHelper;
+
+  ProductManagerHelper get productManagerHelper => _productManagerHelper;
 }
