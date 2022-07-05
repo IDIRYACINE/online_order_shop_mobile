@@ -1,14 +1,18 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:online_order_shop_mobile/Application/Catalogue/catalogue_helper.dart';
 import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/category_model.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Server/ionline_data_service.dart';
 import 'package:online_order_shop_mobile/Infrastructure/service_provider.dart';
+import 'package:online_order_shop_mobile/Ui/Components/Images/local_image.dart';
+import 'package:online_order_shop_mobile/Ui/Components/Images/network_image.dart';
 import 'package:online_order_shop_mobile/Ui/Components/cards.dart';
-import 'package:online_order_shop_mobile/Ui/Components/forms.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
+import 'dart:developer' as dev;
 
 class CategoryManagerScreen extends StatefulWidget {
   final bool editMode;
@@ -26,38 +30,27 @@ class _CategoryManagerScreenState extends State<CategoryManagerScreen> {
   late ValueNotifier<String> imageUrl;
   bool imageChanged = false;
 
-  void saveChanges() {
+  Future<void> saveChanges() async {
     IOnlineServerAcess server = ServicesProvider().serverAcessService;
+    category.transfer(widget.category!);
 
     if (widget.editMode) {
-      category.transfer(widget.category!);
-      catalogueHelper.updateCategory(category);
-
       if (imageChanged) {
-        server.uploadFile(
-            fileUrl: category.getImageUrl(), savePath: category.getId());
+        String url = await server.uploadFile(
+            fileUrl: imageUrl.value, name: category.getId());
+        category.setImageUrl(url);
       }
+      catalogueHelper.updateCategory(category);
       return;
     }
+
+    String url = await server.uploadFile(
+        fileUrl: imageUrl.value, name: category.getId());
+    category.setImageUrl(url);
     catalogueHelper.createCategory(category);
-    if (imageChanged) {
-      server.uploadFile(
-          fileUrl: category.getImageUrl(), savePath: category.getName());
-    }
   }
 
   void setup() {
-    if (widget.editMode == false) {
-      category = Category(
-        id: '',
-        name: '',
-        productsCount: 0,
-        imageUrl: uploadImageUrl,
-      );
-      imageUrl = ValueNotifier('');
-
-      return;
-    }
     category = Category.from(widget.category!);
     imageUrl = ValueNotifier(category.getImageUrl());
   }
@@ -66,9 +59,10 @@ class _CategoryManagerScreenState extends State<CategoryManagerScreen> {
     final ImagePicker _picker = ImagePicker();
     // Pick an image
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    // Maybe we should move the copy image from (cache) to internal storge , then upload
     if (image != null) {
-      category.setImageUrl(image.path);
-      imageUrl.value = category.getImageUrl();
+      imageUrl.value = image.path;
+      imageChanged = true;
     }
   }
 
@@ -120,22 +114,35 @@ class _CategoryManagerScreenState extends State<CategoryManagerScreen> {
                 child: InkResponse(
               onTap: browseImage,
               child: ValueListenableBuilder<String>(
-                valueListenable: imageUrl,
-                builder: (context, value, child) {
-                  return FaultTolerantImage(
-                    category.getImageUrl(),
-                    backupImage: uploadImageUrl,
-                    fit: BoxFit.fill,
-                  );
-                },
-              ),
+                  valueListenable: imageUrl,
+                  builder: (context, image, child) {
+                    if (widget.editMode) {
+                      return CustomNetworkImage(
+                        image,
+                        backupImage: uploadImageUrl,
+                        fit: BoxFit.fill,
+                      );
+                    }
+                    return LocalImage(
+                      image,
+                      backupImage: uploadImageUrl,
+                      fit: BoxFit.fill,
+                    );
+                  }),
             )),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-              child: InformationCard(
-                label: categoryNameLabel,
-                initialValue: category.getName(),
-                onChangeConfirm: (value) {},
+            Flexible(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: InformationCard(
+                  label: categoryNameLabel,
+                  initialValue: category.getName(),
+                  onChangeConfirm: (name) {
+                    if (!widget.editMode) {
+                      category.setId(name);
+                    }
+                    category.setName(name);
+                  },
+                ),
               ),
             ),
           ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/optional_item.dart';
+import 'package:online_order_shop_mobile/Ui/Components/Images/network_image.dart';
 import 'package:online_order_shop_mobile/Ui/Components/forms.dart';
 
 typedef ItemPopulater = OptionalItem Function(int index);
@@ -69,7 +70,7 @@ class _OptionalItemsWidgetState extends State<OptionalItemsWidget> {
       displayIcon: widget.displayItemIcon,
       isSelected: checkSelectedItem(index),
       displayLabel: widget.displayItemLabel,
-      icon: FaultTolerantImage(item.getImageUrl()),
+      icon: CustomNetworkImage(item.getImageUrl()),
       selectedItemColor: widget.selectedItemColor ?? theme.primaryColor,
       unselectedItemColor:
           widget.unselectedItemColor ?? theme.colorScheme.background,

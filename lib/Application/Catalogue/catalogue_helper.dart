@@ -5,7 +5,7 @@ import 'package:online_order_shop_mobile/Domain/Catalogue/category_model.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/product_model.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Catalogue/Product/product_widget.dart';
 
-class CatalogueHelper {
+class CatalogueHelper with ChangeNotifier {
   final CatalogueModel _catalogueModel;
   final int _maxProductsPreview = 5;
   late Category _selectedCategory;
@@ -34,20 +34,24 @@ class CatalogueHelper {
     _selectedCategory = _catalogueModel.getCategory(categoryIndex: 0);
   }
 
-  void setSelectedCategory(int categoryIndex) {
-    _selectedCategory =
-        _catalogueModel.getCategory(categoryIndex: categoryIndex);
+  void setSelectedCategory(Category category) {
+    _selectedCategory = category;
   }
 
   final BoxConstraints _defaultProductWidgetConstraints =
       const BoxConstraints(minHeight: 100, maxHeight: 150);
 
-  Widget productWidgetBuilder(BuildContext context, int productIndex,
+  Widget productWidgetBuilder(
+      BuildContext context, int productIndex, ProductCallback removeProduct,
       [BoxConstraints? productConstraints]) {
     return ConstrainedBox(
         constraints: productConstraints ?? _defaultProductWidgetConstraints,
-        child: ProductWidget(getCategory(),
-            _selectedCategory.getProduct(productIndex: productIndex)));
+        child: ProductWidget(
+          getCategory(),
+          _selectedCategory.getProduct(productIndex: productIndex),
+          removeProduct: removeProduct,
+          index: productIndex,
+        ));
   }
 
   void removeCategory(int index) {
@@ -64,6 +68,7 @@ class CatalogueHelper {
 
   void createCategory(Category category) {
     _catalogueModel.createCategory(category);
+    notifyListeners();
   }
 
   void updateProduct(Category category, Product product) {

@@ -56,6 +56,8 @@ const productNameLabel = "Nom d'article";
 const productDescriptionLabel = "Description";
 const manage = "Manager";
 const deleteOrderLabel = "Supprimer";
+const productsTitle = "Articles";
+const orderStatusLabel = "Status";
 
 //Settings
 const synchroniseDatabaseTitle = "Synchroniser la base de données";
@@ -64,6 +66,8 @@ const resetDatabaseTitle = "Réinitialiser la base de données";
 const advancedSectionTitle = "Avancée";
 const priceLabel = "Prix";
 const sizeLabel = "Taille";
+const updatedDatabaseLabel = "Base de données mise à jour";
+const reDownloadingDatabaseLabel = "Base de données réinitialisée";
 
 //Measures
 const appBarHeight = 100.0;

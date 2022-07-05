@@ -150,6 +150,11 @@ class ProductsDatabase implements IProductsDatabase {
     if (somethingChanged) {
       int currentVersion = await _productsDatabase.getVersion();
       _productsDatabase.setVersion(currentVersion + 1);
+
+      File databaseFile = await _getLocalDatabaseFile();
+
+      _serverAccess.uploadFile(
+          fileUrl: databaseFile.path, name: _productsDatabaseName);
       somethingChanged = false;
       return true;
     }
@@ -166,5 +171,22 @@ class ProductsDatabase implements IProductsDatabase {
   @override
   void remebmerChange() {
     somethingChanged = true;
+  }
+
+  @override
+  Future<void> reset() async {
+    File databaseFile = await _getLocalDatabaseFile();
+
+    try {
+      int databaseVersion = await _serverAccess.fetchData(dataUrl: 'version');
+
+      disconnect();
+      await _serverAccess.downloadFile(
+          fileUrl: _productsDatabaseName, out: databaseFile);
+      await _connectToLocalDatabase(localDatabasePath: databaseFile.path);
+      _productsDatabase.setVersion(databaseVersion);
+    } catch (e) {
+      // dont care
+    }
   }
 }

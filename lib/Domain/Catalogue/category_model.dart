@@ -102,4 +102,8 @@ class Category {
   void removeProduct(int productIndex) {}
 
   void addProduct() {}
+
+  void setId(String name) {
+    _id = name;
+  }
 }

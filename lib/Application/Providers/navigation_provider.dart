@@ -92,11 +92,16 @@ class NavigationProvider with ChangeNotifier {
   }
 
   void navigateToProductDetails(
-      BuildContext context, Category category, Product product) {
+      BuildContext context, Category category, Product product,
+      [bool editMode = false]) {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => ProductsScreen(product, category: category)));
+            builder: (context) => ProductsScreen(
+                  product,
+                  category: category,
+                  editMode: editMode,
+                )));
   }
 
   void navigateToOrderDetails(BuildContext context, IOrder order) {
@@ -112,8 +117,8 @@ class NavigationProvider with ChangeNotifier {
     return _iconIndex;
   }
 
-  void navigateToCategoryManager(BuildContext context,
-      [bool editMode = false, Category? category]) {
+  void navigateToCategoryManager(BuildContext context, Category category,
+      [bool editMode = false]) {
     Navigator.push(
         context,
         MaterialPageRoute(

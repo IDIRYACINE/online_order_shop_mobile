@@ -90,6 +90,7 @@ class _InformationCardState extends State<InformationCard> {
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Text(widget.label,
                     style: widget.labelTextStyle ?? theme.textTheme.subtitle1),

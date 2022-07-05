@@ -8,8 +8,9 @@ import 'package:online_order_shop_mobile/Domain/Catalogue/optional_item.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/product_model.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Server/ionline_data_service.dart';
 import 'package:online_order_shop_mobile/Infrastructure/service_provider.dart';
+import 'package:online_order_shop_mobile/Ui/Components/Images/local_image.dart';
+import 'package:online_order_shop_mobile/Ui/Components/Images/network_image.dart';
 import 'package:online_order_shop_mobile/Ui/Components/cards.dart';
-import 'package:online_order_shop_mobile/Ui/Components/forms.dart';
 import 'package:online_order_shop_mobile/Ui/Components/product_components.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
 import 'package:provider/provider.dart';
@@ -33,7 +34,7 @@ class ProductsScreen extends StatefulWidget {
   final int productDescriptionFlex = 1;
 
   const ProductsScreen(this.product,
-      {Key? key, this.editMode = true, required this.category})
+      {Key? key, required this.editMode, required this.category})
       : super(key: key);
 
   @override
@@ -48,23 +49,26 @@ class _ProductsScreenState extends State<ProductsScreen> {
   late CatalogueHelper catalogueHelper;
   late ValueNotifier<String> imageUrl;
 
-  void saveChanges() {
+  Future<void> saveChanges() async {
     IOnlineServerAcess server = ServicesProvider().serverAcessService;
 
     if (widget.editMode) {
-      product.transfer(widget.product);
-      catalogueHelper.updateProduct(widget.category, product);
       if (imageChanged) {
-        server.uploadFile(
-            fileUrl: product.getImageUrl(),
-            savePath: product.getId().toString());
+        String url = await server.uploadFile(
+            fileUrl: imageUrl.value, name: product.getName());
+        product.setImageUrl(url);
       }
+      product.transfer(widget.product);
+
+      catalogueHelper.updateProduct(widget.category, product);
+
       return;
     }
-    catalogueHelper.createProduct(widget.category, product);
 
-    server.uploadFile(
-        fileUrl: product.getImageUrl(), savePath: product.getName());
+    String url = await server.uploadFile(
+        fileUrl: imageUrl.value, name: product.getName());
+    product.setImageUrl(url);
+    catalogueHelper.createProduct(widget.category, product);
   }
 
   void setup(BuildContext context) {
@@ -76,14 +80,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
     catalogueHelper =
         Provider.of<HelpersProvider>(context, listen: false).catalogueHelper;
 
-    if (widget.editMode) {
-      product = widget.product;
-      imageUrl = ValueNotifier(product.getImageUrl());
-      return;
-    }
-
-    product = Product("", "", "", [], []);
-    imageUrl = ValueNotifier("");
+    product = widget.product;
+    imageUrl = ValueNotifier(product.getImageUrl());
   }
 
   Future<void> browseImage() async {
@@ -158,18 +156,25 @@ class _ProductsScreenState extends State<ProductsScreen> {
               Expanded(
                   flex: widget.imageFlex,
                   child: InkResponse(
-                    onTap: () {},
+                    onTap: () {
+                      browseImage();
+                    },
                     child: ValueListenableBuilder<String>(
-                      valueListenable: imageUrl,
-                      builder: (context, value, child) {
-                        return FaultTolerantImage(
-                          product.getImageUrl(),
-                          backupImage: 'assets/images/upload.png',
-                          width: double.infinity,
-                          fit: BoxFit.fill,
-                        );
-                      },
-                    ),
+                        valueListenable: imageUrl,
+                        builder: (context, value, child) {
+                          if (widget.editMode) {
+                            return CustomNetworkImage(
+                              product.getImageUrl(),
+                              backupImage: uploadImageUrl,
+                              fit: BoxFit.fill,
+                            );
+                          }
+                          return LocalImage(
+                            product.getImageUrl(),
+                            backupImage: uploadImageUrl,
+                            fit: BoxFit.fill,
+                          );
+                        }),
                   )),
               Expanded(
                 flex: widget.productFlex,

@@ -10,7 +10,8 @@ abstract class IOnlineServerAcess {
   Future<void> updateData({required String dataUrl, required dynamic data});
   Stream<DatabaseEvent> getDataStream({required String dataUrl});
   Future<void> removeData({required String dataUrl});
-  Future<bool> uploadFile({required String fileUrl, String? savePath});
+  Future<String> uploadFile({required String fileUrl, required String name});
   Future<bool> uploadPendingFiles();
+  Future<String> getUploadUrl({required String savePath});
   void addFileToUploadQueue({required String fileUrl, String? savePath});
 }

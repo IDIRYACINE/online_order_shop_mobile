@@ -1,6 +1,5 @@
 import 'package:online_order_shop_mobile/Domain/Cart/cart_item.dart';
 import 'package:online_order_shop_mobile/Domain/Orders/iorder.dart';
-import 'dart:developer' as dev;
 
 class Order implements IOrder {
   late List<Map<String, dynamic>> _items;
@@ -15,7 +14,6 @@ class Order implements IOrder {
   double? _totalPrice;
 
   Order(Map<String, dynamic> order) {
-    dev.log(order.toString());
     _items = List.from(order["items"]);
     _orderId = order["id"];
     _orderStatus = "waiting"; //order["status"];

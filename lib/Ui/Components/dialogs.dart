@@ -105,6 +105,7 @@ typedef TypedCallback = void Function(String value);
 class SpinnerAlertDialog extends StatefulWidget {
   final List<String> data;
   final int initialSelection;
+  final String? initialValue;
   final TypedCallback onConfirm;
   final VoidCallback? onCancel;
 
@@ -113,7 +114,8 @@ class SpinnerAlertDialog extends StatefulWidget {
       required this.data,
       this.initialSelection = 0,
       required this.onConfirm,
-      this.onCancel})
+      this.onCancel,
+      this.initialValue})
       : super(key: key);
 
   String getInitialItem() {
@@ -125,7 +127,7 @@ class SpinnerAlertDialog extends StatefulWidget {
 }
 
 class _SpinnerAlertDialogState<T> extends State<SpinnerAlertDialog> {
-  late String dropDownValue = "attendu";
+  late String dropDownValue;
 
   void onItemSelected(String? value) {
     setState(() {
@@ -133,9 +135,15 @@ class _SpinnerAlertDialogState<T> extends State<SpinnerAlertDialog> {
     });
   }
 
+  void setup() {
+    dropDownValue = widget.initialValue ?? "attendu";
+  }
+
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
+    setup();
+
     return AlertDialog(
         content: Padding(
             padding: const EdgeInsets.all(8.0),

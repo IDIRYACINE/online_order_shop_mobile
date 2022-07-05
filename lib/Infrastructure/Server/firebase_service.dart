@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-
+import 'dart:developer' as dev;
 import 'ionline_data_service.dart';
 
 class FireBaseServices implements IOnlineServerAcess {
@@ -50,10 +50,18 @@ class FireBaseServices implements IOnlineServerAcess {
   }
 
   @override
-  Future<bool> uploadFile({required String fileUrl, String? savePath}) async {
-    File file = File(fileUrl);
-    await _firebaseStorage.ref(fileUrl).putFile(file);
-    return true;
+  Future<String> uploadFile(
+      {required String fileUrl, required String name}) async {
+    String url = "";
+    try {
+      File file = File(fileUrl);
+
+      await _firebaseStorage.ref("images/$name.png").putFile(file);
+      url = await _firebaseStorage.ref("images/$name.png").getDownloadURL();
+    } on FirebaseException catch (e) {
+      dev.log(e.message!);
+    }
+    return url;
   }
 
   @override
@@ -65,10 +73,12 @@ class FireBaseServices implements IOnlineServerAcess {
   Future<bool> uploadPendingFiles() async {
     // TODO: Somehow give back feedback on progress
 
-    for (String fileUrl in _uploadQueue) {
-      uploadFile(fileUrl: fileUrl);
-    }
-
     return true;
+  }
+
+  @override
+  Future<String> getUploadUrl({required String savePath}) async {
+    String url = await _firebaseStorage.ref(savePath).getDownloadURL();
+    return url;
   }
 }

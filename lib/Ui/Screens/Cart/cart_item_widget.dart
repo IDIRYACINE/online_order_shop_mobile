@@ -3,6 +3,7 @@ import 'package:online_order_shop_mobile/Application/Cart/cart_helper.dart';
 import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
 import 'package:online_order_shop_mobile/Application/Providers/navigation_provider.dart';
 import 'package:online_order_shop_mobile/Domain/Cart/cart_item.dart';
+import 'package:online_order_shop_mobile/Ui/Components/Images/network_image.dart';
 import 'package:online_order_shop_mobile/Ui/Components/forms.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +37,7 @@ class _CartItemState extends State<CartItemWidget> {
         children: [
           Expanded(
               flex: 2,
-              child: FaultTolerantImage(
+              child: CustomNetworkImage(
                 widget.cartItem.getThumbnailUrl(),
                 height: double.maxFinite,
                 fit: BoxFit.fitHeight,

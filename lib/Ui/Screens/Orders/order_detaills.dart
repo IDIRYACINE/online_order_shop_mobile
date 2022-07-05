@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:online_order_shop_mobile/Application/Providers/navigation_provider.dart';
 import 'package:online_order_shop_mobile/Domain/Cart/cart.dart';
 import 'package:online_order_shop_mobile/Domain/Orders/iorder.dart';
+import 'package:online_order_shop_mobile/Domain/Orders/order_status.dart';
+import 'package:online_order_shop_mobile/Infrastructure/service_provider.dart';
 import 'package:online_order_shop_mobile/Ui/Components/cards.dart';
+import 'package:online_order_shop_mobile/Ui/Components/dialogs.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 
 class OrderDetaillsScreen extends StatefulWidget {
   final IOrder order;
@@ -23,6 +27,15 @@ class OrderDetaillsScreen extends StatefulWidget {
 }
 
 class _OrderDetaillsScreentState extends State<OrderDetaillsScreen> {
+  void dialPhone() {
+    UrlLauncher.launch("tel://21213123123");
+  }
+
+  void updateState(String newState) {
+    ServicesProvider().orderService.updateOrderStatus(
+        OrderStatus.frToEnStatus(newState), widget.order.getId());
+  }
+
   @override
   Widget build(BuildContext context) {
     NavigationProvider navigationProvider =
@@ -69,7 +82,9 @@ class _OrderDetaillsScreentState extends State<OrderDetaillsScreen> {
                 child: InformationCard(
                   label: phoneLabel,
                   initialValue: widget.order.getPhoneNumber(),
-                  onPressed: () {},
+                  onPressed: () {
+                    dialPhone();
+                  },
                   onChangeConfirm: (String value) {},
                 ),
               ),
@@ -95,6 +110,22 @@ class _OrderDetaillsScreentState extends State<OrderDetaillsScreen> {
                   onChangeConfirm: (String value) {},
                 ),
               ),
+              Padding(
+                  padding: EdgeInsets.all(widget.cardsPadding),
+                  child: InformationCard(
+                      label: orderStatusLabel,
+                      initialValue: widget.order.getStatus(),
+                      onPressed: () {
+                        showDialog<AlertDialog>(
+                            context: context,
+                            builder: (context) {
+                              return SpinnerAlertDialog(
+                                  data: OrderStatus.values,
+                                  initialValue: widget.order.getStatus(),
+                                  onConfirm: updateState);
+                            });
+                      },
+                      onChangeConfirm: (String value) {})),
               Padding(
                 padding: EdgeInsets.all(widget.cardsPadding),
                 child: InformationCard(

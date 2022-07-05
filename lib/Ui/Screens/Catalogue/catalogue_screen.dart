@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:online_order_shop_mobile/Application/Catalogue/catalogue_helper.dart';
 import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
 import 'package:online_order_shop_mobile/Application/Providers/navigation_provider.dart';
-import 'package:online_order_shop_mobile/Ui/Components/category_widget.dart';
+import 'package:online_order_shop_mobile/Domain/Catalogue/category_model.dart';
+import 'package:online_order_shop_mobile/Ui/Screens/Catalogue/Category/category_widget.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
 import 'package:provider/provider.dart';
 
@@ -24,11 +25,6 @@ class CatalogueScreen extends StatefulWidget {
 class _CatalogueScreenState extends State<CatalogueScreen> {
   late CatalogueHelper catalogueHelper;
   late NavigationProvider navigationProvider;
-
-  void onCategoryPressed(int index, VoidCallback toggleSelfCallback) {
-    catalogueHelper.setSelectedCategory(index);
-    // Rebuilding widget will cancel the execution of the function ! ValueNotifiers
-  }
 
   void removeCategory(int index) {
     setState(() {
@@ -66,7 +62,10 @@ class _CatalogueScreenState extends State<CatalogueScreen> {
                     ),
                     IconButton(
                         onPressed: () {
-                          navigationProvider.navigateToCategoryManager(context);
+                          Category category = Category(
+                              id: "", name: "", imageUrl: "", productsCount: 0);
+                          navigationProvider.navigateToCategoryManager(
+                              context, category);
                         },
                         icon: const Icon(Icons.add_circle_outline)),
                   ],
