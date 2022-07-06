@@ -3,6 +3,7 @@ import 'package:online_order_shop_mobile/Application/Catalogue/catalogue_helper.
 import 'package:online_order_shop_mobile/Application/Catalogue/category_manager_helper.dart';
 import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
 import 'package:online_order_shop_mobile/Ui/Components/Images/local_image.dart';
+import 'package:online_order_shop_mobile/Ui/Components/Images/network_local_image.dart';
 import 'package:online_order_shop_mobile/Ui/Components/cards.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
 import 'package:provider/provider.dart';
@@ -82,9 +83,10 @@ class _CategoryManagerScreenState extends State<CategoryManagerScreen> {
               child: ValueListenableBuilder<String>(
                   valueListenable: categoryManagerHelper.image,
                   builder: (context, value, child) {
-                    return LocalImage(
+                    return NetworkLocalImage(
                       value,
                       fit: BoxFit.fill,
+                      firstLoadWatcher: categoryManagerHelper.firstLoad,
                     );
                   }),
             )),

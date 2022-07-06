@@ -60,7 +60,7 @@ class Product {
 
   Map<String, Object?> toMap() {
     return {
-      "Name": _name,
+      "Name": _name.value,
       "Description": _description,
       "ImageUrl": _imageUrl,
       "Size": _sizes.toString(),

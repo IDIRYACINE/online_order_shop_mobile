@@ -1,16 +1,19 @@
-import 'package:online_order_shop_mobile/Domain/Catalogue/category_model.dart';
-import 'package:online_order_shop_mobile/Domain/Catalogue/product_model.dart';
+import 'package:flutter/src/foundation/change_notifier.dart';
+import 'package:online_order_shop_mobile/Domain/Catalogue/Category/category_model.dart';
+import 'package:online_order_shop_mobile/Domain/Catalogue/Product/product_model.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Database/products_mapper.dart';
 import 'package:online_order_shop_mobile/Infrastructure/service_provider.dart';
 
 class CatalogueModel {
   late ProductsMapper _productsManager;
-  final int _categoryMaxProductDisplay = 5;
+  final int _categoryMaxProductDisplay = 100;
   late CategoryMap _categories;
+  late ValueNotifier<int> _categoriesCount;
 
   Future<void> initCategories() async {
     _productsManager = ServicesProvider().productsMapper;
     _categories = await _productsManager.getCategories();
+    _categoriesCount = ValueNotifier(_categories.length);
     for (Category category in _categories) {
       await category.loadProducts(productsCount: _categoryMaxProductDisplay);
     }
@@ -21,11 +24,12 @@ class CatalogueModel {
   }
 
   int getCategoriesCount() {
-    return _categories.length;
+    return _categoriesCount.value;
   }
 
   void removeCategory(Category category) {
     _categories.remove(category);
+    _categoriesCount.value--;
     _productsManager.removeCategory(category);
   }
 
@@ -40,6 +44,8 @@ class CatalogueModel {
 
   void createCategory(Category category) {
     _categories.add(category);
+    _categoriesCount.value++;
+
     _productsManager.createCategory(category);
   }
 
@@ -54,5 +60,9 @@ class CatalogueModel {
 
   void clearCategories() {
     _categories.clear();
+  }
+
+  ValueListenable<int> getCategoriesCountListenable() {
+    return _categoriesCount;
   }
 }

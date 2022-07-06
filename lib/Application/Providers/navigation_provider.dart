@@ -1,12 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:online_order_shop_mobile/Domain/Cart/cart.dart';
-import 'package:online_order_shop_mobile/Domain/Catalogue/product_model.dart';
+import 'package:online_order_shop_mobile/Domain/Catalogue/Product/product_model.dart';
 import 'package:online_order_shop_mobile/Domain/Orders/iorder.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Cart/cart_screen.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Catalogue/Category/category_manager_screen.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Catalogue/Category/category_screen.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Catalogue/Product/product_manager_screen.dart';
-import 'package:online_order_shop_mobile/Ui/Screens/Catalogue/Product/size_price_manager.dart';
+import 'package:online_order_shop_mobile/Ui/Screens/Catalogue/Product/Size/size_price_manager.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Catalogue/catalogue_screen.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/DeliveryAddress/gps_screen.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/DeliveryAddress/immutable_map.dart';

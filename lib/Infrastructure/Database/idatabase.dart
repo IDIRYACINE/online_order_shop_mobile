@@ -1,5 +1,5 @@
-import 'package:online_order_shop_mobile/Domain/Catalogue/category_model.dart';
-import 'package:online_order_shop_mobile/Domain/Catalogue/product_model.dart';
+import 'package:online_order_shop_mobile/Domain/Catalogue/Category/category_model.dart';
+import 'package:online_order_shop_mobile/Domain/Catalogue/Product/product_model.dart';
 
 typedef ResultSet = List<QueryResult>;
 typedef QueryResult = Map<String, Object?>;

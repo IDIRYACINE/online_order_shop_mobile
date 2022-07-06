@@ -3,7 +3,7 @@ import 'package:online_order_shop_mobile/Application/Catalogue/product_manager_h
 import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
 import 'package:online_order_shop_mobile/Application/Providers/navigation_provider.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/optional_item.dart';
-import 'package:online_order_shop_mobile/Ui/Components/Images/local_image.dart';
+import 'package:online_order_shop_mobile/Ui/Components/Images/network_local_image.dart';
 import 'package:online_order_shop_mobile/Ui/Components/cards.dart';
 import 'package:online_order_shop_mobile/Ui/Components/product_components.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
@@ -121,9 +121,10 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     child: ValueListenableBuilder<String>(
                         valueListenable: productManagerHelper.image,
                         builder: (context, value, child) {
-                          return LocalImage(
+                          return NetworkLocalImage(
                             value,
                             fit: BoxFit.fill,
+                            firstLoadWatcher: productManagerHelper.firstLoad,
                           );
                         }),
                   )),

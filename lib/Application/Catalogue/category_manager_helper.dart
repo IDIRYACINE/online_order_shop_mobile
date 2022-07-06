@@ -1,9 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:online_order_shop_mobile/Application/Catalogue/catalogue_helper.dart';
-import 'package:online_order_shop_mobile/Domain/Catalogue/category_model.dart'
+import 'package:online_order_shop_mobile/Domain/Catalogue/Category/category_model.dart'
     as my_app;
-import 'package:online_order_shop_mobile/Domain/Catalogue/product_model.dart';
+import 'package:online_order_shop_mobile/Domain/Catalogue/Product/product_model.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Database/idatabase.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Server/ionline_data_service.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Catalogue/Product/product_widget.dart';
@@ -42,6 +43,10 @@ class CategoryManagerHelper {
 
   bool get editMode => _editMode;
 
+  final ValueNotifier<bool> _firstLoad = ValueNotifier(true);
+
+  ValueListenable<bool> get firstLoad => _firstLoad;
+
   void setCategory(my_app.Category category, [bool editMode = true]) {
     _category = category;
 
@@ -52,6 +57,8 @@ class CategoryManagerHelper {
     image.value = category.getImageUrl();
 
     productCount.value = category.getProductCount();
+
+    _firstLoad.value = true;
   }
 
   void removeProduct(Product product) {
@@ -86,10 +93,10 @@ class CategoryManagerHelper {
           imageNameOnServer =
               _server.serverImageNameFormater(_category.getId());
 
-          String url = await _server.uploadFile(
-              fileUrl: image.value, name: imageNameOnServer);
+          /*String url = await _server.uploadFile(
+              fileUrl: image.value, name: imageNameOnServer);*/
 
-          imageUrl = url;
+          imageUrl = image.value; //TODO : uirl
         }
         _tempCategory.transfer(_category);
 
@@ -100,10 +107,10 @@ class CategoryManagerHelper {
       imageNameOnServer =
           _server.serverImageNameFormater(_tempCategory.getId());
 
-      String url = await _server.uploadFile(
-          fileUrl: image.value, name: imageNameOnServer);
+      /*String url = await _server.uploadFile(
+          fileUrl: image.value, name: imageNameOnServer);*/
 
-      imageUrl = url;
+      imageUrl = image.value;
 
       _tempCategory.transfer(_category);
 
@@ -120,6 +127,10 @@ class CategoryManagerHelper {
         await _picker.pickImage(source: ImageSource.gallery);
 
     if (imageFile != null) {
+      if (_firstLoad.value == true) {
+        _firstLoad.value = false;
+      }
+
       image.value = imageFile.path;
       imageUrl = image.value;
     }
@@ -146,8 +157,8 @@ class CategoryManagerHelper {
     return _catalogueHelper.getCategory(index);
   }
 
-  int getCategoriesCount() {
-    return _catalogueHelper.getCategoriesCount();
+  ValueListenable<int> getCategoriesCount() {
+    return _catalogueHelper.getCategoriesCountListenable();
   }
 
   void removeCategory(my_app.Category category) {

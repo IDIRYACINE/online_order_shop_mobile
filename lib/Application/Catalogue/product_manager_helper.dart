@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:online_order_shop_mobile/Application/Catalogue/catalogue_helper.dart';
-import 'package:online_order_shop_mobile/Domain/Catalogue/category_model.dart'
+import 'package:online_order_shop_mobile/Domain/Catalogue/Category/category_model.dart'
     as my_app;
 
-import 'package:online_order_shop_mobile/Domain/Catalogue/product_model.dart';
+import 'package:online_order_shop_mobile/Domain/Catalogue/Product/product_model.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Database/idatabase.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Server/ionline_data_service.dart';
 
@@ -39,6 +39,10 @@ class ProductManagerHelper {
 
   final CatalogueHelper _catalogueHelper;
 
+  final ValueNotifier<bool> _firstLoad = ValueNotifier(true);
+
+  ValueListenable<bool> get firstLoad => _firstLoad;
+
   ProductManagerHelper(
       this._server, this._productsDatabase, this._catalogueHelper);
 
@@ -53,6 +57,8 @@ class ProductManagerHelper {
     _editMode = editMode;
 
     tempModelsCount.value = _tempProduct.getSizesCount();
+
+    _firstLoad.value = true;
 
     image.value = _tempProduct.getImageUrl();
 
@@ -168,6 +174,10 @@ class ProductManagerHelper {
         await _picker.pickImage(source: ImageSource.gallery);
 
     if (imageFile != null) {
+      if (_firstLoad.value == true) {
+        _firstLoad.value = false;
+      }
+
       image.value = imageFile.path;
       imageUrl = image.value;
     }

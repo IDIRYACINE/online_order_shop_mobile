@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:online_order_shop_mobile/Application/Catalogue/category_manager_helper.dart';
 import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
 import 'package:online_order_shop_mobile/Application/Providers/navigation_provider.dart';
-import 'package:online_order_shop_mobile/Domain/Catalogue/category_model.dart';
+import 'package:online_order_shop_mobile/Domain/Catalogue/Category/category_model.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Catalogue/Category/category_widget.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
 import 'package:provider/provider.dart';
+import 'dart:developer' as dev;
 
 class CatalogueScreen extends StatefulWidget {
   final double bodyPadding = 16.0;
@@ -70,22 +71,29 @@ class _CatalogueScreenState extends State<CatalogueScreen> {
                 )),
                 Expanded(
                     flex: golenRationFlexSmall,
-                    child: ListView.separated(
-                      itemCount: categoryManagerHelper.getCategoriesCount(),
-                      itemBuilder: (context, index) {
-                        if (categoryManagerHelper.getCategoriesCount() == 0) {
-                          return const SizedBox();
-                        }
-                        return CategoryWidget(
-                            categoryManagerHelper.getCategory(index),
-                            index: index);
-                      },
-                      separatorBuilder: (BuildContext context, int index) {
-                        return const SizedBox(
-                          height: 5,
-                        );
-                      },
-                    )),
+                    child: ValueListenableBuilder<int>(
+                        valueListenable:
+                            categoryManagerHelper.getCategoriesCount(),
+                        builder: (context, categoriesCount, child) {
+                          dev.log("$categoriesCount");
+                          return ListView.separated(
+                            itemCount: categoriesCount,
+                            itemBuilder: (context, index) {
+                              if (categoriesCount == 0) {
+                                return const SizedBox();
+                              }
+                              return CategoryWidget(
+                                  categoryManagerHelper.getCategory(index),
+                                  index: index);
+                            },
+                            separatorBuilder:
+                                (BuildContext context, int index) {
+                              return const SizedBox(
+                                height: 5,
+                              );
+                            },
+                          );
+                        })),
               ],
             )));
   }

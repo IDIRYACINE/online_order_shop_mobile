@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Database/products_mapper.dart';
 import 'package:online_order_shop_mobile/Infrastructure/service_provider.dart';
 
-import 'product_model.dart';
+import '../Product/product_model.dart';
 
 typedef CategoryMap = List<Category>;
 
@@ -62,9 +62,9 @@ class Category {
 
   Map<String, Object?> toMap() {
     return {
-      "Name": _name,
+      "Name": _name.value,
       "ImageUrl": _imageUrl,
-      "ProductsCount": _productCount
+      "ProductsCount": _productCount.value
     };
   }
 

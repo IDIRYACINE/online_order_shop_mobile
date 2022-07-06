@@ -1,8 +1,8 @@
 // ignore_for_file: empty_catches
 
 import 'dart:io';
-import 'package:online_order_shop_mobile/Domain/Catalogue/product_model.dart';
-import 'package:online_order_shop_mobile/Domain/Catalogue/category_model.dart';
+import 'package:online_order_shop_mobile/Domain/Catalogue/Product/product_model.dart';
+import 'package:online_order_shop_mobile/Domain/Catalogue/Category/category_model.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Database/idatabase.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Exceptions/server_exceptions.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Server/ionline_data_service.dart';

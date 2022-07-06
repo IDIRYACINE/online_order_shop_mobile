@@ -3,8 +3,8 @@ import 'package:online_order_shop_mobile/Application/Catalogue/category_manager_
 import 'package:online_order_shop_mobile/Application/Catalogue/product_manager_helper.dart';
 import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
 import 'package:online_order_shop_mobile/Application/Providers/navigation_provider.dart';
-import 'package:online_order_shop_mobile/Domain/Catalogue/category_model.dart';
-import 'package:online_order_shop_mobile/Domain/Catalogue/product_model.dart';
+import 'package:online_order_shop_mobile/Domain/Catalogue/Category/category_model.dart';
+import 'package:online_order_shop_mobile/Domain/Catalogue/Product/product_model.dart';
 import 'package:online_order_shop_mobile/Ui/Components/Images/network_image.dart';
 import 'package:provider/provider.dart';
 
