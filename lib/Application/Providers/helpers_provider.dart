@@ -51,7 +51,7 @@ class HelpersProvider with ChangeNotifier {
       _categoryManagerHelper =
           CategoryManagerHelper(_catalogueHelper, services.productDatabase);
 
-      _categoryEditorHelper = CategoryEditorHelper();
+      _categoryEditorHelper = CategoryEditorHelper(_catalogueHelper);
     } on LocalDatabaseNotFound catch (_) {
       throw LocalDatabaseNotFound();
     } catch (e) {

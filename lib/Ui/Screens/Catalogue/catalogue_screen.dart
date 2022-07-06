@@ -65,11 +65,13 @@ class _CatalogueScreenState extends State<CatalogueScreen> {
                         onPressed: () {
                           Provider.of<HelpersProvider>(context, listen: false)
                               .categoryEditorHelper
-                              .setCategory(Category(
-                                  id: "",
-                                  name: "",
-                                  imageUrl: "",
-                                  productsCount: 0));
+                              .setCategory(
+                                  Category(
+                                      id: "",
+                                      name: "",
+                                      imageUrl: "",
+                                      productsCount: 0),
+                                  false);
                           navigationProvider.navigateToCategoryEditor(context);
                         },
                         icon: const Icon(Icons.add_circle_outline)),

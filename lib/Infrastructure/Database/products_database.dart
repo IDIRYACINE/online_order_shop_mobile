@@ -157,6 +157,8 @@ class ProductsDatabase implements IProductsDatabase {
 
       _serverAccess.uploadFile(
           fileUrl: databaseFile.path, name: _productsDatabaseName);
+
+      _serverAccess.postData(dataUrl: "version", data: currentVersion + 1);
       _somethingChanged = false;
       return true;
     }
@@ -178,14 +180,28 @@ class ProductsDatabase implements IProductsDatabase {
   @override
   Future<void> reset() async {
     File databaseFile = await _getLocalDatabaseFile();
-    try {
-      int databaseVersion = await _serverAccess.fetchData(dataUrl: 'version');
+    disconnect();
+    databaseFile.deleteSync();
 
-      disconnect();
-      await _serverAccess.downloadFile(
-          fileUrl: _productsDatabaseName, out: databaseFile);
+    String createCategoriesTable =
+        "CREATE TABLE IF NOT EXISTS $_categoriresTable "
+        " ("
+        "	Id String PRIMARY KEY,"
+        "	Name text NOT NULL,"
+        "	ImageUrl text NOT NULL,"
+        " ProductsCount Integer "
+        ")";
+
+    try {
+      await _serverAccess.postData(dataUrl: 'version', data: 0);
+
       await _connectToLocalDatabase(localDatabasePath: databaseFile.path);
-      _productsDatabase.setVersion(databaseVersion);
+      _productsDatabase.execute(createCategoriesTable);
+
+      _productsDatabase.setVersion(0);
+
+      await _serverAccess.uploadFile(
+          fileUrl: databaseFile.path, name: _productsDatabaseName);
     } catch (e) {
       // dont care
     }

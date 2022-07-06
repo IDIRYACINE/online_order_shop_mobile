@@ -18,6 +18,5 @@ abstract class IProductsDatabase {
   Future<void> updateCategory(Category category);
   Future<bool> upgradeDatabaseVersion();
   void remebmerChange();
-
   Future<void> reset();
 }

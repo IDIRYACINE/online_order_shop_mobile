@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:online_order_shop_mobile/Application/Catalogue/catalogue_helper.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/Category/category_model.dart'
     as my_app;
 import 'package:online_order_shop_mobile/Infrastructure/Database/idatabase.dart';
@@ -18,6 +19,10 @@ class CategoryEditorHelper {
 
   late my_app.Category _category;
   late my_app.Category _tempCategory;
+
+  final CatalogueHelper _catalogueHelper;
+
+  CategoryEditorHelper(this._catalogueHelper);
 
   void setCategory(my_app.Category category, [bool editMode = true]) {
     _category = category;
@@ -54,6 +59,7 @@ class CategoryEditorHelper {
 
           imageUrl = url;
         }
+
         _tempCategory.transfer(_category);
 
         _productsDatabase.updateCategory(_category);
@@ -68,7 +74,7 @@ class CategoryEditorHelper {
 
       _tempCategory.transfer(_category);
 
-      _productsDatabase.createCategory(_category);
+      _catalogueHelper.createCategory(_category);
 
       _somethingChanged = false;
       _imageUpdated = false;
