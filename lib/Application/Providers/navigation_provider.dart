@@ -96,7 +96,7 @@ class NavigationProvider with ChangeNotifier {
   }
 
   void navigateToRebootScreen(BuildContext context, AsyncCallback task) {
-    Navigator.pushReplacement(
+    Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => RebootScreen(

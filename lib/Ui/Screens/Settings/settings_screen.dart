@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:online_order_shop_mobile/Application/Catalogue/catalogue_helper.dart';
 import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
-import 'package:online_order_shop_mobile/Application/Providers/navigation_provider.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Database/idatabase.dart';
 import 'package:online_order_shop_mobile/Infrastructure/service_provider.dart';
 import 'package:online_order_shop_mobile/Ui/Components/Dialogs/confirmation_dialog.dart';
@@ -28,9 +27,6 @@ class _SettingsState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     //ThemeData theme = Theme.of(context);
-
-    NavigationProvider navigationProvider =
-        Provider.of<NavigationProvider>(context, listen: false);
 
     catalogueHelper = catalogueHelper =
         Provider.of<HelpersProvider>(context, listen: false).catalogueHelper;
@@ -68,8 +64,11 @@ class _SettingsState extends State<SettingsScreen> {
                   builder: (context) {
                     return ConfirmAlertDialog(
                       onConfirm: () {
-                        navigationProvider.navigateToRebootScreen(
-                            context, reboot);
+                        database.reset();
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
+                          content: Text(messageResetDatabase),
+                        ));
                       },
                       message: messagePermanantAction,
                     );
