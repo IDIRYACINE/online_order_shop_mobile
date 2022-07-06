@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:online_order_shop_mobile/Application/Catalogue/category_manager_helper.dart';
+import 'package:online_order_shop_mobile/Application/Category/category_manager_helper.dart';
 import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
 import 'package:online_order_shop_mobile/Application/Providers/navigation_provider.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/Product/product_model.dart';
@@ -78,15 +78,13 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 ),
                 IconButton(
                     onPressed: () {
-                      Provider.of<NavigationProvider>(context, listen: false)
-                          .navigateToProductDetails(
-                        context,
-                      );
-
-                      /* Provider.of<HelpersProvider>(context, listen: false) TODO
+                      Provider.of<HelpersProvider>(context, listen: false)
                           .productManagerHelper
-                          .setProduct(
-                              Product("", "", "", [0], ["Standard"]), false);*/
+                          .setProduct(categoryManagerHelper.getCategory(),
+                              Product("", "", "", [0], ["Standard"]), false);
+
+                      Provider.of<NavigationProvider>(context, listen: false)
+                          .navigateToProductEditor(context);
                     },
                     icon: const Icon(Icons.add_circle_outline)),
               ],

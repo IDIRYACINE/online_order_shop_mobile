@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:online_order_shop_mobile/Application/Catalogue/product_manager_helper.dart';
+import 'package:online_order_shop_mobile/Application/Product/product_editor_helper.dart';
 import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
 import 'package:online_order_shop_mobile/Application/Providers/navigation_provider.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/optional_item.dart';
@@ -9,7 +9,7 @@ import 'package:online_order_shop_mobile/Ui/Components/product_components.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
 import 'package:provider/provider.dart';
 
-class ProductsScreen extends StatefulWidget {
+class ProductEditorScreen extends StatefulWidget {
   final double dividerThickness = 2.0;
   final double appBarElevation = 0.0;
   final double padding = 15.0;
@@ -19,24 +19,23 @@ class ProductsScreen extends StatefulWidget {
 
   final int imageFlex = 1;
   final int productFlex = 1;
-
   final int productNameFlex = 1;
   final int productPriceFlex = 1;
   final int productDescriptionFlex = 1;
 
-  const ProductsScreen({Key? key}) : super(key: key);
+  const ProductEditorScreen({Key? key}) : super(key: key);
 
   @override
-  _ProductsScreenState createState() => _ProductsScreenState();
+  _ProductEditorScreenState createState() => _ProductEditorScreenState();
 }
 
-class _ProductsScreenState extends State<ProductsScreen> {
+class _ProductEditorScreenState extends State<ProductEditorScreen> {
   late ThemeData theme;
 
   bool initiliazed = false;
 
   late NavigationProvider navigationProvider;
-  late ProductManagerHelper productManagerHelper;
+  late ProductEditorHelper productManagerHelper;
 
   void setup(BuildContext context) {
     if (!initiliazed) {
@@ -174,16 +173,15 @@ class _ProductsScreenState extends State<ProductsScreen> {
                       )),
                       Expanded(
                           child: ValueListenableBuilder<int>(
-                              valueListenable:
-                                  productManagerHelper.modelsChangeCounter,
-                              builder: (context, changes, child) {
+                              valueListenable: productManagerHelper.modelsCount,
+                              builder: (context, modelsCount, child) {
                                 return OptionalItemsWidget(
                                   sizesTitle,
                                   displayTitle: false,
                                   activeItem: currentSizeIndex.value,
                                   unselectedItemColor:
                                       theme.colorScheme.background,
-                                  itemCount: productManagerHelper.modelsCount,
+                                  itemCount: modelsCount,
                                   itemPopulater: getSize,
                                   onItemPressed: selectSize,
                                 );

@@ -7,7 +7,7 @@ import 'package:online_order_shop_mobile/Domain/Orders/iorder.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Cart/cart_screen.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Catalogue/Category/category_editor_screen.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Catalogue/Category/category_manager_screen.dart';
-import 'package:online_order_shop_mobile/Ui/Screens/Catalogue/Product/product_manager_screen.dart';
+import 'package:online_order_shop_mobile/Ui/Screens/Catalogue/Product/product_editor_screen.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Catalogue/Product/Size/size_price_manager.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Catalogue/catalogue_screen.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/DeliveryAddress/gps_screen.dart';
@@ -111,9 +111,9 @@ class NavigationProvider with ChangeNotifier {
         MaterialPageRoute(builder: (context) => const CategoryScreen()));
   }
 
-  void navigateToProductDetails(BuildContext context) {
+  void navigateToProductEditor(BuildContext context) {
     Navigator.push(context,
-        MaterialPageRoute(builder: (context) => const ProductsScreen()));
+        MaterialPageRoute(builder: (context) => const ProductEditorScreen()));
   }
 
   void navigateToOrderDetails(BuildContext context, IOrder order) {

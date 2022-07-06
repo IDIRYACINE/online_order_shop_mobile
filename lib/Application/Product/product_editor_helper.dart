@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:online_order_shop_mobile/Application/Catalogue/catalogue_helper.dart';
+import 'package:online_order_shop_mobile/Application/Product/size_editor_helper.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/Category/category_model.dart'
     as my_app;
 
@@ -8,7 +8,7 @@ import 'package:online_order_shop_mobile/Domain/Catalogue/Product/product_model.
 import 'package:online_order_shop_mobile/Infrastructure/Database/idatabase.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Server/ionline_data_service.dart';
 
-class ProductManagerHelper {
+class ProductEditorHelper {
   late Product _product;
 
   late my_app.Category _category;
@@ -16,10 +16,6 @@ class ProductManagerHelper {
   final IOnlineServerAcess _server;
 
   final IProductsDatabase _productsDatabase;
-
-  List<String> _tempSizes = [];
-
-  List<double> _tempPrices = [];
 
   late Product _tempProduct;
 
@@ -29,19 +25,33 @@ class ProductManagerHelper {
 
   bool _updatedImage = false;
 
-  final ValueNotifier<int> modelsChangeCounter = ValueNotifier(0);
+  late SizeEditorHelper _sizeEditorHelper;
 
   final ValueNotifier<String> image = ValueNotifier("");
-
-  final ValueNotifier<int> formCounter = ValueNotifier(0);
-
-  final ValueNotifier<int> tempModelsCount = ValueNotifier(0);
 
   final ValueNotifier<bool> _firstLoad = ValueNotifier(true);
 
   ValueListenable<bool> get firstLoad => _firstLoad;
 
-  ProductManagerHelper(this._server, this._productsDatabase);
+  bool get editMode => _editMode;
+
+  Product get product => _tempProduct;
+
+  get formCounter => null;
+
+  String getSize(int index) => _tempProduct.getSize(index);
+
+  String getPrice(int index) => _tempProduct.getPrice(index).toString();
+
+  String get name => _product.getName();
+
+  String get description => _product.getName();
+
+  ValueListenable<int> get modelsCount => _sizeEditorHelper.getModelsCount();
+
+  String get imageUrl => _product.getName();
+
+  ProductEditorHelper(this._server, this._productsDatabase);
 
   void setProduct(my_app.Category category, Product product,
       [bool editMode = true]) {
@@ -53,34 +63,20 @@ class ProductManagerHelper {
 
     _editMode = editMode;
 
-    tempModelsCount.value = _tempProduct.getSizesCount();
-
     _firstLoad.value = true;
 
     image.value = _tempProduct.getImageUrl();
-
-    _tempSizes = List.from(_tempProduct.getSizeList());
-
-    _tempPrices = List.from(_tempProduct.getPriceList());
   }
-
-  String get name => _product.getName();
 
   set name(String name) {
     _tempProduct.setName(name);
     _somethingChanged = true;
   }
 
-  String get description => _product.getName();
-
   set description(String description) {
     _tempProduct.setDescription(description);
     _somethingChanged = true;
   }
-
-  get modelsCount => _tempProduct.getSizesCount();
-
-  String get imageUrl => _product.getName();
 
   set imageUrl(String imageUrl) {
     _tempProduct.setImageUrl(imageUrl);
@@ -95,32 +91,6 @@ class ProductManagerHelper {
   void setDescription(String value) {
     _tempProduct.setDescription(description);
     _somethingChanged = true;
-  }
-
-  bool get editMode => _editMode;
-
-  Product get product => _tempProduct;
-
-  String getSize(int index) => _tempProduct.getSize(index);
-
-  String getPrice(int index) => _tempProduct.getPrice(index).toString();
-
-  String getTempSize(int index) => _tempProduct.getSize(index);
-
-  String getTempPrice(int index) => _tempProduct.getPrice(index).toString();
-
-  void addModel(String size, String price) {
-    _tempSizes.add(size);
-    _tempPrices.add(double.parse(price));
-
-    tempModelsCount.value++;
-  }
-
-  void removeModel(int index) {
-    _tempSizes.removeAt(index);
-    _tempPrices.removeAt(index);
-
-    tempModelsCount.value--;
   }
 
   Future<void> applyChanges() async {
@@ -162,11 +132,6 @@ class ProductManagerHelper {
     }
   }
 
-  void updateModel(int index, String size, String price) {
-    formCounter.value++;
-    _tempProduct.updateModel(index, size, double.parse(price));
-  }
-
   Future<void> browseImage() async {
     final ImagePicker _picker = ImagePicker();
     final XFile? imageFile =
@@ -183,8 +148,18 @@ class ProductManagerHelper {
   }
 
   void applyModelsChanges() {
-    _tempProduct.updateModels(_tempSizes, _tempPrices);
-    modelsChangeCounter.value++;
-    _somethingChanged = true;
+    _sizeEditorHelper.applyModelsChanges();
+  }
+
+  String getTempPrice(int index) {
+    return _sizeEditorHelper.getTempPrice(index);
+  }
+
+  void removeModel(int index) {
+    _sizeEditorHelper.removeModel(index);
+  }
+
+  SizeEditorHelper modelHelper() {
+    return _sizeEditorHelper;
   }
 }

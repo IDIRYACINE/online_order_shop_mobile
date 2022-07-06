@@ -75,18 +75,8 @@ class CategoryManagerHelper {
   }
 
   ValueListenable<int> get productsCount => _category.getProductCountObserver();
+
+  my_app.Category getCategory() {
+    return _category;
+  }
 }
-/*
-  my_app.Category getCategory(int index) {
-    return _catalogueHelper.getCategory(index);
-  }
-
-  ValueListenable<int> getCategoriesCount() {
-    return _catalogueHelper.getCategoriesCountListenable();
-  }
-
-  void removeCategory(my_app.Category category) {
-    _catalogueHelper.removeCategory(category);
-  }*/
-
-

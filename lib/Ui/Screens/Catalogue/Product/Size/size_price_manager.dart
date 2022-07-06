@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:online_order_shop_mobile/Application/Catalogue/product_manager_helper.dart';
+import 'package:online_order_shop_mobile/Application/Product/product_editor_helper.dart';
 import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/Product/product_model.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Catalogue/Product/Size/product_size_price_list.dart';
@@ -17,7 +17,7 @@ class _SizePriceManagerScreenState extends State<SizePriceManagerScreen> {
   bool somethingChanged = false;
   late Product product;
   bool initiliazed = false;
-  late ProductManagerHelper productManagerHelper;
+  late ProductEditorHelper productManagerHelper;
 
   void setup(BuildContext context) {
     if (!initiliazed) {
@@ -68,9 +68,10 @@ class _SizePriceManagerScreenState extends State<SizePriceManagerScreen> {
       ),
       body: Column(
         mainAxisSize: MainAxisSize.max,
-        children: const [
+        children: [
           Expanded(
-            child: SizePriceListView(),
+            child: SizePriceListView(
+                sizeEditorHelper: productManagerHelper.modelHelper()),
           ),
         ],
       ),

@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:online_order_shop_mobile/Application/Catalogue/product_manager_helper.dart';
+import 'package:online_order_shop_mobile/Application/Product/product_editor_helper.dart';
+import 'package:online_order_shop_mobile/Application/Product/size_editor_helper.dart';
 import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
 import 'package:online_order_shop_mobile/Ui/Components/Dialogs/sizeprice_dialog.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
 import 'package:provider/provider.dart';
 
 class SizePriceListView extends StatefulWidget {
+  final SizeEditorHelper sizeEditorHelper;
   const SizePriceListView({
     Key? key,
+    required this.sizeEditorHelper,
   }) : super(key: key);
 
   @override
@@ -19,7 +22,7 @@ class _SizePriceListViewState extends State<SizePriceListView> {
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
 
-    ProductManagerHelper productManagerHelper =
+    ProductEditorHelper productManagerHelper =
         Provider.of<HelpersProvider>(context, listen: false)
             .productManagerHelper;
 
@@ -45,7 +48,7 @@ class _SizePriceListViewState extends State<SizePriceListView> {
                       builder: (context) {
                         return SizePriceAlertDialog(
                           onConfirm: (String size, String price) {
-                            productManagerHelper.addModel(size, price);
+                            widget.sizeEditorHelper.addModel(size, price);
                           },
                           formKey: GlobalKey<FormState>(),
                         );
@@ -57,7 +60,7 @@ class _SizePriceListViewState extends State<SizePriceListView> {
           const Divider(),
           Expanded(
             child: ValueListenableBuilder<int>(
-                valueListenable: productManagerHelper.tempModelsCount,
+                valueListenable: widget.sizeEditorHelper.tempModelsCount,
                 builder: (context, itemsCount, child) {
                   return ListView.separated(
                     scrollDirection: Axis.vertical,
@@ -68,10 +71,11 @@ class _SizePriceListViewState extends State<SizePriceListView> {
                         size: productManagerHelper.getSize(index),
                         price: productManagerHelper.getPrice(index),
                         removeForm: () {
-                          productManagerHelper.removeModel(index);
+                          widget.sizeEditorHelper.removeModel(index);
                         },
                         updateForm: (index, size, price) {
-                          productManagerHelper.updateModel(index, size, price);
+                          widget.sizeEditorHelper
+                              .updateModel(index, size, price);
                         },
                       );
                     },
@@ -118,7 +122,7 @@ class _SizePriceFormState extends State<_SizePriceForm> {
     ThemeData theme = Theme.of(context);
     size = widget.size;
     price = widget.price;
-    ProductManagerHelper productManagerHelper =
+    ProductEditorHelper productManagerHelper =
         Provider.of<HelpersProvider>(context, listen: false)
             .productManagerHelper;
 

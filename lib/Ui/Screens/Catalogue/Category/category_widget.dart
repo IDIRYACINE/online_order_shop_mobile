@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:online_order_shop_mobile/Application/Cart/cart_helper.dart';
 import 'package:online_order_shop_mobile/Application/Catalogue/catalogue_helper.dart';
-import 'package:online_order_shop_mobile/Application/Catalogue/category_manager_helper.dart';
+import 'package:online_order_shop_mobile/Application/Category/category_manager_helper.dart';
 import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
 import 'package:online_order_shop_mobile/Application/Providers/navigation_provider.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/Category/category_model.dart';

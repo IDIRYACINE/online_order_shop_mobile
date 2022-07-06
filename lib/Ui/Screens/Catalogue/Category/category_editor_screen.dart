@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:online_order_shop_mobile/Application/Catalogue/category_editor_helper.dart';
+import 'package:online_order_shop_mobile/Application/Category/category_editor_helper.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/Category/category_model.dart';
 import 'package:online_order_shop_mobile/Ui/Components/Images/network_local_image.dart';
 import 'package:online_order_shop_mobile/Ui/Components/cards.dart';
