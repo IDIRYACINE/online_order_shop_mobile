@@ -9,15 +9,11 @@ class SizeEditorHelper {
 
   late List<double> _tempPrices;
 
-  final ValueNotifier<int> formCounter = ValueNotifier(0);
-
   final ValueNotifier<int> modelsChangeCounter = ValueNotifier(0);
 
   final ValueNotifier<int> modelsCount = ValueNotifier(0);
 
   final ValueNotifier<int> tempModelsCount = ValueNotifier(0);
-
-  SizeEditorHelper(this._product) {}
 
   void setUp(Product product) {
     _product = product;
@@ -51,17 +47,18 @@ class SizeEditorHelper {
   }
 
   void updateModel(int index, String size, String price) {
-    _product.updateModel(index, size, double.parse(price));
+    _tempSizes[index] = size;
+    _tempPrices[index] = double.parse(price);
+    modelsChangeCounter.value++;
     _somethingUpdated = true;
-    formCounter.value++;
   }
 
   void applyModelsChanges() {
-    if (_somethingUpdated) {
+   
       _product.updateModels(_tempSizes, _tempPrices);
       modelsCount.value = _tempSizes.length;
       _somethingUpdated = false;
-    }
+    
   }
 
   ValueListenable<int> getModelsCount() {

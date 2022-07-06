@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:online_order_shop_mobile/Application/Category/category_manager_helper.dart';
 import 'package:online_order_shop_mobile/Application/Product/size_editor_helper.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/Category/category_model.dart'
     as my_app;
@@ -7,6 +8,7 @@ import 'package:online_order_shop_mobile/Domain/Catalogue/Category/category_mode
 import 'package:online_order_shop_mobile/Domain/Catalogue/Product/product_model.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Database/idatabase.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Server/ionline_data_service.dart';
+import 'dart:developer' as dev;
 
 class ProductEditorHelper {
   late Product _product;
@@ -19,13 +21,15 @@ class ProductEditorHelper {
 
   late Product _tempProduct;
 
+  late CategoryManagerHelper _categoryManagerHelper;
+
   bool _somethingChanged = false;
 
   late bool _editMode;
 
   bool _updatedImage = false;
 
-  late SizeEditorHelper _sizeEditorHelper;
+  final SizeEditorHelper _sizeEditorHelper = SizeEditorHelper();
 
   final ValueNotifier<String> image = ValueNotifier("");
 
@@ -37,24 +41,27 @@ class ProductEditorHelper {
 
   Product get product => _tempProduct;
 
-  get formCounter => null;
+  ValueListenable<int> get formCounter => _sizeEditorHelper.modelsChangeCounter;
 
-  String getSize(int index) => _tempProduct.getSize(index);
+  String getSize(int index) => _sizeEditorHelper.getTempSize(index);
 
-  String getPrice(int index) => _tempProduct.getPrice(index).toString();
+  String getPrice(int index) => _sizeEditorHelper.getTempPrice(index);
 
-  String get name => _product.getName();
+  String get name => _tempProduct.getName();
 
-  String get description => _product.getName();
+  String get description => _tempProduct.getName();
 
   ValueListenable<int> get modelsCount => _sizeEditorHelper.getModelsCount();
 
-  String get imageUrl => _product.getName();
+  String get imageUrl => _tempProduct.getName();
 
   ProductEditorHelper(this._server, this._productsDatabase);
 
   void setProduct(my_app.Category category, Product product,
+      CategoryManagerHelper categoryManagerHelper,
       [bool editMode = true]) {
+    _categoryManagerHelper = categoryManagerHelper;
+
     _product = product;
 
     _tempProduct = Product.from(product);
@@ -65,17 +72,9 @@ class ProductEditorHelper {
 
     _firstLoad.value = true;
 
+    _sizeEditorHelper.setUp(_tempProduct);
+
     image.value = _tempProduct.getImageUrl();
-  }
-
-  set name(String name) {
-    _tempProduct.setName(name);
-    _somethingChanged = true;
-  }
-
-  set description(String description) {
-    _tempProduct.setDescription(description);
-    _somethingChanged = true;
   }
 
   set imageUrl(String imageUrl) {
@@ -84,7 +83,13 @@ class ProductEditorHelper {
   }
 
   void setName(String value) {
+    dev.log('${name} ${_tempProduct.getName()}');
+
     _tempProduct.setName(name);
+
+    _product.setName(name);
+    dev.log('${name} ${_tempProduct.getName()}');
+
     _somethingChanged = true;
   }
 
@@ -95,37 +100,33 @@ class ProductEditorHelper {
 
   Future<void> applyChanges() async {
     if (_somethingChanged || _updatedImage) {
-      String imageNameOnServer = "";
+      String imageNameOnServer =
+          _server.serverImageNameFormater(_tempProduct.getName());
 
       _productsDatabase.remebmerChange();
 
       if (_editMode) {
         if (_updatedImage) {
-          imageNameOnServer =
-              _server.serverImageNameFormater(_product.getName());
-
-          String url =
-              ""; /*TODO : here await _server.uploadFile(
-              fileUrl: image.value, name: imageNameOnServer);*/
+          String url = await _server.uploadFile(
+              fileUrl: image.value, name: imageNameOnServer);
 
           imageUrl = url;
         }
+
         _tempProduct.transfer(_product);
 
         _productsDatabase.updateProduct(_category, _product);
 
         return;
       }
-      imageNameOnServer = _server.serverImageNameFormater(_product.getName());
 
-      String url =
-          "https://img-19.commentcamarche.net/cI8qqj-finfDcmx6jMK6Vr-krEw=/1500x/smart/b829396acc244fd484c5ddcdcb2b08f3/ccmcms-commentcamarche/20494859.jpg";
+      String url = await _server.uploadFile(
+          fileUrl: image.value, name: imageNameOnServer);
 
       imageUrl = url;
 
-      _tempProduct.transfer(_product);
-
-      _productsDatabase.createProduct(_category, _product);
+      _productsDatabase.createProduct(_category, _tempProduct);
+      _categoryManagerHelper.addProduct(_tempProduct);
 
       _somethingChanged = false;
       _updatedImage = false;
@@ -149,6 +150,7 @@ class ProductEditorHelper {
 
   void applyModelsChanges() {
     _sizeEditorHelper.applyModelsChanges();
+    _somethingChanged = true;
   }
 
   String getTempPrice(int index) {

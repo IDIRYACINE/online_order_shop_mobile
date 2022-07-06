@@ -8,6 +8,7 @@ import 'package:online_order_shop_mobile/Ui/Components/cards.dart';
 import 'package:online_order_shop_mobile/Ui/Components/product_components.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
 import 'package:provider/provider.dart';
+import 'dart:developer' as dev;
 
 class ProductEditorScreen extends StatefulWidget {
   final double dividerThickness = 2.0;
@@ -38,18 +39,15 @@ class _ProductEditorScreenState extends State<ProductEditorScreen> {
   late ProductEditorHelper productManagerHelper;
 
   void setup(BuildContext context) {
-    if (!initiliazed) {
-      theme = Theme.of(context);
+    theme = Theme.of(context);
 
-      navigationProvider =
-          Provider.of<NavigationProvider>(context, listen: false);
+    navigationProvider =
+        Provider.of<NavigationProvider>(context, listen: false);
 
-      productManagerHelper =
-          Provider.of<HelpersProvider>(context, listen: false)
-              .productManagerHelper;
+    productManagerHelper = Provider.of<HelpersProvider>(context, listen: false)
+        .productManagerHelper;
 
-      initiliazed = true;
-    }
+    initiliazed = true;
   }
 
   ValueNotifier<int> currentSizeIndex = ValueNotifier(0);
@@ -146,7 +144,10 @@ class _ProductEditorScreenState extends State<ProductEditorScreen> {
                       InformationCard(
                           label: productNameLabel,
                           initialValue: productManagerHelper.name,
-                          onChangeConfirm: productManagerHelper.setName),
+                          onChangeConfirm: (value) {
+                            dev.log(value);
+                            productManagerHelper.setName(value);
+                          }),
                       InformationCard(
                           label: productDescriptionLabel,
                           initialValue: productManagerHelper.description,

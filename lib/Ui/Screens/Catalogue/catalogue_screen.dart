@@ -63,13 +63,14 @@ class _CatalogueScreenState extends State<CatalogueScreen> {
                     ),
                     IconButton(
                         onPressed: () {
-                          navigationProvider.navigateToCategoryEditor(
-                              context,
-                              Category(
+                          Provider.of<HelpersProvider>(context, listen: false)
+                              .categoryEditorHelper
+                              .setCategory(Category(
                                   id: "",
                                   name: "",
                                   imageUrl: "",
                                   productsCount: 0));
+                          navigationProvider.navigateToCategoryEditor(context);
                         },
                         icon: const Icon(Icons.add_circle_outline)),
                   ],
@@ -80,7 +81,6 @@ class _CatalogueScreenState extends State<CatalogueScreen> {
                         valueListenable:
                             catalogueHelper.getCategoriesCountListenable(),
                         builder: (context, categoriesCount, child) {
-                          dev.log("$categoriesCount");
                           return ListView.separated(
                             itemCount: categoriesCount,
                             itemBuilder: (context, index) {

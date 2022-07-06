@@ -19,7 +19,10 @@ class CategoryEditorHelper {
   late my_app.Category _category;
   late my_app.Category _tempCategory;
 
-  CategoryEditorHelper(my_app.Category category, [bool editMode = true]) {
+  void setCategory(my_app.Category category, [bool editMode = true]) {
+    _category = category;
+    _image = ValueNotifier(category.getImageUrl());
+    _firstLoad = ValueNotifier(true);
     _editMode = editMode;
     _tempCategory = my_app.Category.from(_category);
   }
@@ -40,16 +43,16 @@ class CategoryEditorHelper {
       final IOnlineServerAcess _server = ServicesProvider().serverAcessService;
 
       String imageNameOnServer =
-          _server.serverImageNameFormater(_category.getId());
+          _server.serverImageNameFormater(_tempCategory.getId());
 
       _productsDatabase.remebmerChange();
 
       if (_editMode) {
         if (_imageUpdated) {
-          /*String url = await _server.uploadFile(
-              fileUrl: image.value, name: imageNameOnServer);*/
+          String url = await _server.uploadFile(
+              fileUrl: image.value, name: imageNameOnServer);
 
-          imageUrl = _image.value; //TODO : uirl
+          imageUrl = url;
         }
         _tempCategory.transfer(_category);
 
@@ -58,10 +61,10 @@ class CategoryEditorHelper {
         return;
       }
 
-      /*String url = await _server.uploadFile(
-          fileUrl: image.value, name: imageNameOnServer);*/
+      String url = await _server.uploadFile(
+          fileUrl: image.value, name: imageNameOnServer);
 
-      imageUrl = _image.value;
+      imageUrl = url;
 
       _tempCategory.transfer(_category);
 

@@ -22,10 +22,6 @@ class _SizePriceListViewState extends State<SizePriceListView> {
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
 
-    ProductEditorHelper productManagerHelper =
-        Provider.of<HelpersProvider>(context, listen: false)
-            .productManagerHelper;
-
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -68,8 +64,8 @@ class _SizePriceListViewState extends State<SizePriceListView> {
                     itemBuilder: (context, index) {
                       return _SizePriceForm(
                         index: index,
-                        size: productManagerHelper.getSize(index),
-                        price: productManagerHelper.getPrice(index),
+                        size: widget.sizeEditorHelper.getTempSize(index),
+                        price: widget.sizeEditorHelper.getTempPrice(index),
                         removeForm: () {
                           widget.sizeEditorHelper.removeModel(index);
                         },
@@ -163,7 +159,7 @@ class _SizePriceFormState extends State<_SizePriceForm> {
                       child: IconButton(
                     icon: const Icon(Icons.remove_circle_outline),
                     onPressed: () {
-                      productManagerHelper.removeModel(widget.index);
+                      widget.removeForm();
                     },
                   )),
                 ],

@@ -46,19 +46,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 ),
               ),
             ),
-            Card(
-              elevation: 4.0,
-              color: theme.cardColor,
-              child: IconButton(
-                  onPressed: () {
-                    categoryManagerHelper.applyChanges();
-                    Navigator.of(context).pop();
-                  },
-                  icon: Icon(
-                    Icons.done,
-                    color: theme.colorScheme.secondaryVariant,
-                  )),
-            ),
           ],
         ),
       ),
@@ -80,8 +67,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     onPressed: () {
                       Provider.of<HelpersProvider>(context, listen: false)
                           .productManagerHelper
-                          .setProduct(categoryManagerHelper.getCategory(),
-                              Product("", "", "", [0], ["Standard"]), false);
+                          .setProduct(
+                              categoryManagerHelper.getCategory(),
+                              Product("", "", "", [0], ["Standard"]),
+                              categoryManagerHelper,
+                              false);
 
                       Provider.of<NavigationProvider>(context, listen: false)
                           .navigateToProductEditor(context);

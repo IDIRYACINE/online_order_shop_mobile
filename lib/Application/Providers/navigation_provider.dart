@@ -129,14 +129,9 @@ class NavigationProvider with ChangeNotifier {
     return _iconIndex;
   }
 
-  void navigateToCategoryEditor(
-      BuildContext context, my_app.Category category) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => CategoryEditorScreen(
-                  category: category,
-                )));
+  void navigateToCategoryEditor(BuildContext context) {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => const CategoryEditorScreen()));
   }
 
   void navigateToSizeManager(BuildContext context, Product product) {

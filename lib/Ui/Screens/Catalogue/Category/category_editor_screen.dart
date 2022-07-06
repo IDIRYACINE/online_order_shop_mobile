@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:online_order_shop_mobile/Application/Category/category_editor_helper.dart';
-import 'package:online_order_shop_mobile/Domain/Catalogue/Category/category_model.dart';
+import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
 import 'package:online_order_shop_mobile/Ui/Components/Images/network_local_image.dart';
 import 'package:online_order_shop_mobile/Ui/Components/cards.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
+import 'package:provider/provider.dart';
 
 class CategoryEditorScreen extends StatefulWidget {
-  final Category category;
-  const CategoryEditorScreen({Key? key, required this.category})
-      : super(key: key);
+  const CategoryEditorScreen({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _CategoryEditorScreenState();
@@ -20,12 +19,11 @@ class _CategoryEditorScreenState extends State<CategoryEditorScreen> {
   late CategoryEditorHelper categoryEditorHelper;
 
   void setup() {
-    if (!init) {
-      theme = Theme.of(context);
-      categoryEditorHelper = CategoryEditorHelper(widget.category);
+    theme = Theme.of(context);
+    categoryEditorHelper = Provider.of<HelpersProvider>(context, listen: false)
+        .categoryEditorHelper;
 
-      init = true;
-    }
+    init = true;
   }
 
   @override

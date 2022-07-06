@@ -31,21 +31,17 @@ class _CategoryWidgetState extends State<CategoryWidget> {
   bool init = false;
 
   void setup() {
-    if (!init) {
-      categoryManagerHelper =
-          Provider.of<HelpersProvider>(context, listen: false)
-              .categoryManagerHelper;
+    categoryManagerHelper = Provider.of<HelpersProvider>(context, listen: false)
+        .categoryManagerHelper;
 
-      theme = Theme.of(context);
+    theme = Theme.of(context);
 
-      navigationHelper =
-          Provider.of<NavigationProvider>(context, listen: false);
+    navigationHelper = Provider.of<NavigationProvider>(context, listen: false);
 
-      catalogueHelper =
-          Provider.of<HelpersProvider>(context, listen: false).catalogueHelper;
+    catalogueHelper =
+        Provider.of<HelpersProvider>(context, listen: false).catalogueHelper;
 
-      init = true;
-    }
+    init = true;
   }
 
   @override
@@ -97,8 +93,10 @@ class _CategoryWidgetState extends State<CategoryWidget> {
             ),
             IconButton(
                 onPressed: () {
-                  navigationHelper.navigateToCategoryEditor(
-                      context, widget.category);
+                  Provider.of<HelpersProvider>(context, listen: false)
+                      .categoryEditorHelper
+                      .setCategory(widget.category);
+                  navigationHelper.navigateToCategoryEditor(context);
                 },
                 icon: const Icon(Icons.edit_outlined)),
             Align(

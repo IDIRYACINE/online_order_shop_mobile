@@ -82,7 +82,7 @@ class ProductWidget extends StatelessWidget {
                       IconButton(
                           onPressed: () {
                             productManagerHelper.setProduct(
-                                category, product, true);
+                                category, product, categoryManagerHelper, true);
 
                             navigationHelper.navigateToProductEditor(context);
                           },

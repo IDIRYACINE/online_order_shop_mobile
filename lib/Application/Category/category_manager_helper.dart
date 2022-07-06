@@ -29,13 +29,17 @@ class CategoryManagerHelper {
   }
 
   void removeProduct(Product product) {
+    _productsDatabase.remebmerChange();
     _category.removeProduct(product);
-    _deletedProducts.add(product);
+    _productsDatabase.deleteProduct(_category, product);
+    _productsDatabase.updateCategory(_category);
   }
 
   void addProduct(Product product) {
+    _productsDatabase.remebmerChange();
     _category.addProduct(product);
-    _createdProducts.add(product);
+    _productsDatabase.createProduct(_category, product);
+    _productsDatabase.updateCategory(_category);
   }
 
   final BoxConstraints _defaultProductWidgetConstraints =
