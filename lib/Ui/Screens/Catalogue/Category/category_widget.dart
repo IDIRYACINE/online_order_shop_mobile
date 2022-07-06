@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:online_order_shop_mobile/Application/Cart/cart_helper.dart';
+import 'package:online_order_shop_mobile/Application/Catalogue/catalogue_helper.dart';
 import 'package:online_order_shop_mobile/Application/Catalogue/category_manager_helper.dart';
 import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
 import 'package:online_order_shop_mobile/Application/Providers/navigation_provider.dart';
@@ -24,8 +25,8 @@ class CategoryWidget extends StatefulWidget {
 
 class _CategoryWidgetState extends State<CategoryWidget> {
   late NavigationProvider navigationHelper;
-  late CartHelper cartHelper;
   late CategoryManagerHelper categoryManagerHelper;
+  late CatalogueHelper catalogueHelper;
   late ThemeData theme;
 
   bool init = false;
@@ -41,8 +42,8 @@ class _CategoryWidgetState extends State<CategoryWidget> {
       navigationHelper =
           Provider.of<NavigationProvider>(context, listen: false);
 
-      cartHelper =
-          Provider.of<HelpersProvider>(context, listen: false).cartHelper;
+      catalogueHelper =
+          Provider.of<HelpersProvider>(context, listen: false).catalogueHelper;
 
       init = true;
     }
@@ -54,8 +55,8 @@ class _CategoryWidgetState extends State<CategoryWidget> {
 
     return InkResponse(
       onTap: () {
-        categoryManagerHelper.setCategory(widget.category, false);
-        navigationHelper.navigateToCategory(context);
+        categoryManagerHelper.setCategory(widget.category);
+        navigationHelper.navigateToCategoryManager(context);
       },
       child: Card(
         elevation: 4.0,
@@ -97,9 +98,8 @@ class _CategoryWidgetState extends State<CategoryWidget> {
             ),
             IconButton(
                 onPressed: () {
-                  categoryManagerHelper.setCategory(widget.category);
-
-                  navigationHelper.navigateToCategoryManager(context);
+                  navigationHelper.navigateToCategoryEditor(
+                      context, widget.category);
                 },
                 icon: const Icon(Icons.edit_outlined)),
             Align(
@@ -111,8 +111,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                         builder: (context) {
                           return ConfirmAlertDialog(
                             onConfirm: () {
-                              categoryManagerHelper
-                                  .removeCategory(widget.category);
+                              catalogueHelper.removeCategory(widget.category);
                             },
                             message: messagePermanantAction,
                           );

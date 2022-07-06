@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:online_order_shop_mobile/Application/Catalogue/catalogue_helper.dart';
 import 'package:online_order_shop_mobile/Application/Catalogue/category_manager_helper.dart';
 import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
 import 'package:online_order_shop_mobile/Application/Providers/navigation_provider.dart';
@@ -26,9 +27,10 @@ class CatalogueScreen extends StatefulWidget {
 class _CatalogueScreenState extends State<CatalogueScreen> {
   late NavigationProvider navigationProvider;
   late CategoryManagerHelper categoryManagerHelper;
+  late CatalogueHelper catalogueHelper;
 
   void onSeeAllPressed(BuildContext context) {
-    navigationProvider.navigateToCategory(context);
+    navigationProvider.navigateToCategoryManager(context);
   }
 
   @override
@@ -38,6 +40,9 @@ class _CatalogueScreenState extends State<CatalogueScreen> {
 
     categoryManagerHelper = Provider.of<HelpersProvider>(context, listen: false)
         .categoryManagerHelper;
+
+    catalogueHelper =
+        Provider.of<HelpersProvider>(context, listen: false).catalogueHelper;
 
     final ThemeData theme = Theme.of(context);
 
@@ -58,13 +63,13 @@ class _CatalogueScreenState extends State<CatalogueScreen> {
                     ),
                     IconButton(
                         onPressed: () {
-                          categoryManagerHelper.setCategory(Category(
-                              id: "",
-                              name: "",
-                              imageUrl: "",
-                              productsCount: 0));
-
-                          navigationProvider.navigateToCategoryManager(context);
+                          navigationProvider.navigateToCategoryEditor(
+                              context,
+                              Category(
+                                  id: "",
+                                  name: "",
+                                  imageUrl: "",
+                                  productsCount: 0));
                         },
                         icon: const Icon(Icons.add_circle_outline)),
                   ],
@@ -73,7 +78,7 @@ class _CatalogueScreenState extends State<CatalogueScreen> {
                     flex: golenRationFlexSmall,
                     child: ValueListenableBuilder<int>(
                         valueListenable:
-                            categoryManagerHelper.getCategoriesCount(),
+                            catalogueHelper.getCategoriesCountListenable(),
                         builder: (context, categoriesCount, child) {
                           dev.log("$categoriesCount");
                           return ListView.separated(
@@ -83,7 +88,7 @@ class _CatalogueScreenState extends State<CatalogueScreen> {
                                 return const SizedBox();
                               }
                               return CategoryWidget(
-                                  categoryManagerHelper.getCategory(index),
+                                  catalogueHelper.getCategory(index),
                                   index: index);
                             },
                             separatorBuilder:

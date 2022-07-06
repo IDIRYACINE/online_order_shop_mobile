@@ -4,7 +4,7 @@ import 'package:online_order_shop_mobile/Domain/Catalogue/Category/category_mode
     as my_app;
 import 'package:online_order_shop_mobile/Domain/Catalogue/Product/product_model.dart';
 
-class CatalogueHelper with ChangeNotifier {
+class CatalogueHelper {
   final CatalogueModel _catalogueModel;
 
   CatalogueHelper(this._catalogueModel);
@@ -39,16 +39,6 @@ class CatalogueHelper with ChangeNotifier {
 
   void createCategory(my_app.Category category) {
     _catalogueModel.createCategory(category);
-
-    notifyListeners();
-  }
-
-  void updateProduct(my_app.Category category, Product product) {
-    _catalogueModel.updateProduct(category, product);
-  }
-
-  void createProduct(my_app.Category category, Product product) {
-    _catalogueModel.createProduct(category, product);
   }
 
   Future<void> reloadCategories() async {

@@ -110,9 +110,13 @@ class Category {
 
   void removeProduct(Product product) {
     _products.remove(product);
+    _productCount.value--;
   }
 
-  void addProduct() {}
+  void addProduct(Product product) {
+    _products.add(product);
+    _productCount.value++;
+  }
 
   void setId(String name) {
     _id = name;

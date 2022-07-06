@@ -41,11 +41,11 @@ class HelpersProvider with ChangeNotifier {
 
       await services.permissionsService.requestGpsPermission();
 
-      _productManagerHelper = ProductManagerHelper(services.serverAcessService,
-          services.productDatabase, _catalogueHelper);
+      _productManagerHelper = ProductManagerHelper(
+          services.serverAcessService, services.productDatabase);
 
-      _categoryManagerHelper = CategoryManagerHelper(_catalogueHelper,
-          services.productDatabase, services.serverAcessService);
+      _categoryManagerHelper =
+          CategoryManagerHelper(_catalogueHelper, services.productDatabase);
     } on LocalDatabaseNotFound catch (_) {
       throw LocalDatabaseNotFound();
     } catch (e) {

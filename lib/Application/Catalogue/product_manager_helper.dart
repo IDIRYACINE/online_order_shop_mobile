@@ -37,14 +37,11 @@ class ProductManagerHelper {
 
   final ValueNotifier<int> tempModelsCount = ValueNotifier(0);
 
-  final CatalogueHelper _catalogueHelper;
-
   final ValueNotifier<bool> _firstLoad = ValueNotifier(true);
 
   ValueListenable<bool> get firstLoad => _firstLoad;
 
-  ProductManagerHelper(
-      this._server, this._productsDatabase, this._catalogueHelper);
+  ProductManagerHelper(this._server, this._productsDatabase);
 
   void setProduct(my_app.Category category, Product product,
       [bool editMode = true]) {
@@ -137,26 +134,28 @@ class ProductManagerHelper {
           imageNameOnServer =
               _server.serverImageNameFormater(_product.getName());
 
-          String url = await _server.uploadFile(
-              fileUrl: image.value, name: imageNameOnServer);
+          String url =
+              ""; /*TODO : here await _server.uploadFile(
+              fileUrl: image.value, name: imageNameOnServer);*/
 
           imageUrl = url;
         }
         _tempProduct.transfer(_product);
 
-        _catalogueHelper.updateProduct(_category, _product);
+        _productsDatabase.updateProduct(_category, _product);
 
         return;
       }
       imageNameOnServer = _server.serverImageNameFormater(_product.getName());
 
-      String url = await _server.uploadFile(
-          fileUrl: image.value, name: imageNameOnServer);
+      String url =
+          "https://img-19.commentcamarche.net/cI8qqj-finfDcmx6jMK6Vr-krEw=/1500x/smart/b829396acc244fd484c5ddcdcb2b08f3/ccmcms-commentcamarche/20494859.jpg";
 
       imageUrl = url;
 
       _tempProduct.transfer(_product);
-      _catalogueHelper.createProduct(_category, _product);
+
+      _productsDatabase.createProduct(_category, _product);
 
       _somethingChanged = false;
       _updatedImage = false;

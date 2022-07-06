@@ -27,6 +27,8 @@ class CatalogueModel {
     return _categoriesCount.value;
   }
 
+  //TODO : productDatabase remeberChange
+
   void removeCategory(Category category) {
     _categories.remove(category);
     _categoriesCount.value--;
@@ -34,7 +36,7 @@ class CatalogueModel {
   }
 
   void createProduct(Category category, Product product) {
-    category.addProduct();
+    category.addProduct(product);
     _productsManager.createProduct(category, product);
   }
 
