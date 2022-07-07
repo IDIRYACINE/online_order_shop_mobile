@@ -19,7 +19,7 @@ import 'package:online_order_shop_mobile/Infrastructure/Server/ionline_data_serv
 
 class ServicesProvider {
   static final ServicesProvider _instance = ServicesProvider._();
-  static const String localHost = "192.168.1.8";
+  static const String localHost = "192.168.1.6";
   static const String nodeJsHost = "https://orsnodejs.herokuapp.com";
   static String databaseUrl =
       "https://online-order-client-default-rtdb.europe-west1.firebasedatabase.app/";

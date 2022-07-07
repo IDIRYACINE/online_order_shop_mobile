@@ -1,5 +1,7 @@
 // ignore_for_file: unused_field
 
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 
 typedef ProductMap = Map<String, List<Product>>;
@@ -63,8 +65,8 @@ class Product {
       "Name": _name.value,
       "Description": _description,
       "ImageUrl": _imageUrl,
-      "Size": _sizes.toString(),
-      "Price": _prices.toString(),
+      "Size": jsonEncode(_sizes),
+      "Price": jsonEncode(_prices),
     };
   }
 

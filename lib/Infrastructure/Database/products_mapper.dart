@@ -3,6 +3,8 @@ import 'package:online_order_shop_mobile/Domain/Catalogue/Category/category_mode
 import 'package:online_order_shop_mobile/Domain/Catalogue/Product/product_model.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Database/idatabase.dart';
 
+import 'dart:developer' as dev;
+
 class ProductsMapper {
   late final IProductsDatabase _database;
 
@@ -38,6 +40,10 @@ class ProductsMapper {
   }
 
   Product _mapResultSetToProduct(QueryResult queryResult) {
+    dev.log("HERE");
+
+    dev.log(queryResult['Size'].runtimeType.toString());
+
     String rawSize = queryResult['Size'] as String;
     String rawPrice = queryResult['Price'] as String;
 

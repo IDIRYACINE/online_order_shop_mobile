@@ -48,11 +48,11 @@ class ProductEditorHelper {
 
   String get name => _tempProduct.getName();
 
-  String get description => _tempProduct.getName();
+  String get description => _tempProduct.getDescription();
 
   ValueListenable<int> get modelsCount => _sizeEditorHelper.getModelsCount();
 
-  String get imageUrl => _tempProduct.getName();
+  String get imageUrl => _tempProduct.getImageUrl();
 
   ProductEditorHelper(this._server, this._productsDatabase);
 
@@ -122,7 +122,6 @@ class ProductEditorHelper {
 
       imageUrl = url;
 
-      _productsDatabase.createProduct(_category, _tempProduct);
       _categoryManagerHelper.addProduct(_tempProduct);
 
       _somethingChanged = false;

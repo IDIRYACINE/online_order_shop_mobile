@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "staging": "online-order-client"
+  },
+  "targets": {}
+}

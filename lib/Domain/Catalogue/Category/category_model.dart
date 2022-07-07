@@ -81,6 +81,7 @@ class Category {
   }
 
   void transfer(Category target) {
+    target.setId(_id);
     target.setImageUrl(_imageUrl);
     target.setName(_name.value);
     target.setProductsCount(_productCount.value);

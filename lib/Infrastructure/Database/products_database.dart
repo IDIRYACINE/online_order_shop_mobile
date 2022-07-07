@@ -122,7 +122,7 @@ class ProductsDatabase implements IProductsDatabase {
   @override
   Future<void> deleteCategory(Category category) async {
     _productsDatabase.delete(_categoriresTable,
-        where: "id=?", whereArgs: [category.getId()]);
+        where: "Id=?", whereArgs: [category.getId()]);
 
     String dropCategoryTable = "DROP TABLE ${category.getId()}";
     _productsDatabase.execute(dropCategoryTable);
@@ -130,14 +130,15 @@ class ProductsDatabase implements IProductsDatabase {
 
   @override
   Future<void> deleteProduct(Category category, Product product) async {
-    _productsDatabase.delete(category.getId(),
-        where: "Name=?", whereArgs: [product.getName()]);
+    _productsDatabase
+        .delete(category.getId(), where: "Id=?", whereArgs: [product.getId()]);
     updateCategoryProductCount(-1, category.getId());
   }
 
   @override
   Future<void> updateCategory(Category category) async {
-    _productsDatabase.update(_categoriresTable, category.toMap());
+    _productsDatabase.update(_categoriresTable, category.toMap(),
+        where: "Id = ?", whereArgs: [category.getId()]);
   }
 
   @override
