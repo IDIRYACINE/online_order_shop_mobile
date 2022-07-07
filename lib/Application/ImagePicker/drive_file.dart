@@ -12,8 +12,12 @@ class DriveFile {
     return _file.name!;
   }
 
+  String getName() {
+    return _file.name!;
+  }
+
   String getUrl() {
-    return _file.webViewLink!;
+    return _file.thumbnailLink!;
   }
 
   void select() {
@@ -23,4 +27,6 @@ class DriveFile {
   void unselect() {
     _selected.value = false;
   }
+
+  ValueListenable<bool> isSelected() => _selected;
 }

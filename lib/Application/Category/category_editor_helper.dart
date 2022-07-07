@@ -1,11 +1,12 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter/widgets.dart';
 import 'package:online_order_shop_mobile/Application/Catalogue/catalogue_helper.dart';
+import 'package:online_order_shop_mobile/Application/ImagePicker/image_picker_helper.dart';
+import 'package:online_order_shop_mobile/Application/Providers/navigation_provider.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/Category/category_model.dart'
     as my_app;
 import 'package:online_order_shop_mobile/Infrastructure/Database/idatabase.dart';
-import 'package:online_order_shop_mobile/Infrastructure/Server/ionline_data_service.dart';
 import 'package:online_order_shop_mobile/Infrastructure/service_provider.dart';
 
 class CategoryEditorHelper {
@@ -46,29 +47,15 @@ class CategoryEditorHelper {
       final IProductsDatabase _productsDatabase =
           ServicesProvider().productDatabase;
 
-      final IOnlineServerAcess _server = ServicesProvider().serverAcessService;
-
       _productsDatabase.remebmerChange();
 
       if (_editMode) {
-        if (_imageUpdated) {
-          String url = await _server.uploadFile(
-              fileUrl: image.value, name: _tempCategory.getId());
-
-          imageUrl = url;
-        }
-
         _tempCategory.transfer(_category);
 
         _productsDatabase.updateCategory(_category);
 
         return;
       }
-
-      String url = await _server.uploadFile(
-          fileUrl: image.value, name: _tempCategory.getId());
-
-      imageUrl = url;
 
       _tempCategory.transfer(_category);
 
@@ -79,27 +66,9 @@ class CategoryEditorHelper {
     }
   }
 
-  Future<void> browseImage() async {
-    /* final ImagePicker _picker = ImagePicker();
-    final XFile? imageFile =
-        await _picker.pickImage(source: ImageSource.gallery);
-
-    if (imageFile != null) {
-      if (_firstLoad.value == true) {
-        _firstLoad.value = false;
-      }
-
-      _image.value = imageFile.path;
-      imageUrl = _image.value;
-    }*/
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
-
-    if (result != null) {
-      _image.value = result.files.single.path!;
-      imageUrl = image.value;
-    } else {
-      // User canceled the picker
-    }
+  void setImage(String url) {
+    _image.value = url;
+    imageUrl = url;
   }
 
   set imageUrl(String imageUrl) {

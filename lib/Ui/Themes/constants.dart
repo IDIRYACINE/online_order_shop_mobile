@@ -61,6 +61,7 @@ const orderStatusLabel = "Status";
 const messagePermanantAction = "Cette action est permanente !";
 const messageResetDatabase =
     "relancer l'application pour affecter les modifications";
+const noImagesFound = "no images found";
 
 //Settings
 const synchroniseDatabaseTitle = "Synchroniser la base de données";

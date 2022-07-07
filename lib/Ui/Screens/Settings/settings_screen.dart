@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:online_order_shop_mobile/Application/Catalogue/catalogue_helper.dart';
 import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
+import 'package:online_order_shop_mobile/Application/Settings/settings_helper.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Database/idatabase.dart';
 import 'package:online_order_shop_mobile/Infrastructure/service_provider.dart';
 import 'package:online_order_shop_mobile/Ui/Components/Dialogs/confirmation_dialog.dart';
@@ -30,6 +31,9 @@ class _SettingsState extends State<SettingsScreen> {
 
     catalogueHelper = catalogueHelper =
         Provider.of<HelpersProvider>(context, listen: false).catalogueHelper;
+
+    SettingsHelper settingsHelper =
+        Provider.of<HelpersProvider>(context, listen: false).settingsHelper;
 
     return SingleChildScrollView(
       child: Column(
@@ -76,8 +80,13 @@ class _SettingsState extends State<SettingsScreen> {
             },
           ),
           SettingRow(
-            title: resetDatabaseTitle,
-            onRowClick: () {},
+            title: "connect to google",
+            onRowClick: () {
+              settingsHelper.googleSignIn();
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text(messageResetDatabase),
+              ));
+            },
           )
         ],
       ),

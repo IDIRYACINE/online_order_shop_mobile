@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:online_order_shop_mobile/Application/Category/category_editor_helper.dart';
 import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
+import 'package:online_order_shop_mobile/Application/Providers/navigation_provider.dart';
 import 'package:online_order_shop_mobile/Ui/Components/Images/network_image.dart';
 import 'package:online_order_shop_mobile/Ui/Components/Images/network_local_image.dart';
 import 'package:online_order_shop_mobile/Ui/Components/cards.dart';
@@ -69,7 +70,11 @@ class _CategoryEditorScreenState extends State<CategoryEditorScreen> {
             Flexible(
                 child: InkResponse(
               onTap: () {
-                categoryEditorHelper.browseImage();
+                Provider.of<HelpersProvider>(context, listen: false)
+                    .settingsHelper;
+                Provider.of<NavigationProvider>(context, listen: false)
+                    .navigateToImagePicker(
+                        context, categoryEditorHelper.setImage);
               },
               child: ValueListenableBuilder<String>(
                   valueListenable: categoryEditorHelper.image,
@@ -77,7 +82,6 @@ class _CategoryEditorScreenState extends State<CategoryEditorScreen> {
                     return CustomNetworkImage(
                       value,
                       fit: BoxFit.fill,
-                      //firstLoadWatcher: categoryEditorHelper.firstLoad,
                     );
                   }),
             )),

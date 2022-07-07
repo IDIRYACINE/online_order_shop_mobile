@@ -8,6 +8,7 @@ import 'package:online_order_shop_mobile/Application/Category/category_editor_he
 import 'package:online_order_shop_mobile/Application/Category/category_manager_helper.dart';
 import 'package:online_order_shop_mobile/Application/DeliveryAddress/delivery_address.dart';
 import 'package:online_order_shop_mobile/Application/Product/product_editor_helper.dart';
+import 'package:online_order_shop_mobile/Application/Settings/settings_helper.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/catalogue_model.dart';
 import 'package:online_order_shop_mobile/Domain/Profile/profile_model.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Exceptions/server_exceptions.dart';
@@ -24,7 +25,9 @@ class HelpersProvider with ChangeNotifier {
   late ProductEditorHelper _productManagerHelper;
   late CategoryManagerHelper _categoryManagerHelper;
   late CategoryEditorHelper _categoryEditorHelper;
+  late SettingsHelper _settingsHelper;
 
+  SettingsHelper get settingsHelper => _settingsHelper;
   CategoryEditorHelper get categoryEditorHelper => _categoryEditorHelper;
 
   Future<bool> initApp() async {
@@ -53,6 +56,8 @@ class HelpersProvider with ChangeNotifier {
           CategoryManagerHelper(_catalogueHelper, services.productDatabase);
 
       _categoryEditorHelper = CategoryEditorHelper(_catalogueHelper);
+
+      _settingsHelper = SettingsHelper();
     } on LocalDatabaseNotFound catch (_) {
       throw LocalDatabaseNotFound();
     } catch (e) {
