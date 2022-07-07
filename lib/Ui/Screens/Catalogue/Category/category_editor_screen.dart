@@ -74,7 +74,10 @@ class _CategoryEditorScreenState extends State<CategoryEditorScreen> {
                     .settingsHelper;
                 Provider.of<NavigationProvider>(context, listen: false)
                     .navigateToImagePicker(
-                        context, categoryEditorHelper.setImage);
+                        context,
+                        Provider.of<HelpersProvider>(context, listen: false)
+                            .settingsHelper,
+                        categoryEditorHelper.setImage);
               },
               child: ValueListenableBuilder<String>(
                   valueListenable: categoryEditorHelper.image,

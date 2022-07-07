@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:online_order_shop_mobile/Application/ImagePicker/image_picker_helper.dart';
+import 'package:online_order_shop_mobile/Application/Settings/settings_helper.dart';
 import 'package:online_order_shop_mobile/Domain/Cart/cart.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/Category/category_model.dart'
     as my_app;
@@ -159,10 +160,20 @@ class NavigationProvider with ChangeNotifier {
     }
   }
 
-  void navigateToImagePicker(BuildContext context, TypedCallback callback) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => ImagePickerScreen(onConfirm: callback)));
+  void navigateToImagePicker(BuildContext context,
+      SettingsHelper settingsHelper, TypedCallback callback) {
+    void pushScreen() {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ImagePickerScreen(onConfirm: callback)));
+    }
+
+    if (settingsHelper.isConnected()) {
+      pushScreen();
+      return;
+    }
+
+    settingsHelper.googleSignIn(pushScreen);
   }
 }

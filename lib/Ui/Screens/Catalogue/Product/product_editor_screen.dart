@@ -118,7 +118,11 @@ class _ProductEditorScreenState extends State<ProductEditorScreen> {
                           .settingsHelper;
                       Provider.of<NavigationProvider>(context, listen: false)
                           .navigateToImagePicker(
-                              context, productManagerHelper.setImage);
+                              context,
+                              Provider.of<HelpersProvider>(context,
+                                      listen: false)
+                                  .settingsHelper,
+                              productManagerHelper.setImage);
                     },
                     child: ValueListenableBuilder<String>(
                         valueListenable: productManagerHelper.image,

@@ -62,6 +62,8 @@ const messagePermanantAction = "Cette action est permanente !";
 const messageResetDatabase =
     "relancer l'application pour affecter les modifications";
 const noImagesFound = "no images found";
+const connectToDrive = "connecter au drive";
+const connectedMessage = "connected";
 
 //Settings
 const synchroniseDatabaseTitle = "Synchroniser la base de données";

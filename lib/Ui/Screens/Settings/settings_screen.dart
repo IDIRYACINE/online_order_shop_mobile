@@ -25,10 +25,14 @@ class _SettingsState extends State<SettingsScreen> {
     await catalogueHelper.reloadCategories();
   }
 
+  void showConnectedMessage() {
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text(messageResetDatabase),
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
-    //ThemeData theme = Theme.of(context);
-
     catalogueHelper = catalogueHelper =
         Provider.of<HelpersProvider>(context, listen: false).catalogueHelper;
 
@@ -71,7 +75,7 @@ class _SettingsState extends State<SettingsScreen> {
                         database.reset();
                         ScaffoldMessenger.of(context)
                             .showSnackBar(const SnackBar(
-                          content: Text(messageResetDatabase),
+                          content: Text(connectedMessage),
                         ));
                       },
                       message: messagePermanantAction,
@@ -80,12 +84,9 @@ class _SettingsState extends State<SettingsScreen> {
             },
           ),
           SettingRow(
-            title: "connect to google",
+            title: connectToDrive,
             onRowClick: () {
-              settingsHelper.googleSignIn();
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text(messageResetDatabase),
-              ));
+              settingsHelper.googleSignIn(showConnectedMessage);
             },
           )
         ],
