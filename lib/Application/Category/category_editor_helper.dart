@@ -1,9 +1,5 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
 import 'package:online_order_shop_mobile/Application/Catalogue/catalogue_helper.dart';
-import 'package:online_order_shop_mobile/Application/ImagePicker/image_picker_helper.dart';
-import 'package:online_order_shop_mobile/Application/Providers/navigation_provider.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/Category/category_model.dart'
     as my_app;
 import 'package:online_order_shop_mobile/Infrastructure/Database/idatabase.dart';

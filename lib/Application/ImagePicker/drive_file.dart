@@ -17,7 +17,7 @@ class DriveFile {
   }
 
   String getUrl() {
-    return _file.thumbnailLink!;
+    return 'https://drive.google.com/uc?export=view&id=${_file.id}';
   }
 
   void select() {

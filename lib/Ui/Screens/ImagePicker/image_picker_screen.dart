@@ -65,7 +65,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
                     Navigator.of(context).pop();
                   },
                   icon: Icon(
-                    Icons.arrow_back_ios,
+                    Icons.done,
                     color: theme.colorScheme.secondaryVariant,
                   ))),
         ]),

@@ -11,7 +11,7 @@ typedef CategoryMap = List<Category>;
 class Category {
   late String _id;
   late ValueNotifier<String> _name;
-  late String _imageUrl;
+  late ValueNotifier<String> _imageUrl;
   late ValueNotifier<int> _productCount;
   int _loadedProductsCount = 0;
   final List<Product> _products = [];
@@ -23,7 +23,7 @@ class Category {
       required int productsCount}) {
     _id = id;
     _name = ValueNotifier(name);
-    _imageUrl = imageUrl;
+    _imageUrl = ValueNotifier(imageUrl);
     _productCount = ValueNotifier(productsCount);
   }
 
@@ -32,6 +32,10 @@ class Category {
   }
 
   String getImageUrl() {
+    return _imageUrl.value;
+  }
+
+  ValueListenable<String> getImagePreviewListenable() {
     return _imageUrl;
   }
 
@@ -63,13 +67,13 @@ class Category {
   Map<String, Object?> toMap() {
     return {
       "Name": _name.value,
-      "ImageUrl": _imageUrl,
+      "ImageUrl": _imageUrl.value,
       "ProductsCount": _productCount.value
     };
   }
 
   void setImageUrl(String value) {
-    _imageUrl = value;
+    _imageUrl.value = value;
   }
 
   static Category from(Category source) {
@@ -82,7 +86,7 @@ class Category {
 
   void transfer(Category target) {
     target.setId(_id);
-    target.setImageUrl(_imageUrl);
+    target.setImageUrl(_imageUrl.value);
     target.setName(_name.value);
     target.setProductsCount(_productCount.value);
     target.setProducts(_products);

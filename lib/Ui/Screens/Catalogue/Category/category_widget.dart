@@ -58,10 +58,16 @@ class _CategoryWidgetState extends State<CategoryWidget> {
         child: Row(
           children: [
             Expanded(
-                child: CustomNetworkImage(
-              widget.category.getImageUrl(),
-              height: 100,
-            )),
+              child: ValueListenableBuilder<String>(
+                  valueListenable: widget.category.getImagePreviewListenable(),
+                  builder: (context, url, child) {
+                    return CustomNetworkImage(
+                      url,
+                      height: 100,
+                      fit: BoxFit.fitHeight,
+                    );
+                  }),
+            ),
             Expanded(
               flex: 2,
               child: Padding(

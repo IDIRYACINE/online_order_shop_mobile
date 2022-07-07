@@ -51,11 +51,16 @@ class ProductWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
-              child: CustomNetworkImage(
-            product.getImageUrl(),
-            height: 100,
-            fit: BoxFit.fitHeight,
-          )),
+            child: ValueListenableBuilder<String>(
+                valueListenable: product.getImageObservable(),
+                builder: (context, url, child) {
+                  return CustomNetworkImage(
+                    url,
+                    height: 100,
+                    fit: BoxFit.fitHeight,
+                  );
+                }),
+          ),
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

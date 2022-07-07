@@ -75,13 +75,14 @@ class ImagePicker {
 
   Future<bool> load() async {
     try {
-      String? targetFolderId = await _getFolderId("Memoire");
+      //TODO:HARD CODED
+      String? targetFolderId = await _getFolderId("Al-Manal");
 
       if (targetFolderId != null) {
         _currentFolder = await _driveApi.files.list(
             spaces: 'drive',
             q: "'$targetFolderId' in parents and mimeType='image/png'",
-            $fields: "files(thumbnailLink,name,webViewLink)");
+            $fields: "files(thumbnailLink,name,id,webViewLink)");
       }
     } catch (e) {
       dev.log(e.toString());

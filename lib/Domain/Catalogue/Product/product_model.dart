@@ -7,17 +7,19 @@ import 'package:flutter/foundation.dart';
 typedef ProductMap = Map<String, List<Product>>;
 
 class Product {
-  String _description, _imageUrl;
+  String _description;
+  late ValueNotifier<String> _imageUrl;
   late ValueNotifier<String> _name;
   List<double> _prices;
   List<String> _sizes;
   late final List<String> _descriptionImages;
   final int? _id;
 
-  Product(
-      String name, this._description, this._imageUrl, this._prices, this._sizes,
+  Product(String name, this._description, String imageUrl, this._prices,
+      this._sizes,
       [this._id]) {
     _name = ValueNotifier(name);
+    _imageUrl = ValueNotifier(imageUrl);
   }
 
   String getDescription() {
@@ -25,7 +27,7 @@ class Product {
   }
 
   String getImageUrl() {
-    return _imageUrl;
+    return _imageUrl.value;
   }
 
   String getName() {
@@ -49,7 +51,7 @@ class Product {
   }
 
   String getDescriptionImageUrl(int index) {
-    return _imageUrl;
+    return _imageUrl.value;
   }
 
   int getDescrpitionImagesCount() {
@@ -64,7 +66,7 @@ class Product {
     return {
       "Name": _name.value,
       "Description": _description,
-      "ImageUrl": _imageUrl,
+      "ImageUrl": _imageUrl.value,
       "Size": jsonEncode(_sizes),
       "Price": jsonEncode(_prices),
     };
@@ -87,7 +89,7 @@ class Product {
     target.setSizeList(_sizes);
     target.setPriceList(_prices);
     target.setName(_name.value);
-    target.setImageUrl(_imageUrl);
+    target.setImageUrl(_imageUrl.value);
     target.setDescription(_description);
   }
 
@@ -106,7 +108,7 @@ class Product {
   }
 
   void setImageUrl(String imageUrl) {
-    _imageUrl = imageUrl;
+    _imageUrl.value = imageUrl;
   }
 
   void setDescription(String description) {
@@ -141,5 +143,9 @@ class Product {
 
   ValueListenable<String> getNameObserver() {
     return _name;
+  }
+
+  ValueListenable<String> getImageObservable() {
+    return _imageUrl;
   }
 }

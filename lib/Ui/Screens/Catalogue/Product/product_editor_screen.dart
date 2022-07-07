@@ -3,6 +3,7 @@ import 'package:online_order_shop_mobile/Application/Product/product_editor_help
 import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
 import 'package:online_order_shop_mobile/Application/Providers/navigation_provider.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/optional_item.dart';
+import 'package:online_order_shop_mobile/Ui/Components/Images/network_image.dart';
 import 'package:online_order_shop_mobile/Ui/Components/Images/network_local_image.dart';
 import 'package:online_order_shop_mobile/Ui/Components/cards.dart';
 import 'package:online_order_shop_mobile/Ui/Components/product_components.dart';
@@ -113,15 +114,18 @@ class _ProductEditorScreenState extends State<ProductEditorScreen> {
                   flex: widget.imageFlex,
                   child: InkResponse(
                     onTap: () {
-                      productManagerHelper.browseImage();
+                      Provider.of<HelpersProvider>(context, listen: false)
+                          .settingsHelper;
+                      Provider.of<NavigationProvider>(context, listen: false)
+                          .navigateToImagePicker(
+                              context, productManagerHelper.setImage);
                     },
                     child: ValueListenableBuilder<String>(
                         valueListenable: productManagerHelper.image,
                         builder: (context, value, child) {
-                          return NetworkLocalImage(
+                          return CustomNetworkImage(
                             value,
                             fit: BoxFit.fill,
-                            firstLoadWatcher: productManagerHelper.firstLoad,
                           );
                         }),
                   )),
