@@ -74,6 +74,10 @@ class _SettingsState extends State<SettingsScreen> {
                     );
                   });
             },
+          ),
+          SettingRow(
+            title: resetDatabaseTitle,
+            onRowClick: () {},
           )
         ],
       ),

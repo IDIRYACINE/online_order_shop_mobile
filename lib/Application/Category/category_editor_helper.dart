@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:online_order_shop_mobile/Application/Catalogue/catalogue_helper.dart';
@@ -47,15 +48,12 @@ class CategoryEditorHelper {
 
       final IOnlineServerAcess _server = ServicesProvider().serverAcessService;
 
-      String imageNameOnServer =
-          _server.serverImageNameFormater(_tempCategory.getId());
-
       _productsDatabase.remebmerChange();
 
       if (_editMode) {
         if (_imageUpdated) {
           String url = await _server.uploadFile(
-              fileUrl: image.value, name: imageNameOnServer);
+              fileUrl: image.value, name: _tempCategory.getId());
 
           imageUrl = url;
         }
@@ -68,7 +66,7 @@ class CategoryEditorHelper {
       }
 
       String url = await _server.uploadFile(
-          fileUrl: image.value, name: imageNameOnServer);
+          fileUrl: image.value, name: _tempCategory.getId());
 
       imageUrl = url;
 
@@ -82,7 +80,7 @@ class CategoryEditorHelper {
   }
 
   Future<void> browseImage() async {
-    final ImagePicker _picker = ImagePicker();
+    /* final ImagePicker _picker = ImagePicker();
     final XFile? imageFile =
         await _picker.pickImage(source: ImageSource.gallery);
 
@@ -93,6 +91,14 @@ class CategoryEditorHelper {
 
       _image.value = imageFile.path;
       imageUrl = _image.value;
+    }*/
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+    if (result != null) {
+      _image.value = result.files.single.path!;
+      imageUrl = image.value;
+    } else {
+      // User canceled the picker
     }
   }
 

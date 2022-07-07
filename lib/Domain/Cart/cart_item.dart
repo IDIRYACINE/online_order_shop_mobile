@@ -3,18 +3,20 @@ class CartItem {
   late int _quantity;
   late num _price;
   late String _size;
-  String _imageUrl = "";
+  late String _imageUrl;
 
   CartItem({
     required String name,
     required int quantity,
     required String size,
     required num price,
+    required String? imageUrl,
   }) {
     _name = name;
     _quantity = quantity;
     _price = price;
     _size = size;
+    _imageUrl = imageUrl ?? "";
   }
 
   String getName() {

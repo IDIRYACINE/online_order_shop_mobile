@@ -53,7 +53,8 @@ class Order implements IOrder {
         name: productRaw["name"],
         price: productRaw["price"],
         quantity: productRaw["quantity"],
-        size: productRaw["size"]);
+        size: productRaw["size"],
+        imageUrl: productRaw["image"]);
   }
 
   @override

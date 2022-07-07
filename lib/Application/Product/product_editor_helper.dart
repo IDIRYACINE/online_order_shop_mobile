@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:online_order_shop_mobile/Application/Category/category_manager_helper.dart';
 import 'package:online_order_shop_mobile/Application/Product/size_editor_helper.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/Category/category_model.dart'
@@ -8,6 +9,7 @@ import 'package:online_order_shop_mobile/Domain/Catalogue/Category/category_mode
 import 'package:online_order_shop_mobile/Domain/Catalogue/Product/product_model.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Database/idatabase.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Server/ionline_data_service.dart';
+import 'dart:developer' as dev;
 
 class ProductEditorHelper {
   late Product _product;
@@ -94,15 +96,12 @@ class ProductEditorHelper {
 
   Future<void> applyChanges() async {
     if (_somethingChanged || _updatedImage) {
-      String imageNameOnServer =
-          _server.serverImageNameFormater(_tempProduct.getName());
-
       _productsDatabase.remebmerChange();
 
       if (_editMode) {
         if (_updatedImage) {
           String url = await _server.uploadFile(
-              fileUrl: image.value, name: imageNameOnServer);
+              fileUrl: image.value, name: _tempProduct.getName());
 
           imageUrl = url;
         }
@@ -118,7 +117,7 @@ class ProductEditorHelper {
       }
 
       String url = await _server.uploadFile(
-          fileUrl: image.value, name: imageNameOnServer);
+          fileUrl: image.value, name: _tempProduct.getName());
 
       imageUrl = url;
 
@@ -130,7 +129,7 @@ class ProductEditorHelper {
   }
 
   Future<void> browseImage() async {
-    final ImagePicker _picker = ImagePicker();
+    /* final ImagePicker _picker = ImagePicker();
     final XFile? imageFile =
         await _picker.pickImage(source: ImageSource.gallery);
 
@@ -141,6 +140,17 @@ class ProductEditorHelper {
 
       image.value = imageFile.path;
       imageUrl = image.value;
+    }*/
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+    if (result != null) {
+      image.value = result.files.single.path!;
+      dev.log(result.files.single.path!);
+            
+
+      imageUrl = image.value;
+    } else {
+      // User canceled the picker
     }
   }
 

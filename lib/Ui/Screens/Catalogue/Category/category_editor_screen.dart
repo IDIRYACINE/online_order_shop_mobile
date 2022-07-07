@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:online_order_shop_mobile/Application/Category/category_editor_helper.dart';
 import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
+import 'package:online_order_shop_mobile/Ui/Components/Images/network_image.dart';
 import 'package:online_order_shop_mobile/Ui/Components/Images/network_local_image.dart';
 import 'package:online_order_shop_mobile/Ui/Components/cards.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
@@ -73,10 +74,10 @@ class _CategoryEditorScreenState extends State<CategoryEditorScreen> {
               child: ValueListenableBuilder<String>(
                   valueListenable: categoryEditorHelper.image,
                   builder: (context, value, child) {
-                    return NetworkLocalImage(
+                    return CustomNetworkImage(
                       value,
                       fit: BoxFit.fill,
-                      firstLoadWatcher: categoryEditorHelper.firstLoad,
+                      //firstLoadWatcher: categoryEditorHelper.firstLoad,
                     );
                   }),
             )),

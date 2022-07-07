@@ -27,14 +27,14 @@ class ProductsDatabase implements IProductsDatabase {
         _serverAccess.downloadFile(
             fileUrl: _productsDatabaseName, out: databaseFile);
       } catch (e) {
-        //throw RemoteDatabaseNotFound();
+        reset();
       }
     }
 
     try {
       await _connectToLocalDatabase(localDatabasePath: databaseFile.path);
     } catch (e) {
-      throw LocalDatabaseNotFound();
+      reset();
     }
 
     try {
@@ -48,7 +48,7 @@ class ProductsDatabase implements IProductsDatabase {
         _productsDatabase.setVersion(databaseVersion);
       }
     } catch (e) {
-      // dont care
+      reset();
     }
   }
 
@@ -82,7 +82,9 @@ class ProductsDatabase implements IProductsDatabase {
 
   Future<void> _connectToLocalDatabase(
       {required String localDatabasePath}) async {
+    dev.log("Here");
     _productsDatabase = await openDatabase(localDatabasePath);
+    dev.log(_productsDatabase.isOpen.toString());
   }
 
   Future<bool> _checkForNewVersion(int fireBaseDatabaseVersion) async {
@@ -182,7 +184,6 @@ class ProductsDatabase implements IProductsDatabase {
   Future<void> reset() async {
     File databaseFile = await _getLocalDatabaseFile();
     disconnect();
-    databaseFile.deleteSync();
 
     String createCategoriesTable =
         "CREATE TABLE IF NOT EXISTS $_categoriresTable "
