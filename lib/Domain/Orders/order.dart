@@ -16,7 +16,7 @@ class Order implements IOrder {
   Order(Map<String, dynamic> order) {
     _items = List.from(order["items"]);
     _orderId = order["id"];
-    _orderStatus = "waiting"; //order["status"];
+    _orderStatus = order["status"] ?? "attendu"; //;
     _phoneNumber = order["phoneNumber"];
     _latitude = order["latitude"].toDouble();
     _longitude = order["longitude"].toDouble();

@@ -84,9 +84,11 @@ class _SettingsState extends State<SettingsScreen> {
             },
           ),
           SettingRow(
-            title: connectToDrive,
+            title: uploadImagesLabel,
             onRowClick: () {
-              settingsHelper.googleSignIn(showConnectedMessage);
+              settingsHelper.googleSignIn(() {
+                settingsHelper.uploadImages(context);
+              });
             },
           )
         ],

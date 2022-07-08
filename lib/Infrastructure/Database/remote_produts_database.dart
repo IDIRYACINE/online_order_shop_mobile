@@ -1,21 +1,24 @@
-// ignore_for_file: empty_catches
+/*import 'dart:io';
 
-import 'dart:io';
-import 'package:online_order_shop_mobile/Domain/Catalogue/Product/product_model.dart';
-import 'package:online_order_shop_mobile/Domain/Catalogue/Category/category_model.dart';
+import 'package:online_order_shop_mobile/Infrastructure/Database/Api/idatabase_api.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Database/idatabase.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Server/ionline_data_service.dart';
 import 'package:sqflite/sqflite.dart';
-import 'dart:developer' as dev;
 
-class ProductsDatabase implements IProductsDatabase {
+class RemoteProductsDatabase implements IProductsDatabase {
   static const String _productsDatabaseName = 'Products.db';
   static const String _categoriresTable = "Categories";
+
   late Database _productsDatabase;
   final IOnlineServerAcess _serverAccess;
   bool _somethingChanged = false;
+  late Uri _backendServerUrl;
+  final IDatabaseApi _api;
 
-  ProductsDatabase(this._serverAccess);
+  RemoteProductsDatabase(
+      this._serverAccess, String backendServerUrl, this._api) {
+    _backendServerUrl = Uri(host: backendServerUrl);
+  }
 
   @override
   Future<void> connect() async {
@@ -81,9 +84,7 @@ class ProductsDatabase implements IProductsDatabase {
 
   Future<void> _connectToLocalDatabase(
       {required String localDatabasePath}) async {
-    dev.log("Here");
     _productsDatabase = await openDatabase(localDatabasePath);
-    dev.log(_productsDatabase.isOpen.toString());
   }
 
   Future<bool> _checkForNewVersion(int fireBaseDatabaseVersion) async {
@@ -95,72 +96,78 @@ class ProductsDatabase implements IProductsDatabase {
   }
 
   @override
-  Future<void> createCategory(Category category) async {
-    Map<String, Object?> categoryValues = category.toMap();
-    categoryValues['Id'] = category.getName();
+  Future<void> createCategory(Map<String, String> category) async {
+    _api.createCategory(category).then((value) {
+      category['Id'] = category['Name']!;
 
-    _productsDatabase.insert(_categoriresTable, categoryValues);
+      _productsDatabase.insert(_categoriresTable, category);
 
-    String createCategoryTable =
-        "CREATE TABLE IF NOT EXISTS ${category.getName()} ("
-        "	Id Integer PRIMARY KEY AUTOINCREMENT,"
-        "	Name text NOT NULL,"
-        "	ImageUrl text NOT NULL,"
-        "	Price text NOT NULL,"
-        "	Size text NOT NULL,"
-        "	Description text DEFAULT '' NOT NULL"
-        ")";
+      String createCategoryTable =
+          "CREATE TABLE IF NOT EXISTS ${category['Name']!} ("
+          "	Id Integer PRIMARY KEY AUTOINCREMENT,"
+          "	Name text NOT NULL,"
+          "	ImageUrl text NOT NULL,"
+          "	Price text NOT NULL,"
+          "	Size text NOT NULL,"
+          "	Description text DEFAULT '' NOT NULL"
+          ")";
 
-    _productsDatabase.execute(createCategoryTable);
+      _productsDatabase.execute(createCategoryTable);
+    });
   }
 
   @override
-  Future<void> createProduct(Category category, Product product) async {
-    _productsDatabase.insert(category.getId(), product.toMap());
-    updateCategoryProductCount(1, category.getId());
+  Future<void> createProduct(
+      String categoryId, Map<String, String> product) async {
+    _productsDatabase.insert(categoryId, product);
+    updateCategoryProductCount(1, categoryId);
   }
 
   @override
-  Future<void> deleteCategory(Category category) async {
-    _productsDatabase.delete(_categoriresTable,
-        where: "Id=?", whereArgs: [category.getId()]);
+  Future<void> deleteCategory(String categoryId) async {
+    _api.deleteCategory(categoryId).then((value) {
+      _productsDatabase
+          .delete(_categoriresTable, where: "Id=?", whereArgs: [categoryId]);
 
-    String dropCategoryTable = "DROP TABLE ${category.getId()}";
-    _productsDatabase.execute(dropCategoryTable);
+      String dropCategoryTable = "DROP TABLE $categoryId";
+      _productsDatabase.execute(dropCategoryTable);
+    });
   }
 
   @override
-  Future<void> deleteProduct(Category category, Product product) async {
-    _productsDatabase
-        .delete(category.getId(), where: "Id=?", whereArgs: [product.getId()]);
-    updateCategoryProductCount(-1, category.getId());
+  Future<void> deleteProduct(String categoryId, String productId) async {
+    _api.deleteProduct(categoryId, productId).then((value) {
+      _productsDatabase
+          .delete(categoryId, where: "Id=?", whereArgs: [productId]);
+      updateCategoryProductCount(-1, categoryId);
+    });
   }
 
   @override
-  Future<void> updateCategory(Category category) async {
-    _productsDatabase.update(_categoriresTable, category.toMap(),
-        where: "Id = ?", whereArgs: [category.getId()]);
+  Future<void> updateCategory(Map<String, String> category) async {
+    _api.updateCategory(category).then((value) => {
+          _productsDatabase.update(_categoriresTable, category,
+              where: "Id = ?", whereArgs: [category[category['Id']]])
+        });
   }
 
   @override
-  Future<void> updateProduct(Category category, Product product) async {
-    _productsDatabase.update(category.getId(), product.toMap(),
-        where: "Id=?", whereArgs: [product.getId()]);
+  Future<void> updateProduct(
+      String categoryId, Map<String, String> product) async {
+    _api.updateProduct(categoryId, product).then((value) => _productsDatabase
+        .update(categoryId, product,
+            where: "Id=?", whereArgs: [product['Id']]));
   }
 
   @override
   Future<bool> upgradeDatabaseVersion() async {
-    dev.log(_somethingChanged.toString());
     if (_somethingChanged) {
-      int currentVersion = await _productsDatabase.getVersion();
-      _productsDatabase.setVersion(currentVersion + 1);
+      _productsDatabase.getVersion().then((databaseVersion) {
+        _api
+            .upgradeDatabaseVersion()
+            .then((value) => _productsDatabase.setVersion(databaseVersion + 1));
+      });
 
-      File databaseFile = await _getLocalDatabaseFile();
-
-      _serverAccess.uploadFile(
-          fileUrl: databaseFile.path, name: _productsDatabaseName);
-
-      _serverAccess.postData(dataUrl: "version", data: currentVersion + 1);
       _somethingChanged = false;
       return true;
     }
@@ -208,3 +215,4 @@ class ProductsDatabase implements IProductsDatabase {
     }
   }
 }
+*/

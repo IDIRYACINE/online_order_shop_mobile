@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/src/widgets/framework.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import 'package:online_order_shop_mobile/Application/ImagePicker/image_picker_helper.dart';
@@ -40,6 +41,8 @@ class SettingsHelper {
   bool isConnected() {
     return _connected;
   }
+
+  void uploadImages(BuildContext context) {}
 
   //https://drive.google.com/file/d/{fileId}/view
 }
