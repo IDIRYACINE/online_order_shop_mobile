@@ -7,7 +7,6 @@ import 'package:online_order_shop_mobile/Domain/Catalogue/Category/category_mode
 import 'package:online_order_shop_mobile/Ui/Screens/Catalogue/Category/category_widget.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
 import 'package:provider/provider.dart';
-import 'dart:developer' as dev;
 
 class CatalogueScreen extends StatefulWidget {
   final double bodyPadding = 16.0;

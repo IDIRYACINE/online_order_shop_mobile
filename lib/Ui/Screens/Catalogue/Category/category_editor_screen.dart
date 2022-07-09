@@ -3,7 +3,6 @@ import 'package:online_order_shop_mobile/Application/Category/category_editor_he
 import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
 import 'package:online_order_shop_mobile/Application/Providers/navigation_provider.dart';
 import 'package:online_order_shop_mobile/Ui/Components/Images/network_image.dart';
-import 'package:online_order_shop_mobile/Ui/Components/Images/network_local_image.dart';
 import 'package:online_order_shop_mobile/Ui/Components/cards.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
 import 'package:provider/provider.dart';
@@ -46,7 +45,7 @@ class _CategoryEditorScreenState extends State<CategoryEditorScreen> {
                   },
                   icon: Icon(
                     Icons.arrow_back_ios,
-                    color: theme.colorScheme.secondaryVariant,
+                    color: theme.colorScheme.secondaryContainer,
                   ))),
           Card(
             elevation: 4.0,
@@ -58,7 +57,7 @@ class _CategoryEditorScreenState extends State<CategoryEditorScreen> {
                 },
                 icon: Icon(
                   Icons.done,
-                  color: theme.colorScheme.secondaryVariant,
+                  color: theme.colorScheme.secondaryContainer,
                 )),
           ),
         ]),

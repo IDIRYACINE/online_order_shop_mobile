@@ -54,7 +54,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
                   },
                   icon: Icon(
                     Icons.arrow_back_ios,
-                    color: theme.colorScheme.secondaryVariant,
+                    color: theme.colorScheme.secondaryContainer,
                   ))),
           Card(
               elevation: 4.0,
@@ -66,7 +66,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
                   },
                   icon: Icon(
                     Icons.done,
-                    color: theme.colorScheme.secondaryVariant,
+                    color: theme.colorScheme.secondaryContainer,
                   ))),
         ]),
       ),
@@ -87,7 +87,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
                       itemBuilder: (context, index) {
                         return ImageBox(
                           driveFile: imagePicker.getDriveFile(index),
-                          selectedColor: theme.colorScheme.secondaryVariant,
+                          selectedColor: theme.colorScheme.secondaryContainer,
                           unselectedColor: theme.colorScheme.onBackground,
                           onSelect: (DriveFile driveFile) {
                             imagePicker.selectFile(driveFile);

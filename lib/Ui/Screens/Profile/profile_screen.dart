@@ -41,7 +41,7 @@ class _ProfileState extends State<ProfileScreen> {
                   },
                   icon: Icon(
                     Icons.arrow_back_ios,
-                    color: theme.colorScheme.secondaryVariant,
+                    color: theme.colorScheme.secondaryContainer,
                   ))),
           Text(profileTitle, style: theme.textTheme.headline2),
           Card(
@@ -54,7 +54,7 @@ class _ProfileState extends State<ProfileScreen> {
                 },
                 icon: Icon(
                   Icons.done,
-                  color: theme.colorScheme.secondaryVariant,
+                  color: theme.colorScheme.secondaryContainer,
                 )),
           ),
         ]),

@@ -87,7 +87,7 @@ class _SpinnerAlertDialogState<T> extends State<SpinnerAlertDialog> {
                           child: Text(
                             confirmLabel,
                             style: TextStyle(
-                                color: theme.colorScheme.secondaryVariant,
+                                color: theme.colorScheme.secondaryContainer,
                                 fontSize: textSizeMeduim2),
                           )),
                     ],

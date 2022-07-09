@@ -47,7 +47,7 @@ class _CartScreenState extends State<CartScreen> {
                   },
                   icon: Icon(
                     Icons.arrow_back_ios,
-                    color: theme.colorScheme.secondaryVariant,
+                    color: theme.colorScheme.secondaryContainer,
                   ))),
         ]),
       ),

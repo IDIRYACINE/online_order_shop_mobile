@@ -1,9 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:online_order_shop_mobile/Application/ImagePicker/image_picker_helper.dart';
 import 'package:online_order_shop_mobile/Application/Settings/settings_helper.dart';
 import 'package:online_order_shop_mobile/Domain/Cart/cart.dart';
-import 'package:online_order_shop_mobile/Domain/Catalogue/Category/category_model.dart'
-    as my_app;
 import 'package:online_order_shop_mobile/Domain/Catalogue/Product/product_model.dart';
 import 'package:online_order_shop_mobile/Domain/Orders/iorder.dart';
 import 'package:online_order_shop_mobile/Ui/Components/Dialogs/spinner_dialog.dart';

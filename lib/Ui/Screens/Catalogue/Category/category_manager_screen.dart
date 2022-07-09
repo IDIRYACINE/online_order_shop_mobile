@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:online_order_shop_mobile/Application/Category/category_manager_helper.dart';
 import 'package:online_order_shop_mobile/Application/Providers/helpers_provider.dart';
 import 'package:online_order_shop_mobile/Application/Providers/navigation_provider.dart';
+import 'package:online_order_shop_mobile/Domain/Catalogue/Category/category_model.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/Product/product_model.dart';
 import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
 import 'package:provider/provider.dart';
@@ -42,7 +43,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 },
                 icon: Icon(
                   Icons.arrow_back_ios,
-                  color: theme.colorScheme.secondaryVariant,
+                  color: theme.colorScheme.secondaryContainer,
                 ),
               ),
             ),
@@ -65,11 +66,13 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 ),
                 IconButton(
                     onPressed: () {
+                      Category category = categoryManagerHelper.getCategory();
                       Provider.of<HelpersProvider>(context, listen: false)
                           .productManagerHelper
                           .setProduct(
-                              categoryManagerHelper.getCategory(),
-                              Product("", "", "", [0], ["Standard"]),
+                              category,
+                              Product("", "", "", [0], ["Standard"],
+                                  category.getProductCount() + 1),
                               categoryManagerHelper,
                               false);
 

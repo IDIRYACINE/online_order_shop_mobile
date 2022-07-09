@@ -3,7 +3,6 @@ import 'package:online_order_shop_mobile/Domain/Catalogue/Product/product_model.
 
 class SizeEditorHelper {
   late Product _product;
-  bool _somethingUpdated = false;
 
   late List<String> _tempSizes;
 
@@ -41,7 +40,6 @@ class SizeEditorHelper {
   void removeModel(int index) {
     _tempSizes.removeAt(index);
     _tempPrices.removeAt(index);
-    _somethingUpdated = true;
 
     tempModelsCount.value--;
   }
@@ -50,15 +48,11 @@ class SizeEditorHelper {
     _tempSizes[index] = size;
     _tempPrices[index] = double.parse(price);
     modelsChangeCounter.value++;
-    _somethingUpdated = true;
   }
 
   void applyModelsChanges() {
-   
-      _product.updateModels(_tempSizes, _tempPrices);
-      modelsCount.value = _tempSizes.length;
-      _somethingUpdated = false;
-    
+    _product.updateModels(_tempSizes, _tempPrices);
+    modelsCount.value = _tempSizes.length;
   }
 
   ValueListenable<int> getModelsCount() {

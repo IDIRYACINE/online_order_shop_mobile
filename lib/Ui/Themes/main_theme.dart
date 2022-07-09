@@ -25,9 +25,9 @@ ThemeData primaryTheme = ThemeData(
   //colors
   colorScheme: ColorScheme(
       primary: primaryColor,
-      primaryVariant: notSetYet,
+      primaryContainer: notSetYet,
       secondary: disabledColor,
-      secondaryVariant: secondaryVariant,
+      secondaryContainer: secondaryVariant,
       surface: surfaceColor,
       background: backgroundColor,
       error: errorColor,

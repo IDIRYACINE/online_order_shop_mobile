@@ -49,7 +49,7 @@ class _SizePriceManagerScreenState extends State<SizePriceManagerScreen> {
                   },
                   icon: Icon(
                     Icons.arrow_back_ios,
-                    color: theme.colorScheme.secondaryVariant,
+                    color: theme.colorScheme.secondary,
                   ))),
           Card(
             elevation: 4.0,
@@ -61,7 +61,7 @@ class _SizePriceManagerScreenState extends State<SizePriceManagerScreen> {
                 },
                 icon: Icon(
                   Icons.done,
-                  color: theme.colorScheme.secondaryVariant,
+                  color: theme.colorScheme.secondaryContainer,
                 )),
           ),
         ]),
