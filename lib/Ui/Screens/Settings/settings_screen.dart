@@ -72,7 +72,7 @@ class _SettingsState extends State<SettingsScreen> {
                   builder: (context) {
                     return ConfirmAlertDialog(
                       onConfirm: () {
-                        database.reset();
+                        reboot();
                         ScaffoldMessenger.of(context)
                             .showSnackBar(const SnackBar(
                           content: Text(connectedMessage),
@@ -89,6 +89,12 @@ class _SettingsState extends State<SettingsScreen> {
               settingsHelper.googleSignIn(() {
                 settingsHelper.uploadImages(context);
               });
+            },
+          ),
+          SettingRow(
+            title: "deconnecter au drive",
+            onRowClick: () {
+              settingsHelper.signOut();
             },
           )
         ],

@@ -1,24 +1,22 @@
-/*import 'dart:io';
+import 'dart:convert';
+import 'dart:io';
 
-import 'package:online_order_shop_mobile/Infrastructure/Database/Api/idatabase_api.dart';
+import 'package:flutter/foundation.dart';
+import 'package:online_order_shop_mobile/Infrastructure/Database/Api/database_api.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Database/idatabase.dart';
+import 'package:online_order_shop_mobile/Infrastructure/Exceptions/server_exceptions.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Server/ionline_data_service.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:http/http.dart' as http;
 
-class RemoteProductsDatabase implements IProductsDatabase {
+class RemoteDatabase implements IProductsDatabase {
   static const String _productsDatabaseName = 'Products.db';
   static const String _categoriresTable = "Categories";
-
   late Database _productsDatabase;
   final IOnlineServerAcess _serverAccess;
-  bool _somethingChanged = false;
-  late Uri _backendServerUrl;
-  final IDatabaseApi _api;
+  final String _serverUrl;
 
-  RemoteProductsDatabase(
-      this._serverAccess, String backendServerUrl, this._api) {
-    _backendServerUrl = Uri(host: backendServerUrl);
-  }
+  RemoteDatabase(this._serverAccess, this._serverUrl);
 
   @override
   Future<void> connect() async {
@@ -97,13 +95,13 @@ class RemoteProductsDatabase implements IProductsDatabase {
 
   @override
   Future<void> createCategory(Map<String, String> category) async {
-    _api.createCategory(category).then((value) {
-      category['Id'] = category['Name']!;
+    _postRequest(createCategoryApi, {"category": json.encode(category)}, () {
+      category['Id'] = category["Name"]!;
 
       _productsDatabase.insert(_categoriresTable, category);
 
       String createCategoryTable =
-          "CREATE TABLE IF NOT EXISTS ${category['Name']!} ("
+          "CREATE TABLE IF NOT EXISTS ${category["Name"]} ("
           "	Id Integer PRIMARY KEY AUTOINCREMENT,"
           "	Name text NOT NULL,"
           "	ImageUrl text NOT NULL,"
@@ -119,13 +117,16 @@ class RemoteProductsDatabase implements IProductsDatabase {
   @override
   Future<void> createProduct(
       String categoryId, Map<String, String> product) async {
-    _productsDatabase.insert(categoryId, product);
-    updateCategoryProductCount(1, categoryId);
+    _postRequest(
+        createProductApi, {"product": product, "categoryId": categoryId}, () {
+      _productsDatabase.insert(categoryId, product);
+      updateCategoryProductCount(1, categoryId);
+    });
   }
 
   @override
   Future<void> deleteCategory(String categoryId) async {
-    _api.deleteCategory(categoryId).then((value) {
+    _postRequest(deleteCategoryApi, {"categoryId": categoryId}, () {
       _productsDatabase
           .delete(_categoriresTable, where: "Id=?", whereArgs: [categoryId]);
 
@@ -135,8 +136,10 @@ class RemoteProductsDatabase implements IProductsDatabase {
   }
 
   @override
-  Future<void> deleteProduct(String categoryId, String productId) async {
-    _api.deleteProduct(categoryId, productId).then((value) {
+  Future<void> deleteProduct(String categoryId, int productId) async {
+    _postRequest(
+        deleteProductApi, {"categoryId": categoryId, "productId": productId},
+        () {
       _productsDatabase
           .delete(categoryId, where: "Id=?", whereArgs: [productId]);
       updateCategoryProductCount(-1, categoryId);
@@ -145,33 +148,26 @@ class RemoteProductsDatabase implements IProductsDatabase {
 
   @override
   Future<void> updateCategory(Map<String, String> category) async {
-    _api.updateCategory(category).then((value) => {
-          _productsDatabase.update(_categoriresTable, category,
-              where: "Id = ?", whereArgs: [category[category['Id']]])
-        });
+    _postRequest(updateCategoryApi, {"category": category}, () {
+      _productsDatabase.update(_categoriresTable, category,
+          where: "Id = ?", whereArgs: [category["Id"]]);
+    });
   }
 
   @override
   Future<void> updateProduct(
       String categoryId, Map<String, String> product) async {
-    _api.updateProduct(categoryId, product).then((value) => _productsDatabase
-        .update(categoryId, product,
-            where: "Id=?", whereArgs: [product['Id']]));
+    _postRequest(
+        updateProductApi, {"categoryId": categoryId, "product": product}, () {
+      _productsDatabase.update(categoryId, product,
+          where: "Id=?", whereArgs: [product["Id"]]);
+    });
   }
 
   @override
   Future<bool> upgradeDatabaseVersion() async {
-    if (_somethingChanged) {
-      _productsDatabase.getVersion().then((databaseVersion) {
-        _api
-            .upgradeDatabaseVersion()
-            .then((value) => _productsDatabase.setVersion(databaseVersion + 1));
-      });
-
-      _somethingChanged = false;
-      return true;
-    }
-    return false;
+    _getRequest(synchroniseDatabaseApi, null, () {});
+    return true;
   }
 
   void updateCategoryProductCount(int step, String categoryId) {
@@ -182,37 +178,38 @@ class RemoteProductsDatabase implements IProductsDatabase {
   }
 
   @override
-  void remebmerChange() {
-    _somethingChanged = true;
-  }
+  void remebmerChange() {}
 
   @override
   Future<void> reset() async {
-    File databaseFile = await _getLocalDatabaseFile();
-    disconnect();
+    _getRequest(resetDatabaseApi, null, () {});
+  }
 
-    String createCategoriesTable =
-        "CREATE TABLE IF NOT EXISTS $_categoriresTable "
-        " ("
-        "	Id String PRIMARY KEY,"
-        "	Name text NOT NULL,"
-        "	ImageUrl text NOT NULL,"
-        " ProductsCount Integer "
-        ")";
+  Future<void> _postRequest(
+      String api, Object? data, VoidCallback onSuccess) async {
+    Uri uri = Uri(scheme: "http", host: _serverUrl, port: 3001, path: api);
+    http.post(uri, body: data).then((response) {
+      if (response.statusCode == 200) {
+        onSuccess();
+      } else {
+        throw InternalServerError();
+      }
+    }).catchError((error) {
+      throw InternalServerError();
+    });
+  }
 
-    try {
-      await _serverAccess.postData(dataUrl: 'version', data: 0);
-
-      await _connectToLocalDatabase(localDatabasePath: databaseFile.path);
-      _productsDatabase.execute(createCategoriesTable);
-
-      _productsDatabase.setVersion(0);
-
-      await _serverAccess.uploadFile(
-          fileUrl: databaseFile.path, name: _productsDatabaseName);
-    } catch (e) {
-      // dont care
-    }
+  Future<void> _getRequest(
+      String api, Object? data, VoidCallback onSuccess) async {
+    Uri uri = Uri(scheme: "http", host: _serverUrl, path: api, port: 3001);
+    http.get(uri).then((response) {
+      if (response.statusCode == 200) {
+        onSuccess();
+      } else {
+        throw InternalServerError();
+      }
+    }).catchError((error) {
+      throw InternalServerError();
+    });
   }
 }
-*/

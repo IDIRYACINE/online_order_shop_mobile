@@ -83,26 +83,26 @@ class ProductsMapper {
   }
 
   void removeProduct(Category category, Product product) {
-    _database.deleteProduct(category, product);
+    _database.deleteProduct(category.getId(), product.getId());
   }
 
   void updateCategory(Category category) {
-    _database.updateCategory(category);
+    _database.updateCategory(category.toMap());
   }
 
   void createCategory(Category category) {
-    _database.createCategory(category);
+    _database.createCategory(category.toMap());
   }
 
   void updateProduct(Category category, Product product) {
-    _database.updateProduct(category, product);
+    _database.updateProduct(category.getId(), product.toMap());
   }
 
   void createProduct(Category category, Product product) {
-    _database.createProduct(category, product);
+    _database.createProduct(category.getId(), product.toMap());
   }
 
   void removeCategory(Category category) {
-    _database.deleteCategory(category);
+    _database.deleteCategory(category.getId());
   }
 }

@@ -5,14 +5,14 @@ import 'package:online_order_shop_mobile/Domain/Catalogue/Category/category_mode
     as my_app;
 
 import 'package:online_order_shop_mobile/Domain/Catalogue/Product/product_model.dart';
-import 'package:online_order_shop_mobile/Infrastructure/Database/idatabase.dart';
+import 'package:online_order_shop_mobile/Infrastructure/Database/products_mapper.dart';
 
 class ProductEditorHelper {
   late Product _product;
 
   late my_app.Category _category;
 
-  final IProductsDatabase _productsDatabase;
+  final ProductsMapper _productsDatabase;
 
   late Product _tempProduct;
 
@@ -90,8 +90,6 @@ class ProductEditorHelper {
 
   Future<void> applyChanges() async {
     if (_somethingChanged || _updatedImage) {
-      _productsDatabase.remebmerChange();
-
       if (_editMode) {
         _tempProduct.transfer(_product);
 

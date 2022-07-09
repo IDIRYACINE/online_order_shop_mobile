@@ -5,6 +5,7 @@ import 'package:online_order_shop_mobile/Domain/Catalogue/Category/category_mode
     as my_app;
 import 'package:online_order_shop_mobile/Domain/Catalogue/Product/product_model.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Database/idatabase.dart';
+import 'package:online_order_shop_mobile/Infrastructure/Database/products_mapper.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Server/ionline_data_service.dart';
 import 'package:online_order_shop_mobile/Infrastructure/service_provider.dart';
 import 'package:online_order_shop_mobile/Ui/Screens/Catalogue/Product/product_widget.dart';
@@ -12,7 +13,7 @@ import 'package:online_order_shop_mobile/Ui/Screens/Catalogue/Product/product_wi
 class CategoryManagerHelper {
   final ValueNotifier<int> productChangeCounter = ValueNotifier(0);
 
-  final IProductsDatabase _productsDatabase;
+  final ProductsMapper _productsDatabase;
 
   late my_app.Category _category;
 
@@ -31,9 +32,8 @@ class CategoryManagerHelper {
   }
 
   void removeProduct(Product product) {
-    _productsDatabase.remebmerChange();
     _category.removeProduct(product);
-    _productsDatabase.deleteProduct(_category, product);
+    _productsDatabase.removeProduct(_category, product);
     _productsDatabase.updateCategory(_category);
     IOnlineServerAcess server = ServicesProvider().serverAcessService;
     server.removeData(
@@ -41,7 +41,6 @@ class CategoryManagerHelper {
   }
 
   void addProduct(Product product) {
-    _productsDatabase.remebmerChange();
     _category.addProduct(product);
     _productsDatabase.createProduct(_category, product);
     _productsDatabase.updateCategory(_category);
@@ -66,10 +65,8 @@ class CategoryManagerHelper {
         _deletedProducts.isNotEmpty || _createdProducts.isNotEmpty;
 
     if (somethingChanged) {
-      _productsDatabase.remebmerChange();
-
       for (Product product in _deletedProducts) {
-        _productsDatabase.deleteProduct(_category, product);
+        _productsDatabase.removeProduct(_category, product);
         _deletedProducts.clear();
       }
 

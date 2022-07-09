@@ -1,6 +1,3 @@
-import 'package:online_order_shop_mobile/Domain/Catalogue/Category/category_model.dart';
-import 'package:online_order_shop_mobile/Domain/Catalogue/Product/product_model.dart';
-
 typedef ResultSet = List<QueryResult>;
 typedef QueryResult = Map<String, Object?>;
 
@@ -10,12 +7,12 @@ abstract class IProductsDatabase {
   Future<ResultSet> loadProducts(
       {required String category, required int startIndex, required int count});
   Future<ResultSet> loadCategories();
-  Future<void> deleteProduct(Category category, Product product);
-  Future<void> deleteCategory(Category category);
-  Future<void> createCategory(Category category);
-  Future<void> createProduct(Category category, Product product);
-  Future<void> updateProduct(Category category, Product product);
-  Future<void> updateCategory(Category category);
+  Future<void> deleteProduct(String categoryId, int productId);
+  Future<void> deleteCategory(String categoryId);
+  Future<void> createCategory(Map<String, String> category);
+  Future<void> createProduct(String categoryId, Map<String, String> product);
+  Future<void> updateProduct(String categoryId, Map<String, String> product);
+  Future<void> updateCategory(Map<String, String> category);
   Future<bool> upgradeDatabaseVersion();
   void remebmerChange();
   Future<void> reset();

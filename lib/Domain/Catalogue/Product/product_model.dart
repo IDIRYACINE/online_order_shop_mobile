@@ -13,11 +13,10 @@ class Product {
   List<double> _prices;
   List<String> _sizes;
   late final List<String> _descriptionImages;
-  final int? _id;
+  late int _id;
 
   Product(String name, this._description, String imageUrl, this._prices,
-      this._sizes,
-      [this._id]) {
+      this._sizes, this._id) {
     _name = ValueNotifier(name);
     _imageUrl = ValueNotifier(imageUrl);
   }
@@ -58,11 +57,11 @@ class Product {
     return 1;
   }
 
-  int? getId() {
+  int getId() {
     return _id;
   }
 
-  Map<String, Object?> toMap() {
+  Map<String, String> toMap() {
     return {
       "Name": _name.value,
       "Description": _description,
@@ -81,8 +80,13 @@ class Product {
   }
 
   static Product from(Product source) {
-    return Product(source.getName(), source.getDescription(),
-        source.getImageUrl(), source.getPriceList(), source.getSizeList());
+    return Product(
+        source.getName(),
+        source.getDescription(),
+        source.getImageUrl(),
+        source.getPriceList(),
+        source.getSizeList(),
+        source.getId());
   }
 
   void transfer(Product target) {

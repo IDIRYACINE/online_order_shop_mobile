@@ -49,3 +49,13 @@ class RemoteDatabaseNotFound extends CustomException {
       StackTrace? stackTrace})
       : super(code: code, message: message, stackTrace: stackTrace);
 }
+
+class InternalServerError extends CustomException {
+  static const errorCode = "internal-server-error";
+
+  InternalServerError(
+      {String code = errorCode,
+      String message = "Internal server error ",
+      StackTrace? stackTrace})
+      : super(code: code, message: message, stackTrace: stackTrace);
+}

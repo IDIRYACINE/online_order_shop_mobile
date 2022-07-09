@@ -49,10 +49,10 @@ class HelpersProvider with ChangeNotifier {
 
       await services.permissionsService.requestGpsPermission();
 
-      _productManagerHelper = ProductEditorHelper(services.productDatabase);
+      _productManagerHelper = ProductEditorHelper(services.productsMapper);
 
       _categoryManagerHelper =
-          CategoryManagerHelper(_catalogueHelper, services.productDatabase);
+          CategoryManagerHelper(_catalogueHelper, services.productsMapper);
 
       _categoryEditorHelper = CategoryEditorHelper(_catalogueHelper);
 

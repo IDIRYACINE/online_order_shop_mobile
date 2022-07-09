@@ -8,8 +8,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Authentication/authentication_service.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Authentication/iauthentication_service.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Database/idatabase.dart';
-import 'package:online_order_shop_mobile/Infrastructure/Database/products_database.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Database/products_mapper.dart';
+import 'package:online_order_shop_mobile/Infrastructure/Database/remote_database.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Orders/iorder_service.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Orders/order_service.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Permissions/ipermissions_service.dart';
@@ -41,7 +41,7 @@ class ServicesProvider {
     if (_isInit) {
       return;
     }
-    //await _useTestMode();
+    await _useTestMode();
     await _initServices();
     _isInit = true;
   }
@@ -51,7 +51,7 @@ class ServicesProvider {
     _authenticationService = FirebaseAuthenticationService(
         FirebaseAuth.instance, FirebaseFirestore.instance);
     _orderService = OrderService(_serverAcess);
-    _productsDatabase = ProductsDatabase(_serverAcess);
+    _productsDatabase = RemoteDatabase(_serverAcess, localHost);
     _productsMapper = ProductsMapper(_productsDatabase);
     _permissionsService = PermissionsService();
   }

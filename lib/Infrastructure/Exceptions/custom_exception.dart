@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 abstract class CustomException implements Exception {
   CustomException({this.code = "unkown", this.message, this.stackTrace});
 
@@ -15,7 +13,7 @@ abstract class CustomException implements Exception {
   }
 
   @override
-  int get hashCode => hashValues(code, message);
+  int get hashCode => Object.hash(code, message);
 
   @override
   String toString() {

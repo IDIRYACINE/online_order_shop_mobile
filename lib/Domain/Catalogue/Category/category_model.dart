@@ -64,11 +64,11 @@ class Category {
     return _id;
   }
 
-  Map<String, Object?> toMap() {
+  Map<String, String> toMap() {
     return {
       "Name": _name.value,
       "ImageUrl": _imageUrl.value,
-      "ProductsCount": _productCount.value
+      "ProductsCount": _productCount.value.toString()
     };
   }
 

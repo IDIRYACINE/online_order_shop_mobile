@@ -3,6 +3,7 @@ import 'package:online_order_shop_mobile/Application/Catalogue/catalogue_helper.
 import 'package:online_order_shop_mobile/Domain/Catalogue/Category/category_model.dart'
     as my_app;
 import 'package:online_order_shop_mobile/Infrastructure/Database/idatabase.dart';
+import 'package:online_order_shop_mobile/Infrastructure/Database/products_mapper.dart';
 import 'package:online_order_shop_mobile/Infrastructure/service_provider.dart';
 
 class CategoryEditorHelper {
@@ -40,10 +41,8 @@ class CategoryEditorHelper {
 
   Future<void> applyChanges() async {
     if (_somethingChanged || _imageUpdated) {
-      final IProductsDatabase _productsDatabase =
-          ServicesProvider().productDatabase;
-
-      _productsDatabase.remebmerChange();
+      final ProductsMapper _productsDatabase =
+          ServicesProvider().productsMapper;
 
       if (_editMode) {
         _tempCategory.transfer(_category);
