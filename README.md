@@ -1,16 +1,14 @@
 # online_order_shop_mobile
 
-A new Flutter project.
+## Note
+    The build folder is not included which would cause some errors in your ide after cloning for the first time execute flutter run or flutter pub get to fix the issues.
 
-## Getting Started
+## PlayStore
+  [PlayStore Link](https://play.google.com/store/apps/details?id=com.idir.online_order_shop_mobile)    
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![1](./screenshots/1.png)
+![2](./screenshots/2.png)
+![3](./screenshots/3.png)
+![4](./screenshots/4.png)
+![5](./screenshots/5.png)
