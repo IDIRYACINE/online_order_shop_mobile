@@ -7,8 +7,8 @@
   [PlayStore Link](https://play.google.com/store/apps/details?id=com.idir.online_order_shop_mobile)    
 
 
-![1](./screenshots/1.png)
-![2](./screenshots/2.png)
-![3](./screenshots/3.png)
-![4](./screenshots/4.png)
-![5](./screenshots/5.png)
+![1](./screenshots/1.jpg)
+![2](./screenshots/2.jpg)
+![3](./screenshots/3.jpg)
+![4](./screenshots/4.jpg)
+![5](./screenshots/5.jpg)
