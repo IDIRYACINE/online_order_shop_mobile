@@ -74,7 +74,7 @@ class FirebaseAuthenticationService implements IAuthenticationService {
         .then((value) => () {
               onSucess();
             })
-        .catchError((onError) {
+        .catchError((onError) async {
       onFail();
     });
   }

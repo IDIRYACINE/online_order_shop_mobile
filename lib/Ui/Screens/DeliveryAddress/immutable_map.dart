@@ -46,31 +46,30 @@ class _DeliveryAddresState extends State<ImmutableDeliveryAddresScreen> {
           return Scaffold(
               body: FlutterMap(
             options: MapOptions(
-              center: location,
-              zoom: widget._mapZoom,
+              initialCenter: location,
+              initialZoom: widget._mapZoom,
             ),
-            nonRotatedChildren: [
-              TileLayerWidget(
-                  options: TileLayerOptions(
+            children: [
+              TileLayer(
                       urlTemplate:
                           "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                      subdomains: ['a', 'b', 'c'])),
-              MarkerLayerWidget(
+                      subdomains: const['a', 'b', 'c']),
+              MarkerLayer(
                   key: widget._markerKey,
-                  options: MarkerLayerOptions(markers: [
+                  markers: [
                     Marker(
                       width: widget._markerWidth,
                       height: widget._markerHeight,
                       rotate: false,
-                      anchorPos: AnchorPos.align(AnchorAlign.center),
+                      alignment: Alignment.center,
                       point: location,
-                      builder: (ctx) => Icon(
+                      child: Icon(
                         Icons.add_location_alt,
                         size: widget._markerSize,
                         color: theme.colorScheme.primary,
                       ),
                     )
-                  ]))
+                  ])
             ],
           ));
         }

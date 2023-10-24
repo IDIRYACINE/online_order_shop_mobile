@@ -13,7 +13,7 @@ class Product {
   List<double> _prices;
   List<String> _sizes;
   late final List<String> _descriptionImages;
-  late int _id;
+  late final int _id;
 
   Product(String name, this._description, String imageUrl, this._prices,
       this._sizes, this._id) {

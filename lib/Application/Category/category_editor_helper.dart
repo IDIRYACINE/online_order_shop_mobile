@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:online_order_shop_mobile/Application/Catalogue/catalogue_helper.dart';
 import 'package:online_order_shop_mobile/Domain/Catalogue/Category/category_model.dart'
     as my_app;
-import 'package:online_order_shop_mobile/Infrastructure/Database/idatabase.dart';
 import 'package:online_order_shop_mobile/Infrastructure/Database/products_mapper.dart';
 import 'package:online_order_shop_mobile/Infrastructure/service_provider.dart';
 
@@ -41,13 +40,13 @@ class CategoryEditorHelper {
 
   Future<void> applyChanges() async {
     if (_somethingChanged || _imageUpdated) {
-      final ProductsMapper _productsDatabase =
+      final ProductsMapper productsDatabase =
           ServicesProvider().productsMapper;
 
       if (_editMode) {
         _tempCategory.transfer(_category);
 
-        _productsDatabase.updateCategory(_category);
+        productsDatabase.updateCategory(_category);
 
         return;
       }

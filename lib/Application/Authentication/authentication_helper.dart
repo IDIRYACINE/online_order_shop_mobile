@@ -12,7 +12,7 @@ import 'package:online_order_shop_mobile/Ui/Themes/constants.dart';
 import 'package:provider/provider.dart';
 import 'dart:developer' as dev;
 
-enum userData { fullName, phoneNumber, address, password, email }
+enum UserData { fullName, phoneNumber, address, password, email }
 
 class AuthenticationHelper {
   late final IAuthenticationService _authService;

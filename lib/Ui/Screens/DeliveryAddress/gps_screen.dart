@@ -33,7 +33,7 @@ class _DeliveryAddresState extends State<DeliveryAddresScreen> {
         Provider.of<HelpersProvider>(context, listen: false).addressHelper;
     _deliveryAddress = _address.getAddress();
 
-    ValueNotifier<LatLng> _markerLocation =
+    ValueNotifier<LatLng> markerLocation =
         ValueNotifier<LatLng>(_address.getLocation().instance);
 
     ThemeData theme = Theme.of(context);
@@ -46,39 +46,36 @@ class _DeliveryAddresState extends State<DeliveryAddresScreen> {
               body: Stack(
             children: [
               FlutterMap(
+                mapController: _controller,
                 options: MapOptions(
-                  center: _markerLocation.value,
+                  initialCenter: markerLocation.value,
                   onPositionChanged: (position, hasGesture) {
-                    _markerLocation.value = position.center!;
+                    markerLocation.value = position.center!;
                   },
-                  controller: _controller,
-                  zoom: widget._mapZoom,
+                  initialZoom: widget._mapZoom,
                 ),
-                nonRotatedChildren: [
-                  TileLayerWidget(
-                      options: TileLayerOptions(
-                          urlTemplate:
-                              "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                          subdomains: ['a', 'b', 'c'])),
+                children: [
+                  TileLayer(
+                      urlTemplate:
+                          "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                      subdomains: const ['a', 'b', 'c']),
                   ValueListenableBuilder<LatLng>(
-                      valueListenable: _markerLocation,
+                      valueListenable: markerLocation,
                       builder: (context, value, child) {
-                        return MarkerLayerWidget(
-                            key: widget._markerKey,
-                            options: MarkerLayerOptions(markers: [
-                              Marker(
-                                width: widget._markerWidth,
-                                height: widget._markerHeight,
-                                rotate: false,
-                                anchorPos: AnchorPos.align(AnchorAlign.center),
-                                point: value,
-                                builder: (ctx) => Icon(
-                                  Icons.add_location_alt,
-                                  size: widget._markerSize,
-                                  color: theme.colorScheme.primary,
-                                ),
-                              )
-                            ]));
+                        return MarkerLayer(key: widget._markerKey, markers: [
+                          Marker(
+                            width: widget._markerWidth,
+                            height: widget._markerHeight,
+                            rotate: false,
+                            alignment: Alignment.center,
+                            point: value,
+                            child: Icon(
+                              Icons.add_location_alt,
+                              size: widget._markerSize,
+                              color: theme.colorScheme.primary,
+                            ),
+                          )
+                        ]);
                       })
                 ],
               ),
@@ -96,8 +93,8 @@ class _DeliveryAddresState extends State<DeliveryAddresScreen> {
                         decoration: InputDecoration(
                           border: const OutlineInputBorder(),
                           hintText: addressHint,
-                          labelStyle: theme.textTheme.bodyText1,
-                          hintStyle: theme.textTheme.subtitle2,
+                          labelStyle: theme.textTheme.bodyLarge,
+                          hintStyle: theme.textTheme.titleSmall,
                         ),
                         onChanged: (value) {
                           _deliveryAddress = value;
@@ -114,8 +111,8 @@ class _DeliveryAddresState extends State<DeliveryAddresScreen> {
                     width: double.infinity,
                     onPressed: () {
                       _address.setLocation(
-                          latitude: _markerLocation.value.latitude,
-                          longitude: _markerLocation.value.longitude,
+                          latitude: markerLocation.value.latitude,
+                          longitude: markerLocation.value.longitude,
                           infos: _deliveryAddress);
                       widget._callback();
                       Navigator.pop(context);
